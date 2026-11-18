@@ -4,7 +4,7 @@
   const cfg = window.MF_CONFIG || {};
   const sb = (window.supabase && cfg.supabaseUrl && !/COLE_AQUI/.test(cfg.supabaseUrl))
     ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
-  const TABELAS = {imoveis:"imoveis", corretores:"corretores", leads:"leads", privado:"privado"};
+  const TABELAS = {imoveis:"imoveis", corretores:"corretores", leads:"leads", privado:"privado", modelos:"modelos"};
   const ouvintes = {}; // colecao -> [fn]
   const novoId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())+Math.random().toString(16).slice(2)).replace(/-/g,"").slice(0,20);
   const tab = c => { const t = TABELAS[c]; if(!t) throw new Error("coleção desconhecida: "+c); return t; };

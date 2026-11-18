@@ -97,6 +97,11 @@ async function crmIniciar(){
     S.privado = Object.fromEntries(snap.docs.map(d=>[d.id, d.data()]));
     if(rota().nome==="crm") render();
   }, ()=>{});
+  S.modelosDb = {};
+  S.db.collection("modelos").onSnapshot(snap=>{
+    S.modelosDb = Object.fromEntries(snap.docs.map(d=>[d.id, d.data()])); S.modelosErro = false;
+    if(rota().nome==="crm" && S.crmTab==="documentos") render();
+  }, ()=>{ S.modelosErro = true; });
   if(rota().nome==="crm") render();
 }
 
@@ -171,7 +176,7 @@ function abasCrm(){
   const L = leadsF().filter(aberto), fim = fimDoDia();
   const nHoje = L.filter(semResposta).length + L.filter(l=>!semResposta(l) && l.proximoContato && new Date(l.proximoContato)<=fim).length
     + todasVisitas().filter(v=>v.status==="agendada" && new Date(v.quando)<=fim).length;
-  const t = [["hoje","Hoje",nHoje],["funil","Funil"],["leads","Leads"],["agenda","Agenda"],["imoveis","Imóveis"],["relatorios","Relatórios"]];
+  const t = [["hoje","Hoje",nHoje],["funil","Funil"],["leads","Leads"],["agenda","Agenda"],["imoveis","Imóveis"],["documentos","Documentos"],["relatorios","Relatórios"]];
   if(ehGestor()) t.push(["equipe","Equipe"]);
   return t;
 }
@@ -187,7 +192,7 @@ function renderCrm(app){
   if($("#crm-cor")) $("#crm-cor").value = S.crmCorretor || "";
   $("#crm-tabs").innerHTML = abas.map(([k,n,b])=>`<button class="ctab ${S.crmTab===k?"on":""}" data-act="aba" data-v="${k}" ${S.crmTab===k?'aria-current="page"':""}>${n}${b?`<i class="badge tab">${b}</i>`:""}</button>`).join("");
   const corpo = $("#crm-corpo");
-  preservar(corpo, ()=>({hoje:crmHoje, funil:crmFunil, leads:crmLeads, agenda:crmAgenda, imoveis:crmImoveis, relatorios:crmRelatorios, equipe:crmEquipe})[S.crmTab](corpo));
+  preservar(corpo, ()=>({hoje:crmHoje, funil:crmFunil, leads:crmLeads, agenda:crmAgenda, imoveis:crmImoveis, documentos:crmDocumentos, relatorios:crmRelatorios, equipe:crmEquipe})[S.crmTab](corpo));
   if(!$("#crm-q-res").hidden) pintarBusca();
 }
 function cascaHtml(){
@@ -252,7 +257,7 @@ document.addEventListener("click", e=>{
   const res = $("#crm-q-res"); if(res && !res.hidden && !e.target.closest(".crm-busca")) res.hidden = true;
   if(e.target.id==="crm-sair"){ sairCrm(); return; }
   const t = e.target.closest("[data-wa],[data-act],[data-l],[data-i]");
-  if(!t || !t.closest("#crm-shell, #crm-corpo, #gaveta, #toasts, .fab")) return;
+  if(!t || !t.closest("#crm-shell, #crm-corpo, #gaveta, #doc-tela, #toasts, .fab")) return;
   const menu = t.closest("details.menu"); if(menu && t.tagName!=="SUMMARY") menu.open = false;
   if(res && t.closest("#crm-q-res")){ res.hidden = true; $("#crm-q").value = ""; }
   if(t.dataset.wa){ const d = {...t.dataset}; setTimeout(()=>registrarModelo(d.lead, d.wa, d), 60); return; }
@@ -261,13 +266,14 @@ document.addEventListener("click", e=>{
   if(t.dataset.i){ e.preventDefault(); abrirImovel(t.dataset.i); return; }
 });
 document.addEventListener("keydown", e=>{
-  if(rota().nome!=="crm" || $("#gaveta")) return;
+  if(rota().nome!=="crm" || $("#gaveta") || $("#doc-tela")) return;
   const digitando = /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||"");
   if((e.key==="k" && (e.ctrlKey||e.metaKey)) || (e.key==="/" && !digitando)){ const q=$("#crm-q"); if(q){ e.preventDefault(); q.focus(); } }
 });
 async function sairCrm(){ await MF.sair(); S.podeCrm = false; S.acessoPronto = false; $("#link-crm").hidden = true; location.hash = "#inicio"; }
 
 async function acao(nome, d, el){
+  if(nome.startsWith("doc-")) return acaoDoc(nome, d, el);
   const id = d.lead;
   const l = id ? S.leads.find(x=>x._id===id) : null;
   switch(nome){
@@ -735,6 +741,7 @@ function pintarLeadCab(){
       <details class="menu" id="ld-wa"><summary class="btn btn-whats">${ICO.whats} WhatsApp ▾</summary><div class="menu-lista">${modelos.map(([m,ctx])=>linkWa(l,m,ctx,`<b>${esc(NOMES_MODELO[m])}</b><small>${esc(msgModelo(m,l,ctx).slice(0,70))}…</small>`,"menu-item")).join("")}</div></details>
       <a class="btn btn-linha" href="tel:+${esc(celIntl(l.celular))}" data-act="ligou" data-lead="${esc(l._id)}">Ligar</a>
       <button class="btn btn-linha" data-act="agendar" data-lead="${esc(l._id)}">Agendar visita</button>
+      ${menuDocs({lead:l._id})}
     </div>
     <div class="nota tab">${esc(fmtCel(l.celular))}${l.email?" · "+esc(l.email):""}${im?` · interesse: <button class="link-btn" data-i="${esc(im._id)}">${esc(im.codigo)} · ${esc(im.titulo)}</button>`:l.interesse?" · "+esc(l.interesse):""}</div>
     ${l.mensagem?`<div class="ld-msg">${esc(l.mensagem)}</div>`:""}`; });
@@ -780,6 +787,7 @@ function pintarLeadDin(){
       ${!pe?'<p class="nota" style="margin:0">Preencha "o que ele procura" em Dados do cliente (abaixo) para ver sugestões da sua carteira.</p>'
         :comb.length?comb.map(i=>{ const e = enviado(i._id); return `<div class="comb"><button class="t-info" data-i="${esc(i._id)}">${(i.fotos||[])[0]?`<img src="${esc(i.fotos[0])}" alt="">`:""}<span><b>${esc(i.codigo)} · ${esc(i.titulo)}</b><small>${esc(i.bairro||"")} · ${brl(i.preco)}${e?` · <span class="ok-txt">enviado ${dataBR(e.quando)}</span>`:""}</small></span></button>${linkWa(l,"imovel",{imovel:i},`${ICO.whats} ${e?"Reenviar":"Enviar"}`)}</div>`; }).join("")
         :'<p class="nota" style="margin:0">Nenhum imóvel da carteira combina agora. Quando entrar um parecido, ele aparece aqui.</p>'}</section>
+    ${secDocsLead(l)}
     <section class="ld-sec"><div class="ld-rot">Histórico</div><div class="hist">${[...(l.historico||[])].reverse().map(h=>`<div><small class="tab">${dataHoraBR(h.quando)} · ${esc(h.tipo)}</small>${esc(h.texto)}</div>`).join("")||'<div class="nota">Sem registros.</div>'}</div></section>`; });
   ligarLeadDin(l);
 }
@@ -838,6 +846,11 @@ function formLeadHtml(l, novo){
     ${novo?`<div class="linha2"><label class="campo">Termômetro<select id="g-temp">${["quente","morno","frio"].map(t=>`<option ${t===l.temperatura?"selected":""}>${t}</option>`).join("")}</select></label><label class="campo">Próximo contato<input id="g-prox" type="datetime-local" value="${toLocalInput(quando("2h"))}"></label></div>`:""}
     <div class="campo">Etiquetas<div class="tags-in" id="g-tags"></div><datalist id="dl-tags">${todasEtiquetas().map(t=>`<option value="${esc(t)}">`).join("")}</datalist></div>
     <label class="campo">Observações<textarea id="g-msg" rows="3">${esc(l.mensagem||"")}</textarea></label>
+    <details class="ld-bloco" id="g-pessoais"><summary>Dados para contratos (CPF, RG, endereço)</summary><div class="g-form" style="padding-top:10px">
+      <div class="linha2"><label class="campo">CPF<input id="g-cpf" inputmode="numeric" value="${esc(l.cpf||"")}"></label><label class="campo">RG<input id="g-rg" value="${esc(l.rg||"")}"></label></div>
+      <div class="linha3"><label class="campo">Estado civil<select id="g-ec"><option value=""></option>${ESTADOS_CIVIS.map(x=>`<option ${x===l.estadoCivil?"selected":""}>${esc(x)}</option>`).join("")}</select></label><label class="campo">Profissão<input id="g-prof" value="${esc(l.profissao||"")}"></label><label class="campo">Nacionalidade<input id="g-nac" value="${esc(l.nacionalidade||"")}" placeholder="brasileiro(a)"></label></div>
+      <label class="campo">Endereço completo<input id="g-end" value="${esc(l.endereco||"")}" placeholder="Rua, número, bairro, cidade/UF"></label>
+    </div></details>
     <fieldset class="perfil"><legend>O que o cliente procura</legend>
       <div class="linha3"><label class="campo">Quer<select id="p-fin"><option value="">Tanto faz</option><option value="venda" ${p.finalidade==="venda"?"selected":""}>Comprar</option><option value="aluguel" ${p.finalidade==="aluguel"?"selected":""}>Alugar</option></select></label>
         <label class="campo">Valor a partir de<input id="p-min" inputmode="numeric" placeholder="R$" value="${p.precoMin?esc(Number(p.precoMin).toLocaleString("pt-BR")):""}"></label>
@@ -872,7 +885,8 @@ function ligarFormLeadCrm(l, novo){
     const perfil = {finalidade:$("#p-fin").value, precoMin:numBR($("#p-min").value), precoMax:numBR($("#p-max").value), quartosMin:Number($("#p-qua").value)||0,
       categorias:[...$("#g-form").querySelectorAll("input[name=p-cat]:checked")].map(c=>c.value), bairros:$("#p-bai").value.trim()};
     const dados = {nome:$("#g-nome").value.trim(), celular:cel, email:$("#g-email").value.trim(), origem:$("#g-origem").value, corretorId:$("#g-cor").value,
-      imovelId:imv?imv._id:"", imovelCodigo:imv?imv.codigo:"", imovelTitulo:imv?imv.titulo:"", mensagem:$("#g-msg").value, tags, perfil};
+      imovelId:imv?imv._id:"", imovelCodigo:imv?imv.codigo:"", imovelTitulo:imv?imv.titulo:"", mensagem:$("#g-msg").value, tags, perfil,
+      cpf:fmtCpf($("#g-cpf").value.trim()), rg:$("#g-rg").value.trim(), estadoCivil:$("#g-ec").value, profissao:$("#g-prof").value.trim(), nacionalidade:$("#g-nac").value.trim(), endereco:$("#g-end").value.trim()};
     try{
       if(novo){
         Object.assign(dados, {etapa:"novo", temperatura:$("#g-temp").value, proximoContato:$("#g-prox").value?new Date($("#g-prox").value).toISOString():"", criadoEm:hoje(), atualizadoEm:hoje(),
@@ -905,9 +919,10 @@ function abrirImovel(id, opc={}){
   gaveta(`
     <div class="ld-linha1"><h2>${id?esc(i.codigo)+" · "+esc(i.titulo):"Novo imóvel"}</h2><button class="btn btn-linha btn-sm" data-act="fechar">Fechar</button></div>
     ${id?`<div class="ld-meta"><span class="status st-${esc(i.status||"disponivel")}">${esc(rotStatus(i.status))}</span><span>${nLeads} ${nLeads===1?"lead":"leads"}</span><span>${nVis} ${nVis===1?"visita":"visitas"}</span><span>${badgeAut(p)}</span></div>
+    <div class="ld-acoes">${menuDocs({imovel:id})}</div>
     <section class="ld-sec"><div class="ld-rot">Clientes que combinam com este imóvel</div>
       ${clientes.length?clientes.slice(0,10).map(l=>{ const e=(l.enviados||[]).find(x=>x.imovelId===id); return `<div class="comb"><button class="t-info" data-l="${esc(l._id)}"><span><b>${esc(l.nome)}</b><small>${esc(nomeEtapa(l.etapa))} · <span class="termo t-${esc(l.temperatura||"morno")}">${esc(l.temperatura||"morno")}</span>${e?` · <span class="ok-txt">enviado ${dataBR(e.quando)}</span>`:""}</small></span></button>${linkWa(l,"imovel",{imovel:i},`${ICO.whats} ${e?"Reenviar":"Enviar"}`)}</div>`; }).join("")
-        :'<p class="nota" style="margin:0">Nenhum cliente em aberto com perfil compatível. Preencha "o que o cliente procura" nos leads para cruzar automaticamente.</p>'}</section>`:""}
+        :'<p class="nota" style="margin:0">Nenhum cliente em aberto com perfil compatível. Preencha "o que o cliente procura" nos leads para cruzar automaticamente.</p>'}</section>${secDocsImovel(id)}`:""}
     <form id="i-form" class="g-form" ${podeEditar?"":'inert'}>
       <details class="ld-bloco" id="i-dados" ${id?"":"open"}><summary>Dados do anúncio (aparecem no site)</summary><div class="g-form" style="padding-top:10px">
       <label class="campo">Título do anúncio<input id="i-titulo" required value="${esc(i.titulo||"")}"></label>
@@ -929,7 +944,9 @@ function abrirImovel(id, opc={}){
       </div></details>
       <details class="ld-bloco" id="i-capt" open><summary>Captação e proprietário (só no CRM, não aparece no site)</summary><div class="g-form" style="padding-top:10px">
         <div class="linha2"><label class="campo">Proprietário<input id="i-prop" value="${esc(p.proprietario||"")}"></label><label class="campo">Celular<input id="i-propcel" inputmode="tel" value="${esc(p.proprietarioCel||"")}"></label></div>
-        <label class="campo">E-mail do proprietário<input id="i-propemail" type="email" value="${esc(p.proprietarioEmail||"")}"></label>
+        <div class="linha2"><label class="campo">E-mail do proprietário<input id="i-propemail" type="email" value="${esc(p.proprietarioEmail||"")}"></label><label class="campo">CPF do proprietário<input id="i-propcpf" inputmode="numeric" value="${esc(p.proprietarioCpf||"")}"></label></div>
+        <label class="campo">Endereço do imóvel (rua e número)<input id="i-end" placeholder="Usado nos documentos; não aparece no site" value="${esc(p.endereco||"")}"></label>
+        <div class="linha2"><label class="campo">Matrícula nº<input id="i-mat" value="${esc(p.matricula||"")}"></label><label class="campo">Inscrição imobiliária (IPTU)<input id="i-iptu" value="${esc(p.inscricaoIptu||"")}"></label></div>
         <div class="linha3"><label class="campo">Autorização<select id="i-aut"><option value="">Não informada</option>${Object.entries(TIPOS_AUT).map(([k,v])=>`<option value="${k}" ${p.autorizacaoTipo===k?"selected":""}>${v}</option>`).join("")}</select></label>
           <label class="campo">Assinada em<input id="i-autini" type="date" value="${esc(p.autorizacaoInicio||"")}"></label><label class="campo">Válida até<input id="i-autfim" type="date" value="${esc(p.autorizacaoValidade||"")}"></label></div>
         <div class="linha2"><label class="campo">Comissão combinada (%)<input id="i-compct" inputmode="decimal" value="${esc(p.comissaoPct||"")}"></label><label class="campo">Onde está a chave<input id="i-chave" placeholder="Ex.: na imobiliária, com o vizinho" value="${esc(p.chave||"")}"></label></div>
@@ -970,6 +987,7 @@ function abrirImovel(id, opc={}){
       corretorId:$("#i-cor").value, descricao:$("#i-desc").value, caracteristicas:$("#i-car").value.split(",").map(s=>s.trim()).filter(Boolean), fotos,
       atualizadoEm:hoje() };
     const priv = { ...p, proprietario:$("#i-prop").value.trim(), proprietarioCel:$("#i-propcel").value.trim(), proprietarioEmail:$("#i-propemail").value.trim(),
+      proprietarioCpf:fmtCpf($("#i-propcpf").value.trim()), endereco:$("#i-end").value.trim(), matricula:$("#i-mat").value.trim(), inscricaoIptu:$("#i-iptu").value.trim(),
       autorizacaoTipo:$("#i-aut").value, autorizacaoInicio:$("#i-autini").value, autorizacaoValidade:$("#i-autfim").value, comissaoPct:$("#i-compct").value.trim(), chave:$("#i-chave").value.trim(), obsInternas:$("#i-obsint").value.trim() };
     const temPriv = Object.entries(priv).some(([k,v])=>v && k!=="origemLead");
     const r = $("#i-ret");
