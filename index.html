@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monfernatti Imóveis | Imóveis em Cornélio Procópio - PR</title>
+<meta name="description" content="Casas, terrenos, apartamentos e imóveis comerciais à venda e para alugar em Cornélio Procópio e região. Fernando Monfernatti, corretor CRECI 43397-PR, perito judicial e avaliador.">
+<meta property="og:title" content="Monfernatti Imóveis">
+<meta property="og:description" content="Imóveis à venda e para alugar em Cornélio Procópio e região.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#293731">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: vitrine de imóveis com cabeçalho escuro da marca + painel CRM no mesmo app, rotas por #hash */
+:root{
+  --marca:#293731;        /* verde-ardósia da logo */
+  --marca-2:#1d2823;
+  --ouro:#c9a464;         /* dourado da logo */
+  --ouro-forte:#a9843f;
+  --bg:#f4f6f4;
+  --card:#ffffff;
+  --fg:#1c2420;
+  --muted:#5f6b65;
+  --linha:#dfe5e1;
+  --chip:#eaefec;
+  --ok:#2f7d4f; --alerta:#b7791f; --perigo:#b23a3a; --info:#2f6390;
+  --whats:#1fa855;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121815;--card:#1a221e;--fg:#e8ede9;--muted:#9aa8a1;--linha:#2b3631;--chip:#232d28;
+  --ouro:#d6b57a;--ouro-forte:#d6b57a;--marca-2:#0e1411;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121815;--card:#1a221e;--fg:#e8ede9;--muted:#9aa8a1;--linha:#2b3631;--chip:#232d28;
+  --ouro:#d6b57a;--ouro-forte:#d6b57a;--marca-2:#0e1411;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--marca)}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ouro);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:.01em;text-wrap:balance;line-height:1.05;margin:0}
+.tab{font-variant-numeric:tabular-nums}
+
+/* Cabeçalho */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--marca);color:#fff}
+.top .wrap{display:flex;align-items:center;gap:20px;min-height:68px}
+.logo img{height:48px;width:auto;display:block}
+.nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.nav a{color:#e9eee9;text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600;font-size:14px}
+.nav a:hover{background:rgba(255,255,255,.08)}
+.nav a.on{color:var(--ouro)}
+.nav a.crm{border:1px solid rgba(201,164,100,.6);color:var(--ouro)}
+@media(max-width:720px){.nav a.hide-m{display:none}.logo img{height:40px}}
+
+/* Botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r);padding:12px 18px;font-weight:700;cursor:pointer;text-decoration:none;font-size:14px}
+.btn-ouro{background:var(--ouro);color:#1d2823}
+.btn-ouro:hover{background:#d8b778}
+.btn-marca{background:var(--marca);color:#fff}
+.btn-whats{background:var(--whats);color:#fff}
+.btn-linha{background:transparent;border:1px solid var(--linha);color:var(--fg)}
+.btn-sm{padding:7px 12px;font-size:13px;border-radius:8px}
+.ico{width:18px;height:18px;flex:none}
+
+/* Hero */
+.hero{position:relative;background:var(--marca);color:#fff;overflow:hidden}
+.hero .bgimg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.38}
+.hero .bgimg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(29,40,35,.35),rgba(29,40,35,.92))}
+.hero .wrap{position:relative;padding-block:64px 40px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro);font-weight:700}
+.hero h1{font-size:clamp(38px,5.4vw,62px);margin:10px 0 12px;max-width:20ch}
+.hero p.lead{max-width:56ch;color:#d6ddd8;margin:0 0 28px;font-size:16px}
+.busca{background:var(--card);color:var(--fg);border-radius:14px;padding:14px;display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr auto;gap:10px;box-shadow:0 18px 50px rgba(0,0,0,.25)}
+.busca label{display:flex;flex-direction:column;gap:3px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);min-width:0}
+.busca select,.busca input{border:1px solid var(--linha);background:var(--bg);border-radius:8px;padding:10px;font-size:14px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--fg);width:100%}
+.busca .btn{align-self:end;height:43px}
+@media(max-width:860px){.busca{grid-template-columns:1fr 1fr}.busca .btn{grid-column:1/-1}}
+.selos{display:flex;gap:22px;flex-wrap:wrap;margin-top:22px;color:#cfd8d2;font-size:13px}
+.selos b{color:#fff;font-family:var(--f-display);font-size:22px;margin-right:6px}
+
+/* Seções */
+.sec{padding-block:48px}
+.sec-h{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.sec-h h2{font-size:clamp(30px,3.6vw,42px)}
+.sec-h p{margin:4px 0 0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+
+/* Card imóvel */
+.card{background:var(--card);border:1px solid var(--linha);border-radius:14px;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(20,30,25,.12)}
+.card .foto{position:relative;aspect-ratio:4/3;background:var(--chip);max-width:100%}
+.card .foto img{width:100%;height:100%;object-fit:cover;display:block}
+.tag{position:absolute;top:10px;left:10px;background:var(--marca);color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:6px}
+.tag.ouro{background:var(--ouro);color:#1d2823;left:auto;right:10px}
+.card .info{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card .tipo{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.card h3{font-family:var(--f-body);font-size:16px;font-weight:700;line-height:1.3}
+.card .loc{display:flex;gap:5px;align-items:center;color:var(--muted);font-size:13px}
+.specs{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:4px}
+.specs span{display:inline-flex;gap:5px;align-items:center}
+.preco{font-family:var(--f-display);font-size:26px;font-weight:700;color:var(--fg);margin-top:auto;padding-top:8px}
+.preco small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:600;margin-right:4px}
+
+/* Página de busca */
+.filtros{display:flex;gap:10px;flex-wrap:wrap;align-items:end;background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:14px;margin-bottom:20px}
+.filtros label{display:flex;flex-direction:column;gap:3px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);flex:1 1 140px;min-width:0}
+.filtros select,.filtros input{border:1px solid var(--linha);background:var(--bg);border-radius:8px;padding:9px;font-size:14px;font-weight:500;text-transform:none;letter-spacing:0;width:100%}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.pill{border:1px solid var(--linha);background:var(--card);border-radius:999px;padding:7px 14px;font-weight:600;font-size:13px;cursor:pointer}
+.pill.on{background:var(--marca);color:#fff;border-color:var(--marca)}
+.vazio{padding:40px;text-align:center;color:var(--muted);background:var(--card);border:1px dashed var(--linha);border-radius:14px}
+
+/* Página do imóvel */
+.galeria{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:8px;border-radius:14px;overflow:hidden}
+.galeria .principal{aspect-ratio:16/10;background:var(--chip);max-width:100%}
+.galeria img{width:100%;height:100%;object-fit:cover;display:block}
+.galeria .lado{display:grid;grid-template-rows:repeat(3,1fr);gap:8px;min-height:0}
+.galeria .lado button{padding:0;border:0;cursor:pointer;background:var(--chip);min-height:0;overflow:hidden;position:relative}
+.galeria .lado button.on::after{content:"";position:absolute;inset:0;border:3px solid var(--ouro)}
+@media(max-width:720px){.galeria{grid-template-columns:minmax(0,1fr)}.galeria .lado{grid-template-rows:none;grid-template-columns:repeat(3,1fr);height:80px}}
+.det{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;margin-top:24px}
+@media(max-width:920px){.det{grid-template-columns:1fr}}
+.det h1{font-size:clamp(32px,4vw,46px);margin:6px 0}
+.ficha{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:18px 0}
+.ficha div{background:var(--card);border:1px solid var(--linha);border-radius:10px;padding:10px 12px}
+.ficha dt{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.ficha dd{margin:2px 0 0;font-weight:700;font-size:16px}
+.texto{max-width:68ch;white-space:pre-line}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{background:var(--chip);border-radius:6px;padding:5px 9px;font-size:13px}
+.contato{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:20px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);align-self:start;display:flex;flex-direction:column;gap:12px}
+.contato .preco{font-size:34px;padding:0}
+form.lead{display:flex;flex-direction:column;gap:10px}
+form.lead input,form.lead textarea{border:1px solid var(--linha);background:var(--bg);border-radius:8px;padding:10px;font-size:14px;width:100%}
+.nota{font-size:12px;color:var(--muted)}
+.ok-box{background:color-mix(in srgb,var(--ok) 14%,transparent);border-radius:8px;padding:10px;font-size:14px}
+.err-box{background:color-mix(in srgb,var(--perigo) 14%,transparent);border-radius:8px;padding:10px;font-size:14px}
+
+/* Faixa institucional */
+.faixa{background:var(--marca);color:#e7ece8}
+.faixa .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:36px;padding-block:52px}
+@media(max-width:820px){.faixa .wrap{grid-template-columns:1fr}}
+.faixa h2{color:#fff;font-size:clamp(30px,3.6vw,42px);margin-bottom:12px}
+.faixa ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.faixa li{display:flex;gap:10px}
+.faixa li b{color:var(--ouro)}
+.rodape{background:var(--marca-2);color:#b9c4be;font-size:13px}
+.rodape .wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;padding-block:28px}
+.rodape b{color:#fff}
+.whats-float{position:fixed;right:max(18px,calc(env(safe-area-inset-right,0px) + 12px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);z-index:40;width:56px;height:56px;border-radius:50%;background:var(--whats);display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.whats-float svg{width:28px;height:28px;fill:#fff}
+
+/* CRM */
+.crm-top{background:var(--card);border-bottom:1px solid var(--linha)}
+.crm-top .wrap{display:flex;gap:6px;padding-block:10px;flex-wrap:wrap;align-items:center}
+.crm-top h2{font-size:26px;margin-right:auto}
+.ctab{border:0;background:transparent;padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer;color:var(--muted)}
+.ctab.on{background:var(--chip);color:var(--fg)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--card);border:1px solid var(--linha);border-radius:12px;padding:14px 16px}
+.kpi dt{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.kpi dd{margin:4px 0 0;font-family:var(--f-display);font-size:34px;font-weight:700}
+.kanban{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,1fr);gap:12px;overflow-x:auto;padding-bottom:10px}
+.col{background:var(--chip);border-radius:12px;padding:10px;min-height:220px;display:flex;flex-direction:column;gap:8px}
+.col.drop{outline:2px dashed var(--ouro)}
+.col h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;display:flex;justify-content:space-between;align-items:center}
+.col h4 i{font-style:normal;background:var(--card);border-radius:999px;padding:1px 8px;font-size:12px}
+.lc{background:var(--card);border:1px solid var(--linha);border-radius:10px;padding:10px;cursor:grab;display:flex;flex-direction:column;gap:4px;text-align:left;width:100%}
+.lc b{font-size:14px}
+.lc small{color:var(--muted);font-size:12px}
+.termo{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700}
+.termo::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.t-quente{color:var(--perigo)}.t-morno{color:var(--alerta)}.t-frio{color:var(--info)}
+.atraso{color:var(--perigo);font-weight:700}
+.tabela-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--linha);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--linha);white-space:nowrap}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--chip)}
+.status{display:inline-block;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;background:var(--chip)}
+.st-disponivel{color:var(--ok)}.st-reservado{color:var(--alerta)}.st-vendido{color:var(--muted)}
+.gaveta{position:fixed;inset:0;z-index:70;background:rgba(10,15,12,.5);display:flex;justify-content:flex-end}
+.gaveta .painel{background:var(--bg);width:min(560px,100%);height:100%;overflow-y:auto;padding:20px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) 20px;padding-top:calc(20px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:14px}
+.campo{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--muted);min-width:0}
+.campo input,.campo select,.campo textarea{border:1px solid var(--linha);background:var(--card);border-radius:8px;padding:9px;font-size:14px;font-weight:500;color:var(--fg);width:100%}
+.linha2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.linha3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:520px){.linha3{grid-template-columns:1fr 1fr}}
+.hist{border-left:2px solid var(--linha);padding-left:12px;display:flex;flex-direction:column;gap:10px}
+.hist div{font-size:14px}
+.hist small{color:var(--muted);display:block;font-size:12px}
+.miniaturas{display:flex;gap:8px;flex-wrap:wrap}
+.miniaturas div{position:relative;width:84px;height:64px;border-radius:6px;overflow:hidden;background:var(--chip)}
+.miniaturas img{width:100%;height:100%;object-fit:cover}
+.miniaturas button{position:absolute;top:2px;right:2px;border:0;border-radius:4px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;cursor:pointer;padding:1px 5px}
+.aviso{background:var(--card);border:1px solid var(--linha);border-left:4px solid var(--ouro);border-radius:10px;padding:14px 16px}
+.carregando{color:var(--muted);padding:30px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ===== v2: visual claro, inspirado em portais modernos ===== */
+:root{--topo:#ffffff;--topo-fg:#293731;--logo-claro:none;--logo-escuro:block;--faixa:#293731;--suave:#eef2ef}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--topo:#161d19;--topo-fg:#e8ede9;--logo-claro:block;--logo-escuro:none;--faixa:#0e1411;--suave:#1d2621}}
+:root[data-theme="dark"]{--topo:#161d19;--topo-fg:#e8ede9;--logo-claro:block;--logo-escuro:none;--faixa:#0e1411;--suave:#1d2621}
+body{background:var(--card)}
+body::before{background:var(--topo)}
+.top{background:var(--topo);color:var(--topo-fg);border-bottom:1px solid var(--linha)}
+.top .wrap{min-height:72px}
+.logo .l-escuro{display:var(--logo-escuro)}
+.logo .l-claro{display:var(--logo-claro)}
+.nav a{color:var(--topo-fg)}
+.nav a:hover{background:var(--suave)}
+.nav a.on{color:var(--ouro-forte)}
+.nav a.crm{border-color:var(--linha);color:var(--topo-fg)}
+.nav a.wa{background:var(--marca);color:#fff}
+.nav a.wa:hover{background:var(--marca-2)}
+
+.hero2{background:var(--card)}
+.hero2 .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center;padding-block:56px 44px}
+@media(max-width:860px){.hero2 .wrap{grid-template-columns:minmax(0,1fr);padding-block:32px 28px}.arco{display:none}}
+.hero2 h1{font-family:var(--f-body);font-weight:400;font-size:clamp(34px,4.6vw,56px);line-height:1.08;text-transform:uppercase;letter-spacing:-.01em;color:var(--fg);max-width:15ch}
+.hero2 h1 b{font-weight:800;color:var(--marca)}
+.hero2 .sub{color:var(--muted);margin:16px 0 24px;max-width:48ch;font-size:16px}
+.modo{display:inline-flex;background:var(--suave);border-radius:999px;padding:4px;margin-bottom:12px}
+.modo button{border:0;background:transparent;border-radius:999px;padding:8px 18px;font-weight:700;cursor:pointer;color:var(--muted)}
+.modo button.on{background:var(--card);color:var(--fg);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.barra{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:8px 8px 8px 18px;box-shadow:0 10px 30px rgba(20,30,25,.10);max-width:620px}
+.barra input{flex:1;min-width:0;border:0;background:transparent;font-size:16px;padding:10px 0;outline:none}
+.barra button{width:46px;height:46px;border-radius:10px;border:0;background:var(--marca);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.atalhos{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.atalhos a{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--linha);border-radius:999px;padding:6px 12px;color:var(--muted)}
+.atalhos a:hover{border-color:var(--ouro);color:var(--fg)}
+.arco{position:relative;justify-self:center;width:min(380px,100%);aspect-ratio:4/5;border-radius:999px 999px 24px 24px;overflow:hidden;background:var(--marca);box-shadow:0 30px 60px rgba(20,30,25,.25)}
+.arco img{width:100%;height:100%;object-fit:cover;display:block}
+.arco::after{content:"";position:absolute;inset:12px;border:2px solid rgba(201,164,100,.85);border-radius:999px 999px 16px 16px;pointer-events:none}
+.etiqueta{position:absolute;left:22px;bottom:22px;right:22px;background:rgba(29,40,35,.92);color:#fff;border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center;text-decoration:none}
+.etiqueta img{width:40px;height:40px;object-fit:contain;flex:none}
+.etiqueta small{display:block;color:var(--ouro);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.etiqueta b{font-family:var(--f-display);font-size:22px;font-weight:700}
+
+.faixa-num{background:var(--faixa);color:#fff;overflow:hidden}
+.faixa-num .trilho{display:flex;gap:56px;width:max-content;padding-block:16px;animation:corre 32s linear infinite}
+.faixa-num span{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;font-size:13px;color:#cfd8d2}
+.faixa-num b{font-family:var(--f-display);font-size:26px;color:var(--ouro);font-weight:700}
+@keyframes corre{to{transform:translateX(-50%)}}
+
+.carrossel-h{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px}
+.setas{display:flex;gap:8px}
+.setas button{width:40px;height:40px;border-radius:50%;border:1px solid var(--linha);background:var(--card);cursor:pointer;font-size:18px;color:var(--fg)}
+.carrossel{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,300px);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:thin}
+.carrossel>*{scroll-snap-align:start}
+.card{position:relative}
+.fav{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.92);display:grid;place-items:center;cursor:pointer;z-index:2;color:#293731}
+.fav.on{color:#c0392b}
+.fav svg{width:18px;height:18px}
+.card .tag.ouro{right:auto;left:auto;top:auto;bottom:10px;left:10px}
+
+.tipos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.tipo-c{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:16/10;text-decoration:none;color:#fff;background:var(--marca);max-width:100%}
+.tipo-c img{width:100%;height:100%;object-fit:cover;display:block;opacity:.75;transition:transform .3s}
+.tipo-c:hover img{transform:scale(1.04)}
+.tipo-c div{position:absolute;inset:auto 0 0 0;padding:14px 16px;background:linear-gradient(transparent,rgba(20,28,24,.9))}
+.tipo-c b{font-family:var(--f-display);font-size:26px;display:block}
+.tipo-c small{color:#e2d3b3;font-weight:600}
+
+.sec.suave{background:var(--suave)}
+.etapas{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.etapa{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:18px}
+.etapa h3{font-size:24px;margin-bottom:10px;display:flex;gap:10px;align-items:baseline}
+.etapa h3 span{font-size:15px;color:var(--ouro-forte)}
+.etapa details{border-top:1px solid var(--linha);padding:10px 0}
+.etapa summary{cursor:pointer;font-weight:600;font-size:14px}
+.etapa details p{margin:8px 0 0;color:var(--muted);font-size:14px}
+.mvv{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:22px}
+.mvv div{border-top:3px solid var(--ouro);padding-top:12px}
+.mvv b{font-family:var(--f-display);font-size:22px;color:#fff}
+.mvv p{margin:6px 0 0;color:#cfd8d2}
+.faq{max-width:820px}
+.faq details{border-bottom:1px solid var(--linha);padding:16px 0}
+.faq summary{cursor:pointer;font-weight:700;font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::after{content:"+";color:var(--ouro-forte);font-size:22px;line-height:1}
+.faq details[open] summary::after{content:"−"}
+.faq p{color:var(--muted);margin:10px 0 0;max-width:70ch}
+
+/* Página do imóvel v2 */
+.migalha{font-size:13px;color:var(--muted);margin:0 0 12px;display:flex;gap:6px;flex-wrap:wrap}
+.migalha a{text-decoration:none;color:var(--muted)}
+.abas-im{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px);z-index:20;background:var(--card);border-bottom:1px solid var(--linha);margin-bottom:16px}
+.abas-im .wrap{display:flex;gap:4px;align-items:center;overflow-x:auto}
+.abas-im a{padding:12px 12px;text-decoration:none;font-weight:600;font-size:14px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.abas-im a:hover{color:var(--fg);border-color:var(--ouro)}
+.abas-im .acoes{margin-left:auto;display:flex;gap:6px}
+.mosaico{display:grid;grid-template-columns:minmax(0,2fr) repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:8px;border-radius:14px;overflow:hidden;aspect-ratio:21/9;max-width:100%}
+.mosaico button{border:0;padding:0;background:var(--chip);cursor:zoom-in;position:relative;min-height:0;overflow:hidden}
+.mosaico button:first-child{grid-row:1/3}
+.mosaico img{width:100%;height:100%;object-fit:cover;display:block}
+.mosaico .mais{position:absolute;inset:0;background:rgba(20,28,24,.6);color:#fff;display:grid;place-items:center;font-weight:700}
+.mosaico.n1{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+.mosaico.n2{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}.mosaico.n2 button:nth-child(2){grid-row:1/3}
+.mosaico.n3{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.mosaico.n4 button:nth-child(4){grid-column:2/4}
+@media(max-width:720px){.mosaico[class]{grid-template-columns:minmax(0,1fr);grid-template-rows:none;aspect-ratio:4/3}.mosaico button:not(:first-child){display:none}.mosaico button:first-child{grid-row:auto}}
+.valor-box{display:flex;gap:28px;flex-wrap:wrap;align-items:end;margin:14px 0 6px}
+.valor-box small{display:block;color:var(--muted);font-size:13px;font-weight:600}
+.valor-box b{font-family:var(--f-display);font-size:38px}
+.lista-det{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:12px 0}
+.lista-det div{display:flex;gap:10px;align-items:center;font-size:15px}
+.lista-det .ico{width:22px;height:22px;color:var(--ouro-forte)}
+.recolhe{max-height:9.5em;overflow:hidden;position:relative}
+.recolhe::after{content:"";position:absolute;inset:auto 0 0 0;height:3em;background:linear-gradient(transparent,var(--card))}
+.recolhe.aberto{max-height:none}
+.recolhe.aberto::after{display:none}
+.link-btn{border:0;background:none;padding:0;color:var(--ouro-forte);font-weight:700;cursor:pointer;margin-top:6px}
+.simul{background:var(--suave);border-radius:14px;padding:18px;margin-top:8px}
+.simul input[type=range]{width:100%;accent-color:#293731}
+.simul .linha-v{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:6px 0;border-bottom:1px solid var(--linha)}
+.simul .parcela{font-family:var(--f-display);font-size:30px;font-weight:700}
+.bloco{padding-block:22px;border-bottom:1px solid var(--linha)}
+.bloco h2{font-size:30px;margin-bottom:10px}
+.mapa-txt{background:var(--suave);border-radius:12px;padding:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.visor{position:fixed;inset:0;z-index:80;background:rgba(8,12,10,.94);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.visor img{max-width:100%;max-height:86vh;border-radius:8px}
+.visor button{position:absolute;border:0;background:rgba(255,255,255,.15);color:#fff;width:46px;height:46px;border-radius:50%;font-size:22px;cursor:pointer}
+.visor .v-fe{top:calc(env(safe-area-inset-top,0px) + 14px);right:calc(env(safe-area-inset-right,0px) + 14px)}
+.visor .v-an{left:calc(env(safe-area-inset-left,0px) + 14px);top:50%}
+.visor .v-pr{right:calc(env(safe-area-inset-right,0px) + 14px);top:50%}
+.visor span{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);color:#cfd8d2;font-size:13px}
+.contato h3{font-family:var(--f-body);font-size:18px;font-weight:800}
+.faixa .mvv b{color:#fff}
+@media (prefers-reduced-motion:reduce){.faixa-num .trilho{animation:none}}
+
+.avatar{display:inline-grid;place-items:center;border-radius:50%;background:var(--marca);color:var(--ouro);font-family:var(--f-display);font-weight:700;flex:none}
+.equipe{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.corretor{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.corretor h3{font-size:28px}
+.c-topo{display:flex;gap:16px;align-items:center}
+.corretor p{margin:0;color:var(--muted)}
+.c-info{display:flex;flex-direction:column;gap:4px;font-size:14px}
+.c-acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.servicos{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.servico{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:8px}
+.servico h3{font-size:26px}
+.servico p{margin:0;color:var(--muted);flex:1}
+.s-num{font-family:var(--f-display);font-size:15px;color:var(--ouro-forte);font-weight:700}
+.servico .link-btn{text-decoration:none;align-self:start}
+.cta-faixa{margin-top:28px;background:var(--marca);color:#fff;border-radius:16px;padding:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.cta-faixa h3{font-size:30px}.cta-faixa p{margin:4px 0 0;color:#cfd8d2}
+.info-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:start}
+@media(max-width:900px){.info-grid{grid-template-columns:minmax(0,1fr)}}
+.lista-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.lista-links a{display:flex;flex-direction:column;gap:2px;border:1px solid var(--linha);border-radius:12px;padding:12px 14px;text-decoration:none;background:var(--card)}
+.lista-links a:hover{border-color:var(--ouro)}
+.lista-links span{font-size:13px;color:var(--muted)}
+.lista{margin:0;padding-left:18px;color:var(--muted);font-size:14px;display:grid;gap:4px}
+.menu-btn{display:none;margin-left:auto;border:1px solid var(--linha);background:var(--card);border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer;color:var(--topo-fg)}
+@media(max-width:1140px){
+  .menu-btn{display:inline-flex}
+  .nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--topo);border-bottom:1px solid var(--linha);flex-direction:column;padding:8px max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px));box-shadow:0 12px 24px rgba(0,0,0,.08)}
+  .nav.aberto{display:flex}
+  .nav a.hide-m{display:block}
+  .top .wrap{position:relative}
+}
+.crm-filtro{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);font-weight:700}
+.crm-filtro select{border:1px solid var(--linha);background:var(--card);border-radius:8px;padding:6px 8px;color:var(--fg)}
+.mini-av{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--marca);color:var(--ouro);font-size:10px;font-weight:800}
+.c-titulos{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px}.c-titulos span{font-size:12px;font-weight:700;letter-spacing:.02em;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--ouro,#C9A464) 18%,transparent);color:var(--texto,#293731);border:1px solid color-mix(in srgb,var(--ouro,#C9A464) 45%,transparent)}
+.login{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#inicio" aria-label="Início"><img class="l-escuro" src="data:image/png;base64,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" alt="Fernando Monfernatti, Corretor de Imóveis"><img class="l-claro" src="data:image/png;base64,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" alt="Fernando Monfernatti, Corretor de Imóveis"></a>
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav">☰ Menu</button>
+    <nav class="nav" id="nav">
+      <a href="#comprar" data-r="comprar">Comprar</a>
+      <a href="#alugar" data-r="alugar">Alugar</a>
+      <a href="#corretores" data-r="corretores">Corretores</a>
+      <a href="#servicos" data-r="servicos">Serviços</a>
+      <a href="#informacoes" data-r="informacoes">Informações úteis</a>
+      <a href="#anunciar" data-r="anunciar" class="hide-m">Anunciar imóvel</a>
+      <a href="#favoritos" data-r="favoritos" class="hide-m">♡ Favoritos</a>
+      <a href="#crm" data-r="crm" class="crm" id="link-crm" hidden>CRM</a>
+      <a href="https://www.instagram.com/monfernattiimoveis/" target="_blank" rel="noopener" class="hide-m" aria-label="Instagram" title="Instagram @monfernattiimoveis"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="display:block"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+      <a href="https://wa.me/5543999779003" target="_blank" rel="noopener" class="wa hide-m">WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main id="app"><div class="wrap carregando">Carregando imóveis…</div></main>
+
+<footer class="rodape">
+  <div class="wrap">
+    <div><b>Fernando Monfernatti</b> · Corretor de Imóveis · CRECI 43397-PR<br>Rua dos Bandeirantes, 315, Sala 02, Centro, Cornélio Procópio, PR</div>
+    <div>WhatsApp <b class="tab">(43) 99977-9003</b><br>monfernattiimoveis@gmail.com<br><a href="https://www.instagram.com/monfernattiimoveis/" target="_blank" rel="noopener" style="color:inherit">Instagram @monfernattiimoveis</a><br><a href="#entrar" style="color:inherit;opacity:.7">Área do corretor</a></div>
+  </div>
+</footer>
+<a class="whats-float" id="whats-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp" href="https://wa.me/5543999779003"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.3-1.7-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.6.6-.9 1.4-.9 2.2.1 1 .5 1.9 1.1 2.7 1.1 1.6 2.5 2.9 4.2 3.7.5.2.9.4 1.4.5.5.2 1.1.2 1.6.1.6-.1 1.2-.5 1.5-1 .2-.3.2-.7.1-1.1l-.2-.2z"/></svg></a>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/dados.js"></script>
+<script>
+const WHATS = "5543999779003";
+const ETAPAS = [
+  {id:"novo", nome:"Novo"},
+  {id:"atendimento", nome:"Em atendimento"},
+  {id:"visita", nome:"Visita agendada"},
+  {id:"proposta", nome:"Proposta"},
+  {id:"fechado", nome:"Negócio fechado"},
+  {id:"perdido", nome:"Perdido"}
+];
+const TIPOS_CONTATO = ["WhatsApp","Ligação","E-mail","Visita","Reunião","Proposta","Nota"];
+const ORIGENS = ["Site","WhatsApp","Indicação","Placa","Instagram","Facebook","Portal","Carteira própria","Outro"];
+const CATEGORIAS = ["Casa","Casa de condomínio","Sobrado","Apartamento","Terreno","Comercial","Rural"];
+
+const S = { imoveis:[], leads:[], db:null, user:null, podeCrm:false, assets:null, crmTab:"painel", filtro:{}, carregado:false, erroDb:false };
+
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const brl = n => n ? Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0}) : "Consulte";
+const m2 = n => n ? Number(n).toLocaleString("pt-BR",{maximumFractionDigits:2})+" m²" : "";
+const hoje = () => new Date().toISOString();
+const dataBR = iso => iso ? new Date(iso).toLocaleDateString("pt-BR",{day:"2-digit",month:"short"}) : "";
+const dataHoraBR = iso => iso ? new Date(iso).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : "";
+const waLink = (msg, num=WHATS) => "https://wa.me/"+num+"?text="+encodeURIComponent(msg);
+const soDig = s => String(s||"").replace(/\D/g,"");
+
+const INSTA = "https://www.instagram.com/monfernattiimoveis/";
+const ICO = {
+  insta:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
+  pin:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  area:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h4M9 3v4M21 15h-4M15 21v-4"/></svg>',
+  cama:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18V7M21 18v-5a3 3 0 0 0-3-3H10v8M3 14h18M6.5 10.5h0"/></svg>',
+  banho:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16v3a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM6 12V5a2 2 0 0 1 4 0"/></svg>',
+  carro:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 16V11l2-5h10l2 5v5M3 16h18v3H3zM7 19v1M17 19v1"/></svg>',
+  whats:'<svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>'
+};
+
+/* ---------- Dados ---------- */
+async function iniciar(){
+  render();
+  const timer = setTimeout(()=>{ if(!S.carregado){ S.erroDb = true; render(); } }, 10000);
+  try{
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    S.db = db; S.user = user;
+    S.podeCrm = !!(user && ((await user.isOwner().catch(()=>false)) || (await user.canEdit().catch(()=>false))));
+    $("#link-crm").hidden = !S.podeCrm;
+    if(S.podeCrm){ claude.use("assets").then(a=>{ S.assets=a; }); }
+    if(!db){ clearTimeout(timer); S.erroDb = true; render(); return; }
+    db.collection("corretores").onSnapshot(snap=>{ S.corretores = snap.docs.map(d=>({_id:d.id, ...d.data()})); if(S.carregado) render(); }, ()=>{});
+    db.collection("imoveis").onSnapshot(snap=>{
+      clearTimeout(timer);
+      S.imoveis = snap.docs.map(d=>({_id:d.id, ...d.data()}));
+      S.carregado = true; S.erroDb=false; render();
+    }, ()=>{ clearTimeout(timer); S.erroDb = true; render(); });
+    if(S.podeCrm){
+      db.collection("leads").onSnapshot(snap=>{
+        S.leads = snap.docs.map(d=>({_id:d.id, ...d.data()}));
+        if(rota().nome==="crm") render();
+      }, ()=>{});
+    }
+  }catch(e){ clearTimeout(timer); S.erroDb = true; render(); }
+}
+
+function ativos(){ return S.imoveis.filter(i=>i.status!=="oculto" && i.status!=="vendido"); }
+function ordenar(l){ return [...l].sort((a,b)=>(b.destaque?1:0)-(a.destaque?1:0) || (b.criadoEm||"").localeCompare(a.criadoEm||"")); }
+
+/* ---------- Rotas ---------- */
+function rota(){
+  const h = (location.hash||"#inicio").slice(1);
+  if(h.startsWith("imovel-")) return {nome:"imovel", id:h.slice(7)};
+  return {nome:h||"inicio"};
+}
+window.addEventListener("hashchange", ()=>{ $("#nav").classList.remove("aberto"); $("#menu-btn").setAttribute("aria-expanded","false"); render(); window.scrollTo(0,0); });
+document.getElementById("menu-btn").onclick=()=>{ const ab=$("#nav").classList.toggle("aberto"); $("#menu-btn").setAttribute("aria-expanded",String(ab)); };
+
+function render(){
+  const r = rota();
+  document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.r===r.nome));
+  const app = $("#app");
+  if(r.nome==="crm") return renderCrm(app);
+  if(r.nome==="entrar"||r.nome==="nova-senha") return renderEntrar(app, r.nome);
+  if(!S.carregado){
+    app.innerHTML = S.erroDb
+      ? `<div class="wrap sec"><div class="aviso"><b>Não foi possível carregar os imóveis agora.</b><br>Tente atualizar a página em instantes. Enquanto isso, fale direto pelo WhatsApp <b class="tab">(43) 99977-9003</b>.</div></div>`
+      : `<div class="wrap carregando">Carregando imóveis…</div>`;
+    return;
+  }
+  if(r.nome==="imovel") return renderImovel(app, r.id);
+  if(r.nome==="comprar"||r.nome==="alugar") return renderBusca(app, r.nome==="alugar"?"aluguel":"venda");
+  if(r.nome==="anunciar") return renderAnunciar(app);
+  if(r.nome==="favoritos") return renderFavoritos(app);
+  if(r.nome==="corretores") return renderCorretores(app);
+  if(r.nome==="servicos") return renderServicos(app);
+  if(r.nome==="informacoes") return renderInformacoes(app);
+  return renderInicio(app);
+}
+
+/* ---------- Componentes ---------- */
+function opcoes(lista, sel, vazio){
+  return (vazio?`<option value="">${vazio}</option>`:"") + lista.map(v=>`<option ${v===sel?"selected":""}>${esc(v)}</option>`).join("");
+}
+function cidadesDisp(){ return [...new Set(ativos().map(i=>i.cidade).filter(Boolean))].sort(); }
+function categoriasDisp(){ return [...new Set(ativos().map(i=>i.categoria).filter(Boolean))].sort(); }
+
+/* ---------- Favoritos (ficam neste navegador) ---------- */
+function lerFavs(){ try{ return JSON.parse(localStorage.getItem("mf_favs")||"[]"); }catch(e){ return S.favsMem||[]; } }
+function salvarFavs(l){ S.favsMem=l; try{ localStorage.setItem("mf_favs", JSON.stringify(l)); }catch(e){} }
+function alternarFav(id){ const l=lerFavs(); const k=l.indexOf(id); if(k>=0) l.splice(k,1); else l.push(id); salvarFavs(l); return k<0; }
+const CORACAO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.4 2.6.8-1.4 2.3-2.6 4.4-2.6 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg>';
+const CORACAO_V = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.3-9-8.6C1.6 8.2 3.6 5 6.8 5c2 0 3.5 1.1 4.2 2.5h2C13.7 6.1 15.2 5 17.2 5c3.2 0 5.2 3.2 3.8 6.4C19 15.7 12 20 12 20z"/></svg>';
+function ligarFavs(raiz){
+  raiz.querySelectorAll(".fav").forEach(b=>b.onclick=e=>{
+    e.preventDefault(); e.stopPropagation();
+    const on = alternarFav(b.dataset.fav);
+    b.classList.toggle("on", on); b.innerHTML = on?CORACAO:CORACAO_V;
+    b.setAttribute("aria-label", on?"Remover dos favoritos":"Salvar nos favoritos");
+    if(rota().nome==="favoritos") render();
+  });
+}
+
+function cardImovel(i){
+  const capa = (i.fotos||[])[0];
+  const fav = lerFavs().includes(i._id);
+  const sp = [];
+  if(i.areaConstruida) sp.push(`<span>${ICO.area}${m2(i.areaConstruida)}</span>`);
+  else if(i.areaTotal) sp.push(`<span>${ICO.area}${m2(i.areaTotal)}</span>`);
+  if(i.quartos) sp.push(`<span>${ICO.cama}${i.quartos}</span>`);
+  if(i.banheiros) sp.push(`<span>${ICO.banho}${i.banheiros}</span>`);
+  if(i.vagas) sp.push(`<span>${ICO.carro}${i.vagas}</span>`);
+  return `<a class="card" href="#imovel-${esc(i._id)}">
+    <div class="foto">${capa?`<img loading="lazy" src="${esc(capa)}" alt="${esc(i.titulo)}">`:""}
+      <span class="tag">${i.finalidade==="aluguel"?"Aluguel":"Venda"}</span>
+      ${i.status==="reservado"?'<span class="tag ouro">Reservado</span>':(i.destaque?'<span class="tag ouro">Destaque</span>':"")}
+    </div>
+    <button class="fav ${fav?"on":""}" data-fav="${esc(i._id)}" aria-label="${fav?"Remover dos favoritos":"Salvar nos favoritos"}">${fav?CORACAO:CORACAO_V}</button>
+    <div class="info">
+      <span class="tipo">${esc(i.categoria)}</span>
+      <h3>${esc(i.titulo)}</h3>
+      <span class="loc">${ICO.pin}${esc(i.bairro)}, ${esc(i.cidade)} - ${esc(i.uf||"PR")}</span>
+      <div class="preco tab">${brl(i.preco)}${i.finalidade==="aluguel"?'<small> /mês</small>':""}</div>
+      <div class="specs">${sp.join("")}</div>
+    </div></a>`;
+}
+
+/* ---------- Início ---------- */
+const GRUPOS = [
+  {nome:"Terrenos", teste:i=>i.categoria==="Terreno"},
+  {nome:"Casas", teste:i=>/casa|sobrado/i.test(i.categoria||"")},
+  {nome:"Comerciais", teste:i=>i.categoria==="Comercial"},
+  {nome:"Apartamentos", teste:i=>i.categoria==="Apartamento"},
+  {nome:"Rurais", teste:i=>i.categoria==="Rural"}
+];
+function renderInicio(app){
+  const l = ordenar(ativos());
+  const vitrine = l.find(i=>/casa/i.test(i.categoria||"")&&i.destaque) || l[0] || {};
+  const cidades = cidadesDisp();
+  const bairros = [...new Set(ativos().map(i=>i.bairro).filter(Boolean))].slice(0,5);
+  const modo = S.modoBusca||"venda";
+  const grupos = GRUPOS.map(g=>({...g, itens:ativos().filter(g.teste)})).filter(g=>g.itens.length);
+  const faixa = [
+    [ativos().length, ativos().length===1?"imóvel disponível":"imóveis disponíveis"],
+    [cidades.length, cidades.length===1?"cidade atendida":"cidades atendidas"],
+    ["CRECI", "43397-PR"],
+    ["1:1", "atendimento direto com o corretor"],
+    ["WhatsApp", "(43) 99977-9003"]
+  ].map(([a,b])=>`<span><b class="tab">${esc(a)}</b>${esc(b)}</span>`).join("");
+  app.innerHTML = `
+  <section class="hero2"><div class="wrap">
+    <div style="min-width:0">
+      <h1>O seu <b>imóvel</b> em Cornélio Procópio e região</h1>
+      <p class="sub">Terrenos, casas e pontos comerciais com atendimento direto do corretor Fernando Monfernatti, da primeira visita até a escritura.</p>
+      <div class="modo" role="tablist"><button type="button" data-modo="venda" class="${modo==="venda"?"on":""}">Comprar</button><button type="button" data-modo="aluguel" class="${modo==="aluguel"?"on":""}">Alugar</button></div>
+      <form class="barra" id="f-busca" role="search">
+        <input id="b-texto" placeholder="Bairro, cidade, tipo ou código do imóvel" aria-label="Buscar imóveis">
+        <button type="submit" aria-label="Buscar"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+      </form>
+      <div class="atalhos">${bairros.map(b=>`<a href="#comprar" data-bairro="${esc(b)}">${esc(b)}</a>`).join("")}</div>
+    </div>
+    ${vitrine.fotos?`<a class="arco" href="#imovel-${esc(vitrine._id)}" aria-label="${esc(vitrine.titulo)}"><img src="${esc(vitrine.fotos[0])}" alt="">
+      <span class="etiqueta"><img src="data:image/png;base64,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" alt=""><span><small>${esc(vitrine.categoria)} · ${esc(vitrine.cidade)}</small><b class="tab">${brl(vitrine.preco)}</b></span></span></a>`:""}
+  </div></section>
+  <div class="faixa-num" aria-hidden="true"><div class="trilho">${faixa}${faixa}</div></div>
+
+  <section class="wrap sec">
+    <div class="carrossel-h"><div class="sec-h" style="margin:0"><div><h2>Imóveis em destaque</h2><p>Selecionados e visitados pessoalmente pelo corretor.</p></div></div>
+      <div class="setas"><button type="button" id="c-ant" aria-label="Anterior">‹</button><button type="button" id="c-pro" aria-label="Próximo">›</button></div></div>
+    ${l.length?`<div class="carrossel" id="carrossel">${l.map(cardImovel).join("")}</div>`:`<div class="vazio">Nenhum imóvel publicado ainda. Cadastre o primeiro no CRM.</div>`}
+    <p style="margin:18px 0 0"><a class="btn btn-linha btn-sm" href="#comprar">Ver todos os imóveis</a></p>
+  </section>
+
+  ${grupos.length>1?`<section class="wrap sec" style="padding-top:0">
+    <div class="sec-h"><div><h2>Encontre por tipo de imóvel</h2><p>Escolha o que procura e veja as opções disponíveis.</p></div></div>
+    <div class="tipos">${grupos.map(g=>`<a class="tipo-c" href="#comprar" data-grupo="${esc(g.nome)}">${g.itens[0].fotos?.[0]?`<img loading="lazy" src="${esc(g.itens[0].fotos[0])}" alt="">`:""}<div><b>${g.nome}</b><small class="tab">${g.itens.length} ${g.itens.length===1?"opção":"opções"}</small></div></a>`).join("")}</div>
+  </section>`:""}
+
+  <section class="sec suave"><div class="wrap">
+    <div class="sec-h"><div><h2>Dicas para cada etapa da compra</h2><p>O que eu explico para cada cliente antes de fechar negócio.</p></div></div>
+    <div class="etapas">
+      ${[["Planejamento",[["Quanto posso gastar?","Some entrada, FGTS e o valor que o banco aprova. Uma parcela confortável fica em até 30% da renda familiar."],["Comprar ou alugar?","Se você pretende ficar mais de 5 anos na cidade, comprar costuma compensar. Eu faço a conta com você."]]],
+         ["Pesquisa",[["Terreno ou casa pronta?","O terreno permite construir do seu jeito. A casa pronta é mais rápida para mudar. Compare custo total e prazo."],["Como funciona a comissão?","A comissão é paga pelo vendedor, conforme combinado na autorização de venda. Você não paga nada para visitar."]]],
+         ["Escolha",[["O que olhar na visita?","Documentação, infraestrutura da rua (asfalto, água, esgoto), sol da tarde, umidade e vizinhança."],["Imóvel aceita financiamento?","Cada ficha mostra se aceita financiamento, FGTS e permuta. Na dúvida, eu confirmo com o proprietário."]]],
+         ["Decisão",[["Que documentos preciso?","RG, CPF, comprovante de renda e de estado civil. Para o imóvel: matrícula atualizada e certidões negativas."],["Como é o contrato?","Fazemos proposta por escrito, depois o compromisso de compra e venda e, por fim, a escritura no cartório."]]]
+        ].map(([t,qs],k)=>`<div class="etapa"><h3><span class="tab">${k+1}.</span>${t}</h3>${qs.map(([q,r])=>`<details><summary>${q}</summary><p>${r}</p></details>`).join("")}</div>`).join("")}
+    </div>
+  </div></section>
+
+  <section class="faixa"><div class="wrap">
+    <div><span class="eyebrow">Quem atende você</span><h2>Monfernatti Imóveis</h2>
+      <p>Atendimento próximo, do primeiro contato à entrega das chaves. Cada imóvel anunciado aqui foi visitado pela nossa equipe, com fotos e informações conferidas.</p>
+      <a href="#corretores" style="display:flex;gap:10px;align-items:center;text-decoration:none;margin-top:14px;flex-wrap:wrap">${corretores().map(c=>avatar(c,44)).join("")}<span style="color:var(--ouro);font-weight:700">Conheça os corretores →</span></a>
+      <div class="mvv">
+        <div><b>Missão</b><p>Ajudar cada cliente a comprar ou vender com segurança e sem surpresas.</p></div>
+        <div><b>Meta</b><p>Estar entre as imobiliárias mais respeitadas do Brasil.</p></div>
+        <div><b>Valores</b><p>Ética, inovação, transparência e satisfação do cliente.</p></div>
+      </div></div>
+    <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">
+      <a class="btn btn-whats" target="_blank" rel="noopener" href="${waLink("Olá Fernando, vim pelo site e gostaria de atendimento.")}">${ICO.whats} Falar no WhatsApp</a>
+      <a class="btn btn-ouro" href="#anunciar">Quero vender ou alugar meu imóvel</a>
+      <a class="btn btn-linha" style="color:#fff;border-color:rgba(255,255,255,.4)" target="_blank" rel="noopener" href="${INSTA}">${ICO.insta} Siga @monfernattiimoveis</a>
+      <span style="color:#cfd8d2;font-size:13px">Rua dos Bandeirantes, 315, Sala 02, Centro, Cornélio Procópio, PR</span>
+    </div>
+  </div></section>
+
+  <section class="wrap sec">
+    <div class="sec-h"><div><h2>Perguntas frequentes</h2></div></div>
+    <div class="faq">
+      <details><summary>Por que comprar com um corretor credenciado?</summary><p>O corretor com CRECI responde pela intermediação, confere a documentação do imóvel e acompanha a negociação até a escritura, o que reduz riscos para quem compra e para quem vende.</p></details>
+      <details><summary>Vocês trabalham com aluguel?</summary><p>Sim. Os imóveis para alugar aparecem na aba Alugar. Se não encontrar o que procura, me chame no WhatsApp que eu busco para você.</p></details>
+      <details><summary>Como anunciar meu imóvel?</summary><p>Preencha o formulário em "Anunciar imóvel" ou me chame no WhatsApp. Eu faço a avaliação, as fotos e a divulgação.</p></details>
+      <details><summary>Posso usar FGTS ou financiamento?</summary><p>Depende do imóvel. A ficha de cada imóvel indica se aceita financiamento, FGTS ou permuta, e eu ajudo com a simulação no banco.</p></details>
+    </div>
+  </section>`;
+  app.querySelectorAll("[data-modo]").forEach(b=>b.onclick=()=>{ S.modoBusca=b.dataset.modo; app.querySelectorAll("[data-modo]").forEach(x=>x.classList.toggle("on",x===b)); });
+  $("#f-busca").addEventListener("submit", e=>{
+    e.preventDefault();
+    S.filtro = { texto:$("#b-texto").value.trim() };
+    location.hash = (S.modoBusca||"venda")==="aluguel" ? "alugar" : "comprar";
+  });
+  app.querySelectorAll("[data-bairro]").forEach(a=>a.onclick=()=>{ S.filtro={bairro:a.dataset.bairro}; });
+  app.querySelectorAll("[data-grupo]").forEach(a=>a.onclick=()=>{ const g=GRUPOS.find(x=>x.nome===a.dataset.grupo); const cats=[...new Set(ativos().filter(g.teste).map(i=>i.categoria))]; S.filtro={categoria:cats.length===1?cats[0]:"", grupo:g.nome}; });
+  const car = $("#carrossel");
+  if(car){ const passo=()=>Math.min(car.clientWidth, 640); $("#c-ant").onclick=()=>car.scrollBy({left:-passo(),behavior:"smooth"}); $("#c-pro").onclick=()=>car.scrollBy({left:passo(),behavior:"smooth"}); }
+  ligarFavs(app);
+}
+
+function renderFavoritos(app){
+  const favs = lerFavs();
+  const l = S.imoveis.filter(i=>favs.includes(i._id));
+  app.innerHTML = `<section class="wrap sec"><div class="sec-h"><div><h2>Meus favoritos</h2><p>Os imóveis que você salvou ficam guardados neste navegador.</p></div></div>
+    ${l.length?`<div class="grid">${l.map(cardImovel).join("")}</div>`:`<div class="vazio">Você ainda não salvou nenhum imóvel. Toque no coração de um anúncio para guardar aqui. <a href="#comprar">Ver imóveis</a></div>`}</section>`;
+  ligarFavs(app);
+}
+
+/* ---------- Página do imóvel ---------- */
+function renderImovel(app, id){
+  const i = S.imoveis.find(x=>x._id===id);
+  if(!i){ app.innerHTML = `<div class="wrap sec"><div class="vazio">Este imóvel não está mais disponível. <a href="#comprar">Ver outros imóveis</a></div></div>`; return; }
+  const fotos = i.fotos||[];
+  const fav = lerFavs().includes(i._id);
+  const det = [
+    [ICO.area, i.areaTotal?`Área total ${m2(i.areaTotal)}`:""],
+    [ICO.area, i.areaConstruida?`Área construída ${m2(i.areaConstruida)}`:""],
+    [ICO.cama, i.quartos?`${i.quartos} quarto${i.quartos>1?"s":""}`:""],
+    [ICO.cama, i.suites?`${i.suites} suíte${i.suites>1?"s":""}`:""],
+    [ICO.banho, i.banheiros?`${i.banheiros} banheiro${i.banheiros>1?"s":""}`:""],
+    [ICO.carro, i.vagas?`${i.vagas} vaga${i.vagas>1?"s":""} de garagem`:""],
+    [ICO.pin, i.aceitaFinanciamento?"Aceita financiamento":""],
+    [ICO.pin, i.aceitaFGTS?"Aceita FGTS":""],
+    [ICO.pin, i.aceitaPermuta?"Aceita permuta":""]
+  ].filter(x=>x[1]);
+  const cor = corretorDe(i.corretorId);
+  const msg = `Olá ${cor.nome.split(" ")[0]}, tenho interesse no imóvel cód. ${i.codigo} (${i.titulo}).`;
+  const perguntas = [
+    [`Qual o valor do imóvel em ${i.bairro}?`, `O valor é ${brl(i.preco)}${i.finalidade==="aluguel"?" por mês":""}. Condições de pagamento podem ser negociadas com o proprietário.`],
+    i.areaTotal||i.areaConstruida ? [`Qual a área do imóvel?`, [i.areaTotal?`Área total de ${m2(i.areaTotal)}`:"", i.areaConstruida?`área construída de ${m2(i.areaConstruida)}`:""].filter(Boolean).join(" e ")+"."] : null,
+    [`O imóvel aceita financiamento?`, i.aceitaFinanciamento||i.aceitaFGTS ? `Sim. ${[i.aceitaFinanciamento?"Aceita financiamento":"",i.aceitaFGTS?"aceita uso do FGTS":""].filter(Boolean).join(" e ")}.` : `Hoje o proprietário não informou financiamento. Fale comigo para confirmar as condições.`],
+    [`Como agendar uma visita?`, `Chame no WhatsApp (43) 99977-9003 ou deixe seu contato nesta página. Eu retorno para combinar o melhor horário.`]
+  ].filter(Boolean);
+  const mosaico = fotos.slice(0,5);
+  app.innerHTML = `
+  <nav class="abas-im" aria-label="Seções do imóvel"><div class="wrap">
+    <a href="#imovel-${esc(i._id)}" data-ir="topo-im">Visão geral</a><a href="#imovel-${esc(i._id)}" data-ir="detalhes">Detalhes</a><a href="#imovel-${esc(i._id)}" data-ir="local">Localização</a>${i.finalidade!=="aluguel"?`<a href="#imovel-${esc(i._id)}" data-ir="simular">Simular financiamento</a>`:""}
+    <span class="acoes"><button class="btn btn-linha btn-sm fav-im" type="button">${fav?"♥ Salvo":"♡ Salvar"}</button><button class="btn btn-linha btn-sm" type="button" id="compartilhar">Compartilhar</button></span>
+  </div></nav>
+  <section class="wrap" style="padding-bottom:48px" id="topo-im">
+    <p class="migalha"><a href="#${i.finalidade==="aluguel"?"alugar":"comprar"}">${i.finalidade==="aluguel"?"Alugar":"Comprar"}</a>›<span>${esc(i.categoria)}</span>›<span>${esc(i.cidade)}</span>›<span>${esc(i.bairro)}</span></p>
+    <div class="mosaico n${mosaico.length}">${mosaico.map((f,k)=>`<button type="button" data-k="${k}" aria-label="Ampliar foto ${k+1}"><img ${k?'loading="lazy"':""} src="${esc(f)}" alt="${k?"":esc(i.titulo)}">${k===mosaico.length-1&&fotos.length>mosaico.length?`<span class="mais">+${fotos.length-mosaico.length} fotos</span>`:""}</button>`).join("")}</div>
+    <div class="det">
+      <div style="min-width:0">
+        <h1 style="font-size:clamp(30px,3.6vw,42px);margin-top:18px">${esc(i.titulo)}</h1>
+        <span class="loc" style="display:flex;gap:6px;align-items:center;color:var(--muted)">${ICO.pin}${esc(i.bairro)}, ${esc(i.cidade)} - ${esc(i.uf||"PR")}</span>
+        <div class="valor-box"><div><small>${i.finalidade==="aluguel"?"Valor do aluguel":"Valor do imóvel"}</small><b class="tab">${brl(i.preco)}</b></div><div><small>Código</small><b class="tab" style="font-size:24px">#${esc(i.codigo)}</b></div></div>
+        <div class="bloco"><h2>Sobre o imóvel</h2><div class="recolhe" id="desc"><p class="texto" style="margin:0">${esc(i.descricao)}</p></div><button class="link-btn" type="button" id="ver-mais">Ver mais</button></div>
+        <div class="bloco" id="detalhes"><h2>Detalhes da propriedade</h2><div class="lista-det">${det.map(([ic,t])=>`<div>${ic}<span>${esc(t)}</span></div>`).join("")}</div>
+          ${(i.caracteristicas||[]).length?`<h3 style="font-size:22px;margin:16px 0 10px">Características</h3><div class="chips">${i.caracteristicas.map(c=>`<span>${esc(c)}</span>`).join("")}</div>`:""}</div>
+        <div class="bloco" id="local"><h2>Localização</h2>
+          <div class="mapa-txt"><span style="display:flex;gap:8px;align-items:center">${ICO.pin}<b>${esc(i.bairro)}, ${esc(i.cidade)} - ${esc(i.uf||"PR")}</b></span><a class="btn btn-linha btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/${encodeURIComponent(i.bairro+", "+i.cidade+" - "+(i.uf||"PR"))}">Ver no mapa</a></div>
+          ${(i.proximidades||[]).length?`<h3 style="font-size:22px;margin:16px 0 10px">Perto do imóvel</h3><div class="chips">${i.proximidades.map(c=>`<span>${esc(c)}</span>`).join("")}</div>`:""}
+          <p class="nota">O endereço exato é informado no agendamento da visita.</p></div>
+        ${i.finalidade!=="aluguel"&&i.preco?`<div class="bloco" id="simular"><h2>Simule seu financiamento</h2>
+          <div class="simul">
+            <label class="campo" for="s-pct">Porcentagem a financiar: <b id="s-pct-v" class="tab">80%</b></label>
+            <input type="range" id="s-pct" min="10" max="80" step="5" value="80">
+            <div class="linha-v"><span>Entrada</span><b class="tab" id="s-ent"></b></div>
+            <div class="linha-v"><span>Valor financiado</span><b class="tab" id="s-fin"></b></div>
+            <div class="linha3" style="margin-top:12px"><label class="campo">Prazo<select id="s-prazo"><option value="420">35 anos</option><option value="360" selected>30 anos</option><option value="240">20 anos</option><option value="120">10 anos</option></select></label><label class="campo">Juros ao ano (%)<input id="s-juros" inputmode="decimal" value="11"></label><span></span></div>
+            <p style="margin:14px 0 0">Primeira parcela estimada (SAC)</p><div class="parcela tab" id="s-parc"></div>
+            <p class="nota">Estimativa sem seguros e taxas. A aprovação e as condições finais dependem do banco.</p>
+            <a class="btn btn-marca btn-sm" target="_blank" rel="noopener" id="s-wa" href="#">Quero ajuda com o financiamento</a>
+          </div></div>`:""}
+        <div class="bloco faq" style="border-bottom:0"><h2>Perguntas frequentes</h2>${perguntas.map(([q,r])=>`<details><summary>${esc(q)}</summary><p>${esc(r)}</p></details>`).join("")}</div>
+      </div>
+      <aside class="contato" style="margin-top:18px">
+        <h3>Interessado neste imóvel?</h3>
+        <p class="nota" style="margin:0">Fale direto com o corretor responsável.</p>
+        ${i.status==="reservado"?'<div class="aviso">Este imóvel está reservado. Fale comigo para entrar na lista de espera.</div>':""}
+        <a class="btn btn-whats" target="_blank" rel="noopener" href="${waLink(msg, soDig(cor.whatsapp)||WHATS)}">${ICO.whats} Chamar no WhatsApp</a>
+        <form class="lead" id="f-lead">
+          <input id="l-nome" required placeholder="Seu nome" autocomplete="name">
+          <input id="l-cel" required placeholder="Celular com DDD" inputmode="tel" autocomplete="tel">
+          <input id="l-email" type="email" placeholder="E-mail (opcional)" autocomplete="email">
+          <textarea id="l-msg" rows="3">${esc(msg)} Gostaria de agendar uma visita.</textarea>
+          <button class="btn btn-marca" type="submit">Agendar visita</button>
+          <div id="l-ret" class="nota">Retorno em até 1 hora no horário comercial.</div>
+        </form>
+        <a href="#corretores" style="display:flex;gap:10px;align-items:center;border-top:1px solid var(--linha);padding-top:12px;text-decoration:none">${avatar(cor,44)}<span style="font-size:13px"><span class="nota">Corretor responsável</span><br><b>${esc(cor.nome)}</b>${cor.creci?`<br><span class="nota">CRECI ${esc(cor.creci)}</span>`:""}</span></a>
+      </aside>
+    </div>
+    ${(()=>{const sim=ordenar(ativos().filter(x=>x._id!==i._id&&(x.categoria===i.categoria||x.cidade===i.cidade))).slice(0,6);return sim.length?`<div style="margin-top:36px"><div class="sec-h"><div><h2>Imóveis parecidos</h2></div></div><div class="carrossel">${sim.map(cardImovel).join("")}</div></div>`:"";})()}
+  </section>`;
+  app.querySelectorAll("[data-ir]").forEach(a=>a.onclick=e=>{ e.preventDefault(); const alvo=document.getElementById(a.dataset.ir); if(alvo) window.scrollTo({top:alvo.getBoundingClientRect().top+scrollY-140,behavior:"smooth"}); });
+  app.querySelectorAll(".mosaico [data-k]").forEach(b=>b.onclick=()=>abrirVisor(fotos, +b.dataset.k));
+  const d=$("#desc"), vm=$("#ver-mais");
+  if(d.scrollHeight<=d.clientHeight+4){ d.classList.add("aberto"); vm.hidden=true; }
+  vm.onclick=()=>{ const ab=d.classList.toggle("aberto"); vm.textContent=ab?"Ver menos":"Ver mais"; };
+  $(".fav-im").onclick=()=>{ const on=alternarFav(i._id); $(".fav-im").textContent=on?"♥ Salvo":"♡ Salvar"; };
+  $("#compartilhar").onclick=async()=>{ const t=`${i.titulo} - ${brl(i.preco)} (cód. ${i.codigo})`; try{ await navigator.clipboard.writeText(t); $("#compartilhar").textContent="Copiado"; }catch(e){ $("#compartilhar").textContent="Cód. "+i.codigo; } };
+  if($("#s-pct")){
+    const calc=()=>{ const pct=+$("#s-pct").value, n=+$("#s-prazo").value, j=Number(String($("#s-juros").value).replace(",","."))||0;
+      const fin=i.preco*pct/100, ent=i.preco-fin, im=Math.pow(1+j/100,1/12)-1, p1=fin/n+fin*im;
+      $("#s-pct-v").textContent=pct+"%"; $("#s-ent").textContent=brl(ent); $("#s-fin").textContent=brl(fin); $("#s-parc").textContent=p1.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+      $("#s-wa").href=waLink(`Olá Fernando, simulei o financiamento do imóvel cód. ${i.codigo}: entrada de ${brl(ent)} e ${n/12} anos. Pode me ajudar?`); };
+    ["s-pct","s-prazo","s-juros"].forEach(k=>$("#"+k).addEventListener("input",calc)); calc();
+  }
+  ligarFavs(app);
+  ligarFormLead($("#f-lead"), {imovelId:i._id, imovelCodigo:i.codigo, imovelTitulo:i.titulo, corretorId:cor._id, formulario:"Página do imóvel"});
+}
+
+function abrirVisor(fotos, k){
+  const v=document.createElement("div"); v.className="visor"; v.setAttribute("role","dialog"); v.setAttribute("aria-modal","true");
+  const pinta=()=>{ v.innerHTML=`<img src="${esc(fotos[k])}" alt=""><button class="v-fe" aria-label="Fechar">×</button>${fotos.length>1?'<button class="v-an" aria-label="Anterior">‹</button><button class="v-pr" aria-label="Próxima">›</button>':""}<span class="tab">${k+1} de ${fotos.length}</span>`;
+    v.querySelector(".v-fe").onclick=fechar; const a=v.querySelector(".v-an"), p=v.querySelector(".v-pr");
+    if(a){ a.onclick=()=>{k=(k-1+fotos.length)%fotos.length;pinta();}; p.onclick=()=>{k=(k+1)%fotos.length;pinta();}; } };
+  const tecla=e=>{ if(e.key==="Escape") fechar(); if(e.key==="ArrowRight"){k=(k+1)%fotos.length;pinta();} if(e.key==="ArrowLeft"){k=(k-1+fotos.length)%fotos.length;pinta();} };
+  function fechar(){ v.remove(); document.removeEventListener("keydown",tecla); }
+  v.addEventListener("click",e=>{ if(e.target===v) fechar(); });
+  document.addEventListener("keydown",tecla); pinta(); document.body.appendChild(v);
+}
+
+/* ---------- Busca ---------- */
+function renderBusca(app, fin){
+  const f = S.filtro;
+  const base = ativos().filter(i=>(i.finalidade||"venda")===fin);
+  let l = base.filter(i=>
+    (!f.categoria || i.categoria===f.categoria) &&
+    (!f.corretor || (i.corretorId||"fernando")===f.corretor) &&
+    (!f.grupo || (GRUPOS.find(g=>g.nome===f.grupo)||{teste:()=>true}).teste(i)) &&
+    (!f.cidade || i.cidade===f.cidade) &&
+    (!f.bairro || i.bairro===f.bairro) &&
+    (!f.max || Number(i.preco)<=Number(f.max)) &&
+    (!f.min || Number(i.preco)>=Number(f.min)) &&
+    (!f.quartos || Number(i.quartos||0)>=Number(f.quartos)) &&
+    (!f.texto || (i.titulo+" "+i.bairro+" "+i.codigo+" "+i.descricao).toLowerCase().includes(f.texto.toLowerCase()))
+  );
+  if(f.ordem==="menor") l.sort((a,b)=>a.preco-b.preco); else if(f.ordem==="maior") l.sort((a,b)=>b.preco-a.preco); else l = ordenar(l);
+  const cats = [...new Set(base.map(i=>i.categoria))].sort();
+  const bairros = [...new Set(base.map(i=>i.bairro).filter(Boolean))].sort();
+  app.innerHTML = `<section class="wrap sec">
+    <div class="sec-h"><div><h2>${fin==="aluguel"?"Imóveis para alugar":"Imóveis à venda"}</h2><p class="tab">${l.length} ${l.length===1?"imóvel encontrado":"imóveis encontrados"}</p></div></div>
+    <div class="pills"><button class="pill ${!f.categoria&&!f.grupo?"on":""}" data-cat="">Todos</button>${cats.map(c=>`<button class="pill ${f.categoria===c?"on":""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("")}</div>
+    <form class="filtros" id="f-filtros">
+      <label>Buscar<input id="q-texto" placeholder="Bairro, código ou palavra" value="${esc(f.texto||"")}"></label>
+      <label>Cidade<select id="q-cid">${opcoes(cidadesDisp(),f.cidade,"Todas")}</select></label>
+      <label>Bairro<select id="q-bai">${opcoes(bairros,f.bairro,"Todos")}</select></label>
+      <label>Valor mínimo<input id="q-min" inputmode="numeric" placeholder="R$" value="${esc(f.min||"")}"></label>
+      <label>Valor máximo<input id="q-max" inputmode="numeric" placeholder="R$" value="${esc(f.max||"")}"></label>
+      <label>Quartos<select id="q-qua"><option value="">Qualquer</option>${[1,2,3,4].map(n=>`<option value="${n}" ${String(f.quartos)===String(n)?"selected":""}>${n}+</option>`).join("")}</select></label>
+      <label>Ordenar<select id="q-ord"><option value="">Destaques</option><option value="menor" ${f.ordem==="menor"?"selected":""}>Menor valor</option><option value="maior" ${f.ordem==="maior"?"selected":""}>Maior valor</option></select></label>
+    </form>
+    ${l.length?`<div class="grid">${l.map(cardImovel).join("")}</div>`:`<div class="vazio">${base.length?"Nenhum imóvel com esses filtros. Tente ampliar a busca ou ":"No momento não há imóveis nesta categoria. "}<a target="_blank" rel="noopener" href="${waLink("Olá Fernando, procuro um imóvel para "+(fin==="aluguel"?"alugar":"comprar")+". Pode me ajudar?")}">peça pelo WhatsApp</a> que eu procuro para você.</div>`}
+  </section>`;
+  app.querySelectorAll(".pill").forEach(b=>b.onclick=()=>{ S.filtro.categoria=b.dataset.cat; S.filtro.grupo=""; render(); });
+  ligarFavs(app);
+  const ler = ()=>{ S.filtro = {...S.filtro, texto:$("#q-texto").value, cidade:$("#q-cid").value, bairro:$("#q-bai").value, min:soDig($("#q-min").value), max:soDig($("#q-max").value), quartos:$("#q-qua").value, ordem:$("#q-ord").value}; };
+  $("#f-filtros").addEventListener("change", ()=>{ ler(); render(); });
+  $("#f-filtros").addEventListener("submit", e=>{ e.preventDefault(); ler(); render(); });
+}
+
+function ligarFormLead(form, extra){
+  form.addEventListener("submit", async e=>{
+    e.preventDefault();
+    const ret = form.querySelector("[id$='-ret']");
+    const nome = form.querySelector("[id$='-nome']").value.trim();
+    const cel = soDig(form.querySelector("[id$='-cel']").value);
+    if(nome.length<2 || cel.length<10){ ret.className="err-box"; ret.textContent="Informe seu nome e um celular com DDD."; return; }
+    const lead = {
+      nome, celular:cel, email:(form.querySelector("[id$='-email']")||{}).value||"",
+      mensagem:(form.querySelector("textarea")||{}).value||"",
+      origem:"Site", etapa:"novo", temperatura:"morno", criadoEm:hoje(), atualizadoEm:hoje(),
+      historico:[{quando:hoje(), tipo:"Sistema", texto:"Lead recebido pelo site ("+(extra.formulario||"formulário")+")."}],
+      ...extra
+    };
+    const btn = form.querySelector("button[type=submit]"); btn.disabled = true;
+    try{
+      if(!S.db) throw new Error("sem db");
+      await S.db.collection("leads").add(lead);
+      ret.className="ok-box"; ret.textContent="Recebido! Fernando vai falar com você em breve pelo WhatsApp.";
+      form.querySelectorAll("input").forEach(x=>x.value="");
+    }catch(err){
+      ret.className="err-box";
+      ret.innerHTML = `Não consegui registrar agora. Fale direto pelo <a target="_blank" rel="noopener" href="${waLink(lead.mensagem||"Olá Fernando!")}">WhatsApp (43) 99977-9003</a>.`;
+    }finally{ btn.disabled=false; }
+  });
+}
+
+/* ---------- Anunciar ---------- */
+function renderAnunciar(app){
+  app.innerHTML = `<section class="wrap sec" style="max-width:760px">
+    <span class="eyebrow">Para proprietários</span>
+    <h2 style="font-size:clamp(32px,4vw,46px);margin:8px 0 10px">Quer vender ou alugar seu imóvel?</h2>
+    <p style="color:var(--muted);max-width:60ch">Faço a avaliação, as fotos e a divulgação. Conte um pouco sobre o imóvel e eu retorno para combinar a visita.</p>
+    <form class="lead" id="f-anuncio" style="margin-top:18px;background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:20px">
+      <div class="linha2"><input id="a-nome" required placeholder="Seu nome"><input id="a-cel" required placeholder="Celular com DDD" inputmode="tel"></div>
+      <input id="a-email" type="email" placeholder="E-mail (opcional)">
+      <textarea id="a-msg" rows="4" placeholder="Tipo de imóvel, bairro, cidade e valor pretendido"></textarea>
+      <button class="btn btn-ouro" type="submit">Enviar para avaliação</button>
+      <div id="a-ret" class="nota">Seus dados ficam só com o corretor.</div>
+    </form></section>`;
+  ligarFormLead($("#f-anuncio"), {formulario:"Anuncie seu imóvel", interesse:"Captação"});
+}
+
+
+/* ---------- Corretores ---------- */
+const CORRETOR_PADRAO = {_id:"fernando", nome:"Fernando Monfernatti", creci:"43397-PR", whatsapp:"5543999779003", email:"monfernattiimoveis@gmail.com", titulos:"CNAI 46.678, Perito judicial, Avaliador de imóveis", bio:"Corretor de imóveis, perito judicial e avaliador em Cornélio Procópio e região. Atende compra, venda e locação com acompanhamento do primeiro contato até a escritura.", ordem:1};
+function titulosDe(c){ return String(c.titulos||"").split(/[,;·]/).map(t=>t.trim()).filter(Boolean); }
+function corretores(){ const l=(S.corretores&&S.corretores.length)?S.corretores:[CORRETOR_PADRAO]; return [...l].filter(c=>c.ativo!==false).sort((a,b)=>(a.ordem||99)-(b.ordem||99)||(a.nome||"").localeCompare(b.nome||"")); }
+function todosCorretores(){ return (S.corretores&&S.corretores.length)?S.corretores:[CORRETOR_PADRAO]; }
+function corretorDe(id){ return todosCorretores().find(c=>c._id===id) || corretores()[0] || CORRETOR_PADRAO; }
+function iniciais(n){ return String(n||"?").split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0].toUpperCase()).join(""); }
+function avatar(c, tam=56){ return c.foto?`<img src="${esc(c.foto)}" alt="" style="width:${tam}px;height:${tam}px;border-radius:50%;object-fit:cover;flex:none">`:`<span class="avatar" style="width:${tam}px;height:${tam}px;font-size:${Math.round(tam/2.6)}px">${esc(iniciais(c.nome))}</span>`; }
+
+function renderCorretores(app){
+  const l = corretores();
+  app.innerHTML = `<section class="wrap sec">
+    <span class="eyebrow">Nossa equipe</span>
+    <div class="sec-h"><div><h2>Corretores</h2><p>Fale direto com quem vai cuidar do seu atendimento.</p></div></div>
+    <div class="equipe">${l.map(c=>{ const n=S.imoveis.filter(i=>(i.corretorId||"fernando")===c._id && i.status!=="vendido" && i.status!=="oculto").length; return `
+      <article class="corretor">
+        <div class="c-topo">${avatar(c,88)}<div><h3>${esc(c.nome)}</h3><span class="nota">Corretor${/a$/i.test((c.nome||"").split(" ")[0])?"a":""} de imóveis${c.creci?` · CRECI ${esc(c.creci)}`:""}</span></div></div>
+        ${titulosDe(c).length?`<div class="c-titulos">${titulosDe(c).map(t=>`<span>${esc(t)}</span>`).join("")}</div>`:""}
+        ${c.bio?`<p>${esc(c.bio)}</p>`:""}
+        <div class="c-info">${c.whatsapp?`<span>WhatsApp <b class="tab">${esc(fmtCel(String(c.whatsapp).replace(/^55/,"")))}</b></span>`:""}${c.email?`<span>${esc(c.email)}</span>`:""}${n?`<span class="tab">${n} ${n===1?"imóvel":"imóveis"} na carteira</span>`:""}</div>
+        <div class="c-acoes">${c.whatsapp?`<a class="btn btn-whats btn-sm" target="_blank" rel="noopener" href="${waLink("Olá "+c.nome.split(" ")[0]+", vim pelo site da Monfernatti Imóveis.", soDig(c.whatsapp))}">${ICO.whats} Chamar no WhatsApp</a>`:""}${n?`<a class="btn btn-linha btn-sm" href="#comprar" data-corretor="${esc(c._id)}">Ver imóveis</a>`:""}</div>
+      </article>`;}).join("")}</div>
+    <div class="aviso" style="margin-top:22px">Quer trabalhar com a gente? Envie seu contato pelo <a target="_blank" rel="noopener" href="${waLink("Olá Fernando, sou corretor(a) e gostaria de conversar sobre parceria.")}">WhatsApp</a>.</div>
+  </section>`;
+  app.querySelectorAll("[data-corretor]").forEach(a=>a.onclick=()=>{ S.filtro={corretor:a.dataset.corretor}; });
+}
+
+/* ---------- Serviços ---------- */
+const SERVICOS = [
+  ["Venda de imóveis","Divulgação com fotos profissionais, filtragem de interessados, acompanhamento das visitas e negociação até a escritura.","Quero vender meu imóvel"],
+  ["Locação","Anúncio, análise do inquilino, contrato e vistoria de entrada e saída para quem quer alugar com segurança.","Quero alugar meu imóvel"],
+  ["Avaliação e perícia judicial","Laudo de avaliação feito por avaliador com CNAI e atuação como perito judicial em processos que envolvem imóveis: inventário, partilha, divórcio e ações de cobrança.","Preciso de uma avaliação ou perícia"],
+  ["Busca personalizada","Não achou o imóvel que procura? Diga o que precisa e nós procuramos para você, inclusive fora do site.","Quero que procurem para mim"],
+  ["Assessoria em financiamento","Simulação nos principais bancos, orientação sobre FGTS e acompanhamento da aprovação de crédito.","Quero ajuda com financiamento"],
+  ["Documentação e escritura","Conferência de matrícula e certidões, contrato de compra e venda, ITBI e registro em cartório.","Tenho dúvidas sobre documentação"]
+];
+function renderServicos(app){
+  app.innerHTML = `<section class="wrap sec">
+    <span class="eyebrow">O que fazemos</span>
+    <div class="sec-h"><div><h2>Serviços</h2><p>Do primeiro contato à entrega das chaves, com um corretor acompanhando cada etapa.</p></div></div>
+    <div class="servicos">${SERVICOS.map(([t,d,cta],k)=>`<article class="servico"><span class="s-num tab">${String(k+1).padStart(2,"0")}</span><h3>${t}</h3><p>${d}</p><a class="link-btn" target="_blank" rel="noopener" href="${waLink("Olá, vim pelo site. "+cta+".")}">${cta} →</a></article>`).join("")}</div>
+    <div class="cta-faixa"><div><h3>Quer anunciar seu imóvel?</h3><p>Conte um pouco sobre ele e retornamos para combinar a avaliação.</p></div><a class="btn btn-ouro" href="#anunciar">Anunciar imóvel</a></div>
+  </section>`;
+}
+
+/* ---------- Informações úteis ---------- */
+function renderInformacoes(app){
+  const bancos = [["Caixa","https://www.caixa.gov.br/voce/habitacao/Paginas/default.aspx"],["Banco do Brasil","https://www.bb.com.br/site/pra-voce/financiamentos/financiamento-imobiliario/"],["Itaú","https://www.itau.com.br/emprestimos-financiamentos/credito-imobiliario"],["Bradesco","https://banco.bradesco/html/classic/produtos-servicos/emprestimo-e-financiamento/imoveis/credito-imobiliario.shtm"],["Santander","https://www.santander.com.br/credito-financiamento/financiamento-imobiliario"]];
+  const links = [["Cartório 24 Horas","Certidões online","https://www.cartorio24horas.com.br"],["Secovi","Sindicato da Habitação","https://www.secovi.com.br"],["Correios","Consulta de CEP","https://buscacep.correios.com.br"],["Receita Federal","Certidão negativa de débitos","https://www.gov.br/receitafederal"]];
+  const fichas = ["Ficha de captação para financiamento imobiliário","Ficha de cadastro de pessoa física","Ficha para cadastro ou captação de imóvel"];
+  const glossario = [["Matrícula","Documento do Cartório de Registro de Imóveis com todo o histórico do imóvel: donos, área e dívidas registradas."],["Escritura","Documento feito no Tabelionato de Notas que formaliza a compra e venda."],["ITBI","Imposto municipal pago pelo comprador na transferência do imóvel, em geral 2% a 3% do valor."],["Averbação","Registro de uma mudança na matrícula, como uma construção nova ou alteração de área."],["SAC e Price","Tabelas de amortização. No SAC a parcela começa maior e cai; na Price ela é fixa."]];
+  app.innerHTML = `<section class="wrap sec">
+    <span class="eyebrow">Para quem vai comprar, vender ou alugar</span>
+    <div class="sec-h"><div><h2>Informações úteis</h2><p>Simuladores, links, fichas e os termos que aparecem durante a negociação.</p></div></div>
+    <nav class="pills" aria-label="Seções">${[["i-simular","Simulador"],["i-bancos","Simuladores dos bancos"],["i-docs","Documentos"],["i-links","Links úteis"],["i-fichas","Fichas"],["i-glossario","Glossário"]].map(([id,t])=>`<button class="pill" type="button" data-ir="${id}">${t}</button>`).join("")}</nav>
+
+    <div class="info-grid">
+      <div class="bloco" id="i-simular" style="padding-top:0"><h2>Simule seu financiamento</h2>
+        <div class="simul">
+          <label class="campo">Valor do imóvel (R$)<input id="g-valor" inputmode="numeric" value="300.000"></label>
+          <label class="campo" for="s-pct" style="margin-top:10px">Porcentagem a financiar: <b id="s-pct-v" class="tab">80%</b></label>
+          <input type="range" id="s-pct" min="10" max="80" step="5" value="80">
+          <div class="linha-v"><span>Entrada</span><b class="tab" id="s-ent"></b></div>
+          <div class="linha-v"><span>Valor financiado</span><b class="tab" id="s-fin"></b></div>
+          <div class="linha2" style="margin-top:12px"><label class="campo">Prazo<select id="s-prazo"><option value="420">35 anos</option><option value="360" selected>30 anos</option><option value="240">20 anos</option><option value="120">10 anos</option></select></label><label class="campo">Juros ao ano (%)<input id="s-juros" inputmode="decimal" value="11"></label></div>
+          <p style="margin:14px 0 0">Primeira parcela estimada (SAC)</p><div class="parcela tab" id="s-parc"></div>
+          <p class="nota" id="s-renda"></p>
+          <p class="nota">Estimativa sem seguros e taxas. A aprovação e as condições finais dependem do banco.</p>
+        </div></div>
+      <div>
+        <div class="bloco" id="i-bancos" style="padding-top:0"><h2>Simuladores dos bancos</h2><p class="nota" style="margin-top:0">Abra o simulador oficial de cada banco para comparar taxas.</p>
+          <div class="lista-links">${bancos.map(([n,u])=>`<a target="_blank" rel="noopener" href="${u}"><b>${n}</b><span>Crédito imobiliário ↗</span></a>`).join("")}</div></div>
+        <div class="bloco" id="i-docs"><h2>Documentos necessários</h2>
+          <div class="linha2"><div><h3 style="font-size:20px;margin-bottom:6px">Do comprador</h3><ul class="lista">${["RG e CPF","Comprovante de estado civil","Comprovante de residência","Comprovante de renda (para financiamento)","Extrato do FGTS, se for usar"].map(x=>`<li>${x}</li>`).join("")}</ul></div>
+          <div><h3 style="font-size:20px;margin-bottom:6px">Do imóvel</h3><ul class="lista">${["Matrícula atualizada (até 30 dias)","Certidão negativa de ônus","IPTU quitado","Certidões do vendedor","Habite-se, se houver construção"].map(x=>`<li>${x}</li>`).join("")}</ul></div></div></div>
+      </div>
+    </div>
+    <div class="bloco" id="i-links"><h2>Links úteis</h2><div class="lista-links">${links.map(([n,d,u])=>`<a target="_blank" rel="noopener" href="${u}"><b>${n}</b><span>${d} ↗</span></a>`).join("")}</div></div>
+    <div class="bloco" id="i-fichas"><h2>Fichas úteis</h2><p class="nota" style="margin-top:0">Peça a ficha pelo WhatsApp e enviamos o arquivo para preencher.</p>
+      <div class="lista-links">${fichas.map(f=>`<a target="_blank" rel="noopener" href="${waLink("Olá, gostaria de receber a "+f.toLowerCase()+".")}"><b>${f}</b><span>Pedir pelo WhatsApp ↗</span></a>`).join("")}</div></div>
+    <div class="bloco faq" id="i-glossario" style="border-bottom:0;max-width:none"><h2>Glossário</h2>${glossario.map(([t,d])=>`<details><summary>${t}</summary><p>${d}</p></details>`).join("")}</div>
+  </section>`;
+  app.querySelectorAll("[data-ir]").forEach(a=>a.onclick=()=>{ const alvo=document.getElementById(a.dataset.ir); if(alvo) window.scrollTo({top:alvo.getBoundingClientRect().top+scrollY-90,behavior:"smooth"}); });
+  const calc=()=>{ const v=Number(soDig($("#g-valor").value))||0, pct=+$("#s-pct").value, n=+$("#s-prazo").value, j=Number(String($("#s-juros").value).replace(",","."))||0;
+    const fin=v*pct/100, ent=v-fin, im=Math.pow(1+j/100,1/12)-1, p1=fin/n+fin*im;
+    $("#s-pct-v").textContent=pct+"%"; $("#s-ent").textContent=brl(ent); $("#s-fin").textContent=brl(fin);
+    $("#s-parc").textContent=p1.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+    $("#s-renda").textContent= p1? "Renda familiar sugerida: a partir de "+(p1/0.3).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0})+" (parcela em até 30% da renda).":""; };
+  ["g-valor","s-pct","s-prazo","s-juros"].forEach(k=>$("#"+k).addEventListener("input",calc)); calc();
+}
+
+/* ---------- CRM: equipe ---------- */
+function crmEquipe(el){
+  const l = [...todosCorretores()].sort((a,b)=>(a.ordem||99)-(b.ordem||99));
+  el.innerHTML = `<div class="sec-h" style="margin-top:0"><div><h3 style="font-size:26px">Corretores</h3><p>Quem aparece na página Corretores e pode receber leads e imóveis.</p></div><button class="btn btn-marca btn-sm" id="novo-corretor">+ Corretor</button></div>
+  <div class="tabela-wrap"><table><thead><tr><th></th><th>Nome</th><th>CRECI</th><th>WhatsApp</th><th>Leads abertos</th><th>Imóveis</th><th>No site</th></tr></thead><tbody>
+  ${l.map(c=>`<tr class="click" data-c="${esc(c._id)}"><td>${avatar(c,36)}</td><td><b>${esc(c.nome)}</b></td><td>${esc(c.creci||"")}</td><td class="tab">${esc(fmtCel(String(c.whatsapp||"").replace(/^55/,"")))}</td><td class="tab">${S.leads.filter(x=>(x.corretorId||"fernando")===c._id && !["fechado","perdido"].includes(x.etapa)).length}</td><td class="tab">${S.imoveis.filter(i=>(i.corretorId||"fernando")===c._id).length}</td><td>${c.ativo===false?"Oculto":"Visível"}</td></tr>`).join("")}
+  </tbody></table></div>`;
+  $("#novo-corretor").onclick=()=>abrirCorretor(null);
+  el.querySelectorAll("[data-c]").forEach(r=>r.onclick=()=>abrirCorretor(r.dataset.c));
+}
+function abrirCorretor(id){
+  const c = id ? todosCorretores().find(x=>x._id===id) : {ordem:todosCorretores().length+1, ativo:true};
+  let foto = c.foto||"";
+  gaveta(`
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="font-size:30px">${id?"Editar corretor":"Novo corretor"}</h2><button class="btn btn-linha btn-sm" id="g-fechar">Fechar</button></div>
+    <form id="c-form" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:12px;align-items:center"><span id="c-foto-prev">${avatar({...c,foto},72)}</span><label class="campo" style="flex:1">Foto<input type="file" id="c-up" accept="image/*" ${S.assets?"":"disabled"}></label></div>
+      <label class="campo">Nome<input id="c-nome" required value="${esc(c.nome||"")}"></label>
+      <div class="linha2"><label class="campo">CRECI<input id="c-creci" value="${esc(c.creci||"")}"></label><label class="campo">WhatsApp com DDD<input id="c-wa" inputmode="tel" value="${esc(fmtCel(String(c.whatsapp||"").replace(/^55/,"")))}"></label></div>
+      <label class="campo">E-mail<input id="c-email" type="email" value="${esc(c.email||"")}"></label>
+      <label class="campo">Títulos e credenciais (separe por vírgula)<input id="c-titulos" placeholder="Ex.: CNAI 12.345, Perito judicial" value="${esc(c.titulos||"")}"></label>
+      <label class="campo">Apresentação (aparece no site)<textarea id="c-bio" rows="3">${esc(c.bio||"")}</textarea></label>
+      <div class="linha2"><label class="campo">Ordem na página<input id="c-ordem" inputmode="numeric" value="${esc(c.ordem||"")}"></label><label class="campo">Mostrar no site<select id="c-ativo"><option value="1">Sim</option><option value="" ${c.ativo===false?"selected":""}>Não</option></select></label></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-marca" type="submit">Salvar</button>${id&&id!=="fernando"?`<button class="btn btn-linha" type="button" id="c-excluir">Excluir</button>`:""}</div>
+      <div id="c-ret" class="nota"></div>
+    </form>`);
+  $("#g-fechar").onclick=fecharGaveta;
+  $("#c-up").onchange=async e=>{ const a=e.target.files[0]; if(!a||!S.assets) return; $("#c-ret").textContent="Enviando foto…"; try{ const r=await S.assets.upload(a); foto=r.url; $("#c-foto-prev").innerHTML=avatar({...c,foto},72); $("#c-ret").textContent="Foto enviada. Salve para publicar."; }catch(err){ $("#c-ret").textContent="Não foi possível enviar a foto."; } };
+  let conf=false;
+  if($("#c-excluir")) $("#c-excluir").onclick=async()=>{ if(!conf){conf=true;$("#c-excluir").textContent="Clique de novo para excluir";return;} await S.db.collection("corretores").doc(id).delete(); fecharGaveta(); };
+  $("#c-form").onsubmit=async e=>{ e.preventDefault();
+    const wa=soDig($("#c-wa").value);
+    const dados={nome:$("#c-nome").value.trim(), creci:$("#c-creci").value.trim(), whatsapp:wa?(wa.startsWith("55")&&wa.length>11?wa:"55"+wa):"", email:$("#c-email").value.trim(), titulos:$("#c-titulos").value.trim(), bio:$("#c-bio").value.trim(), ordem:Number($("#c-ordem").value)||99, ativo:!!$("#c-ativo").value, foto, atualizadoEm:hoje()};
+    try{ const docId = id || (dados.nome.toLowerCase().normalize("NFD").replace(/[^\w]+/g,"-").replace(/^-|-$/g,"")||undefined);
+      await S.db.collection("corretores").doc(docId).set(dados); $("#c-ret").className="ok-box"; $("#c-ret").textContent="Salvo."; if(!id) setTimeout(fecharGaveta,600);
+    }catch(err){ $("#c-ret").className="err-box"; $("#c-ret").textContent="Não foi possível salvar. Tente de novo."; } };
+}
+
+/* ======================= CRM ======================= */
+function renderCrm(app){
+  if(!S.podeCrm) return renderEntrar(app, "entrar");
+  const tabs = [["painel","Painel"],["funil","Funil"],["leads","Leads"],["imoveis","Imóveis"],["equipe","Equipe"]];
+  app.innerHTML = `<div class="crm-top"><div class="wrap"><h2>CRM Monfernatti</h2>
+    ${tabs.map(([k,n])=>`<button class="ctab ${S.crmTab===k?"on":""}" data-t="${k}">${n}</button>`).join("")}
+    <label class="crm-filtro">Corretor<select id="crm-cor"><option value="">Todos</option>${todosCorretores().map(c=>`<option value="${esc(c._id)}" ${S.crmCorretor===c._id?"selected":""}>${esc(c.nome)}</option>`).join("")}</select></label>
+    <button class="btn btn-ouro btn-sm" id="novo-lead">+ Lead</button><button class="btn btn-marca btn-sm" id="novo-imovel">+ Imóvel</button><button class="btn btn-linha btn-sm" id="crm-sair">Sair</button></div></div>
+    <section class="wrap sec" id="crm-corpo"></section>`;
+  app.querySelectorAll(".ctab").forEach(b=>b.onclick=()=>{ S.crmTab=b.dataset.t; render(); });
+  $("#novo-lead").onclick = ()=>abrirLead(null);
+  $("#novo-imovel").onclick = ()=>abrirImovel(null);
+  $("#crm-cor").onchange = e=>{ S.crmCorretor=e.target.value; render(); };
+  const corpo = $("#crm-corpo");
+  ({painel:crmPainel, funil:crmFunil, leads:crmLeads, imoveis:crmImoveis, equipe:crmEquipe})[S.crmTab](corpo);
+}
+
+const atrasado = l => l.proximoContato && new Date(l.proximoContato) < new Date() && !["fechado","perdido"].includes(l.etapa);
+const nomeEtapa = id => (ETAPAS.find(e=>e.id===id)||{}).nome || id;
+
+function leadsF(){ return S.crmCorretor ? S.leads.filter(l=>(l.corretorId||"fernando")===S.crmCorretor) : S.leads; }
+function imoveisF(){ return S.crmCorretor ? S.imoveis.filter(i=>(i.corretorId||"fernando")===S.crmCorretor) : S.imoveis; }
+function crmPainel(el){
+  const L = leadsF(), abertos = L.filter(l=>!["fechado","perdido"].includes(l.etapa));
+  const semana = L.filter(l=> (Date.now()-new Date(l.criadoEm))/864e5 <= 7);
+  const tarefas = abertos.filter(l=>l.proximoContato).sort((a,b)=>a.proximoContato.localeCompare(b.proximoContato));
+  const parados = abertos.filter(l=>!l.proximoContato && (Date.now()-new Date(l.atualizadoEm||l.criadoEm))/864e5 > 3);
+  const disp = imoveisF().filter(i=>i.status==="disponivel"||!i.status);
+  const carteira = disp.reduce((s,i)=>s+(Number(i.preco)||0),0);
+  const fechados = L.filter(l=>l.etapa==="fechado");
+  el.innerHTML = `
+  <dl class="kpis">
+    <div class="kpi"><dt>Leads em aberto</dt><dd class="tab">${abertos.length}</dd></div>
+    <div class="kpi"><dt>Novos em 7 dias</dt><dd class="tab">${semana.length}</dd></div>
+    <div class="kpi"><dt>Contatos atrasados</dt><dd class="tab" style="color:${tarefas.filter(atrasado).length?"var(--perigo)":"inherit"}">${tarefas.filter(atrasado).length}</dd></div>
+    <div class="kpi"><dt>Imóveis disponíveis</dt><dd class="tab">${disp.length}</dd></div>
+    <div class="kpi"><dt>Carteira à venda</dt><dd class="tab" style="font-size:26px">${brl(carteira)}</dd></div>
+    <div class="kpi"><dt>Negócios fechados</dt><dd class="tab">${fechados.length}</dd></div>
+  </dl>
+  <div class="det" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin-top:0">
+    <div><h3 style="font-size:24px;margin-bottom:10px">Próximos contatos</h3>
+      ${tarefas.length?`<div class="tabela-wrap"><table><tbody>${tarefas.slice(0,8).map(l=>`<tr class="click" data-l="${esc(l._id)}"><td class="${atrasado(l)?"atraso":""} tab">${dataHoraBR(l.proximoContato)}</td><td><b>${esc(l.nome)}</b></td><td>${esc(nomeEtapa(l.etapa))}</td></tr>`).join("")}</tbody></table></div>`:`<div class="vazio">Nenhum contato agendado. Ao registrar um atendimento, marque o próximo contato.</div>`}
+    </div>
+    <div><h3 style="font-size:24px;margin-bottom:10px">Leads parados há mais de 3 dias</h3>
+      ${parados.length?`<div class="tabela-wrap"><table><tbody>${parados.map(l=>`<tr class="click" data-l="${esc(l._id)}"><td><b>${esc(l.nome)}</b></td><td>${esc(nomeEtapa(l.etapa))}</td><td class="tab">${dataBR(l.atualizadoEm||l.criadoEm)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="vazio">Nenhum lead esquecido. Bom trabalho.</div>`}
+    </div>
+  </div>
+  <h3 style="font-size:24px;margin:28px 0 10px">Funil por etapa</h3>
+  <div class="tabela-wrap"><table><tbody>${ETAPAS.map(e=>{const n=L.filter(l=>l.etapa===e.id).length;const max=Math.max(1,...ETAPAS.map(x=>L.filter(l=>l.etapa===x.id).length));return `<tr><td style="width:170px">${e.nome}</td><td style="width:100%"><div style="height:12px;border-radius:6px;background:${e.id==="perdido"?"var(--muted)":e.id==="fechado"?"var(--ok)":"var(--ouro)"};width:${n/max*100}%;min-width:${n?6:0}px"></div></td><td class="tab" style="text-align:right">${n}</td></tr>`}).join("")}</tbody></table></div>`;
+  el.querySelectorAll("[data-l]").forEach(r=>r.onclick=()=>abrirLead(r.dataset.l));
+}
+
+function crmFunil(el){
+  el.innerHTML = `<p class="nota" style="margin-top:0">Arraste os cartões entre as etapas ou abra o lead para mudar.</p>
+  <div class="kanban">${ETAPAS.map(e=>{
+    const l = leadsF().filter(x=>x.etapa===e.id).sort((a,b)=>(b.atualizadoEm||"").localeCompare(a.atualizadoEm||""));
+    return `<div class="col" data-etapa="${e.id}"><h4>${e.nome}<i class="tab">${l.length}</i></h4>
+      ${l.map(x=>`<button class="lc" draggable="true" data-l="${esc(x._id)}"><b>${esc(x.nome)}</b>
+        <small>${esc(x.imovelTitulo||x.interesse||x.origem||"")}</small>
+        <span style="display:flex;justify-content:space-between;gap:6px;align-items:center"><span style="display:flex;gap:6px;align-items:center"><span class="mini-av" title="${esc(corretorDe(x.corretorId).nome)}">${esc(iniciais(corretorDe(x.corretorId).nome))}</span><span class="termo t-${esc(x.temperatura||"morno")}">${esc(x.temperatura||"morno")}</span></span>${x.proximoContato?`<small class="${atrasado(x)?"atraso":""} tab">${dataHoraBR(x.proximoContato)}</small>`:""}</span></button>`).join("")}
+    </div>`;}).join("")}</div>`;
+  el.querySelectorAll(".lc").forEach(c=>{
+    c.onclick=()=>abrirLead(c.dataset.l);
+    c.ondragstart=ev=>ev.dataTransfer.setData("text/plain", c.dataset.l);
+  });
+  el.querySelectorAll(".col").forEach(col=>{
+    col.ondragover=ev=>{ev.preventDefault();col.classList.add("drop");};
+    col.ondragleave=()=>col.classList.remove("drop");
+    col.ondrop=ev=>{ev.preventDefault();col.classList.remove("drop");moverEtapa(ev.dataTransfer.getData("text/plain"), col.dataset.etapa);};
+  });
+}
+
+async function moverEtapa(id, etapa){
+  const l = S.leads.find(x=>x._id===id); if(!l || l.etapa===etapa) return;
+  const historico = [...(l.historico||[]), {quando:hoje(), tipo:"Funil", texto:`Movido de "${nomeEtapa(l.etapa)}" para "${nomeEtapa(etapa)}".`}];
+  try{ await S.db.collection("leads").doc(id).update({etapa, historico, atualizadoEm:hoje()}); }catch(e){}
+}
+
+function crmLeads(el){
+  const q = (S.buscaLead||"").toLowerCase();
+  const l = leadsF().filter(x=>!q || (x.nome+" "+x.celular+" "+(x.imovelTitulo||"")).toLowerCase().includes(q))
+    .sort((a,b)=>(b.criadoEm||"").localeCompare(a.criadoEm||""));
+  el.innerHTML = `<div class="filtros" style="margin-bottom:14px"><label>Buscar lead<input id="busca-lead" placeholder="Nome, telefone ou imóvel" value="${esc(S.buscaLead||"")}"></label></div>
+  ${l.length?`<div class="tabela-wrap"><table><thead><tr><th>Nome</th><th>Celular</th><th>Interesse</th><th>Corretor</th><th>Origem</th><th>Etapa</th><th>Termômetro</th><th>Entrou</th><th>Próx. contato</th></tr></thead><tbody>
+  ${l.map(x=>`<tr class="click" data-l="${esc(x._id)}"><td><b>${esc(x.nome)}</b></td><td class="tab">${esc(fmtCel(x.celular))}</td><td>${esc(x.imovelTitulo||x.interesse||"")}</td><td>${esc(corretorDe(x.corretorId).nome)}</td><td>${esc(x.origem)}</td><td>${esc(nomeEtapa(x.etapa))}</td><td><span class="termo t-${esc(x.temperatura||"morno")}">${esc(x.temperatura||"morno")}</span></td><td class="tab">${dataBR(x.criadoEm)}</td><td class="tab ${atrasado(x)?"atraso":""}">${dataHoraBR(x.proximoContato)}</td></tr>`).join("")}
+  </tbody></table></div>`:`<div class="vazio">Nenhum lead ainda. Os contatos do site entram aqui sozinhos, e você pode cadastrar um manualmente em "+ Lead".</div>`}`;
+  const b = $("#busca-lead"); b.oninput=()=>{ S.buscaLead=b.value; const pos=b.selectionStart; crmLeads(el); const nb=$("#busca-lead"); nb.focus(); nb.setSelectionRange(pos,pos); };
+  el.querySelectorAll("[data-l]").forEach(r=>r.onclick=()=>abrirLead(r.dataset.l));
+}
+const fmtCel = c => { c=soDig(c); return c.length===11?`(${c.slice(0,2)}) ${c.slice(2,7)}-${c.slice(7)}`:c.length===10?`(${c.slice(0,2)}) ${c.slice(2,6)}-${c.slice(6)}`:c; };
+
+function crmImoveis(el){
+  const l = [...imoveisF()].sort((a,b)=>String(b.codigo).localeCompare(String(a.codigo)));
+  el.innerHTML = l.length?`<div class="tabela-wrap"><table><thead><tr><th></th><th>Cód.</th><th>Imóvel</th><th>Tipo</th><th>Bairro</th><th>Valor</th><th>Status</th><th>Leads</th></tr></thead><tbody>
+  ${l.map(i=>`<tr class="click" data-i="${esc(i._id)}"><td>${(i.fotos||[])[0]?`<img src="${esc(i.fotos[0])}" alt="" style="width:56px;height:40px;object-fit:cover;border-radius:4px;display:block">`:""}</td><td class="tab">${esc(i.codigo)}</td><td><b>${esc(i.titulo)}</b>${i.destaque?' <span class="status" style="color:var(--ouro-forte)">Destaque</span>':""}</td><td>${esc(i.categoria)}</td><td>${esc(i.bairro)}</td><td class="tab">${brl(i.preco)}</td><td><span class="status st-${esc(i.status||"disponivel")}">${esc(rotStatus(i.status))}</span></td><td class="tab">${S.leads.filter(x=>x.imovelId===i._id).length}</td></tr>`).join("")}
+  </tbody></table></div>`:`<div class="vazio">Nenhum imóvel cadastrado. Use "+ Imóvel" para o primeiro.</div>`;
+  el.querySelectorAll("[data-i]").forEach(r=>r.onclick=()=>abrirImovel(r.dataset.i));
+}
+const rotStatus = s => ({disponivel:"Disponível",reservado:"Reservado",vendido:"Vendido",oculto:"Oculto no site"})[s||"disponivel"]||s;
+
+/* ---------- Gaveta: lead ---------- */
+function gaveta(html){
+  fecharGaveta();
+  const g = document.createElement("div"); g.className="gaveta"; g.id="gaveta";
+  g.innerHTML = `<div class="painel" role="dialog" aria-modal="true">${html}</div>`;
+  g.addEventListener("click", e=>{ if(e.target===g) fecharGaveta(); });
+  document.body.appendChild(g);
+  document.addEventListener("keydown", escFecha);
+  return g;
+}
+function escFecha(e){ if(e.key==="Escape") fecharGaveta(); }
+function fecharGaveta(){ const g=$("#gaveta"); if(g) g.remove(); document.removeEventListener("keydown", escFecha); }
+
+function abrirLead(id){
+  const l = id ? S.leads.find(x=>x._id===id) : {etapa:"novo", temperatura:"morno", origem:"WhatsApp", historico:[]};
+  if(!l) return;
+  const im = S.imoveis;
+  const g = gaveta(`
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="font-size:30px">${id?esc(l.nome):"Novo lead"}</h2><button class="btn btn-linha btn-sm" id="g-fechar">Fechar</button></div>
+    ${id?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-whats btn-sm" target="_blank" rel="noopener" href="${waLink("Olá "+l.nome.split(" ")[0]+", aqui é o Fernando Monfernatti, corretor de imóveis."+(l.imovelTitulo?" Recebi seu interesse no imóvel "+l.imovelTitulo+".":""), "55"+soDig(l.celular))}">${ICO.whats} WhatsApp</a><span class="nota tab" style="align-self:center">${esc(fmtCel(l.celular))} ${l.email?"· "+esc(l.email):""}</span></div>`:""}
+    <form id="g-form" style="display:flex;flex-direction:column;gap:10px">
+      <div class="linha2"><label class="campo">Nome<input id="g-nome" required value="${esc(l.nome||"")}"></label><label class="campo">Celular<input id="g-cel" required inputmode="tel" value="${esc(fmtCel(l.celular||""))}"></label></div>
+      <div class="linha2"><label class="campo">E-mail<input id="g-email" type="email" value="${esc(l.email||"")}"></label><label class="campo">Origem<select id="g-origem">${opcoes(ORIGENS,l.origem)}</select></label></div>
+      <div class="linha3"><label class="campo">Etapa<select id="g-etapa">${ETAPAS.map(e=>`<option value="${e.id}" ${e.id===l.etapa?"selected":""}>${e.nome}</option>`).join("")}</select></label>
+        <label class="campo">Termômetro<select id="g-temp">${["quente","morno","frio"].map(t=>`<option ${t===l.temperatura?"selected":""}>${t}</option>`).join("")}</select></label>
+        <label class="campo">Próximo contato<input id="g-prox" type="datetime-local" value="${l.proximoContato?toLocalInput(l.proximoContato):""}"></label></div>
+      <label class="campo">Corretor responsável<select id="g-cor">${todosCorretores().map(c=>`<option value="${esc(c._id)}" ${c._id===(l.corretorId||S.crmCorretor||"fernando")?"selected":""}>${esc(c.nome)}</option>`).join("")}</select></label>
+      <label class="campo">Imóvel de interesse<select id="g-imovel"><option value="">Nenhum específico</option>${im.map(i=>`<option value="${esc(i._id)}" ${i._id===l.imovelId?"selected":""}>${esc(i.codigo)} · ${esc(i.titulo)}</option>`).join("")}</select></label>
+      <label class="campo">Observações<textarea id="g-msg" rows="3">${esc(l.mensagem||"")}</textarea></label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-marca" type="submit">${id?"Salvar alterações":"Cadastrar lead"}</button>${id?`<button class="btn btn-linha" type="button" id="g-excluir">Excluir lead</button>`:""}</div>
+      <div id="g-ret" class="nota"></div>
+    </form>
+    ${id?`<div><h3 style="font-size:22px;margin:10px 0">Registrar atendimento</h3>
+      <form id="h-form" style="display:flex;flex-direction:column;gap:8px">
+        <div class="linha2"><label class="campo">Canal<select id="h-tipo">${opcoes(TIPOS_CONTATO,"WhatsApp")}</select></label><label class="campo">Próximo contato<input id="h-prox" type="datetime-local"></label></div>
+        <label class="campo">O que aconteceu<textarea id="h-txt" rows="2" required placeholder="Ex.: cliente pediu fotos internas, retornar sexta"></textarea></label>
+        <button class="btn btn-ouro btn-sm" type="submit" style="align-self:start">Adicionar ao histórico</button>
+      </form></div>
+      <div><h3 style="font-size:22px;margin:10px 0">Histórico</h3><div class="hist">${[...(l.historico||[])].reverse().map(h=>`<div><small class="tab">${dataHoraBR(h.quando)} · ${esc(h.tipo)}</small>${esc(h.texto)}</div>`).join("")||'<div class="nota">Sem registros.</div>'}</div></div>`:""}
+  `);
+  $("#g-fechar").onclick = fecharGaveta;
+  let confirmar = false;
+  if(id) $("#g-excluir").onclick = async ()=>{
+    if(!confirmar){ confirmar=true; $("#g-excluir").textContent="Clique de novo para confirmar"; return; }
+    await S.db.collection("leads").doc(id).delete(); fecharGaveta();
+  };
+  $("#g-form").onsubmit = async e=>{
+    e.preventDefault();
+    const imv = im.find(i=>i._id===$("#g-imovel").value);
+    const prox = $("#g-prox").value ? new Date($("#g-prox").value).toISOString() : "";
+    const dados = { nome:$("#g-nome").value.trim(), celular:soDig($("#g-cel").value), email:$("#g-email").value.trim(), origem:$("#g-origem").value,
+      etapa:$("#g-etapa").value, temperatura:$("#g-temp").value, proximoContato:prox, imovelId:imv?imv._id:"", imovelCodigo:imv?imv.codigo:"", imovelTitulo:imv?imv.titulo:"",
+      mensagem:$("#g-msg").value, corretorId:$("#g-cor").value, atualizadoEm:hoje() };
+    try{
+      if(id){
+        const hist=[...(l.historico||[])];
+        if(dados.etapa!==l.etapa) hist.push({quando:hoje(),tipo:"Funil",texto:`Movido de "${nomeEtapa(l.etapa)}" para "${nomeEtapa(dados.etapa)}".`});
+        if(dados.corretorId!==(l.corretorId||"fernando")) hist.push({quando:hoje(),tipo:"Corretor",texto:`Atendimento passado para ${corretorDe(dados.corretorId).nome}.`});
+        if(dados.temperatura!==l.temperatura) hist.push({quando:hoje(),tipo:"Termômetro",texto:`Termômetro: ${l.temperatura||"-"} → ${dados.temperatura}.`});
+        await S.db.collection("leads").doc(id).update({...dados, historico:hist});
+        $("#g-ret").className="ok-box"; $("#g-ret").textContent="Salvo.";
+      }else{
+        await S.db.collection("leads").add({...dados, criadoEm:hoje(), historico:[{quando:hoje(),tipo:"Sistema",texto:"Lead cadastrado manualmente."}]});
+        fecharGaveta();
+      }
+    }catch(err){ $("#g-ret").className="err-box"; $("#g-ret").textContent="Não foi possível salvar. Verifique a conexão e tente de novo."; }
+  };
+  if(id) $("#h-form").onsubmit = async e=>{
+    e.preventDefault();
+    const prox = $("#h-prox").value ? new Date($("#h-prox").value).toISOString() : (l.proximoContato||"");
+    const hist = [...(l.historico||[]), {quando:hoje(), tipo:$("#h-tipo").value, texto:$("#h-txt").value.trim()}];
+    const up = {historico:hist, proximoContato:prox, atualizadoEm:hoje()};
+    if(l.etapa==="novo") up.etapa="atendimento";
+    await S.db.collection("leads").doc(id).update(up);
+    setTimeout(()=>abrirLead(id), 400);
+  };
+}
+function toLocalInput(iso){ const d=new Date(iso); const p=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; }
+
+/* ---------- Gaveta: imóvel ---------- */
+function abrirImovel(id){
+  const i = id ? S.imoveis.find(x=>x._id===id) : {finalidade:"venda", status:"disponivel", uf:"PR", cidade:"Cornélio Procópio", fotos:[], caracteristicas:[], codigo:String(proximoCodigo())};
+  if(!i) return;
+  let fotos = [...(i.fotos||[])];
+  gaveta(`
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="font-size:30px">${id?"Editar imóvel":"Novo imóvel"}</h2><button class="btn btn-linha btn-sm" id="g-fechar">Fechar</button></div>
+    <form id="i-form" style="display:flex;flex-direction:column;gap:10px">
+      <label class="campo">Título do anúncio<input id="i-titulo" required value="${esc(i.titulo||"")}"></label>
+      <div class="linha3"><label class="campo">Código<input id="i-codigo" required value="${esc(i.codigo||"")}"></label>
+        <label class="campo">Finalidade<select id="i-fin"><option value="venda" ${i.finalidade!=="aluguel"?"selected":""}>Venda</option><option value="aluguel" ${i.finalidade==="aluguel"?"selected":""}>Aluguel</option></select></label>
+        <label class="campo">Tipo<select id="i-cat">${opcoes(CATEGORIAS,i.categoria)}</select></label></div>
+      <div class="linha3"><label class="campo">Valor (R$)<input id="i-preco" inputmode="numeric" value="${esc(i.preco||"")}"></label>
+        <label class="campo">Status<select id="i-status">${["disponivel","reservado","vendido","oculto"].map(s=>`<option value="${s}" ${s===(i.status||"disponivel")?"selected":""}>${rotStatus(s)}</option>`).join("")}</select></label>
+        <label class="campo">Destaque na home<select id="i-dest"><option value="">Não</option><option value="1" ${i.destaque?"selected":""}>Sim</option></select></label></div>
+      <div class="linha3"><label class="campo">Bairro<input id="i-bairro" value="${esc(i.bairro||"")}"></label><label class="campo">Cidade<input id="i-cidade" value="${esc(i.cidade||"")}"></label><label class="campo">UF<input id="i-uf" maxlength="2" value="${esc(i.uf||"PR")}"></label></div>
+      <div class="linha3"><label class="campo">Área total (m²)<input id="i-at" inputmode="decimal" value="${esc(i.areaTotal||"")}"></label><label class="campo">Área construída (m²)<input id="i-ac" inputmode="decimal" value="${esc(i.areaConstruida||"")}"></label><label class="campo">Quartos<input id="i-qua" inputmode="numeric" value="${esc(i.quartos||"")}"></label></div>
+      <div class="linha3"><label class="campo">Suítes<input id="i-sui" inputmode="numeric" value="${esc(i.suites||"")}"></label><label class="campo">Banheiros<input id="i-ban" inputmode="numeric" value="${esc(i.banheiros||"")}"></label><label class="campo">Vagas<input id="i-vag" inputmode="numeric" value="${esc(i.vagas||"")}"></label></div>
+      <div class="linha3"><label class="campo">Financiamento<select id="i-fi"><option value="">Não</option><option value="1" ${i.aceitaFinanciamento?"selected":""}>Aceita</option></select></label><label class="campo">FGTS<select id="i-fg"><option value="">Não</option><option value="1" ${i.aceitaFGTS?"selected":""}>Aceita</option></select></label><label class="campo">Permuta<select id="i-pe"><option value="">Não</option><option value="1" ${i.aceitaPermuta?"selected":""}>Aceita</option></select></label></div>
+      <label class="campo">Descrição<textarea id="i-desc" rows="5">${esc(i.descricao||"")}</textarea></label>
+      <label class="campo">Características (separe por vírgula)<input id="i-car" value="${esc((i.caracteristicas||[]).join(", "))}"></label>
+      <div class="campo">Fotos (a primeira é a capa)<div class="miniaturas" id="i-fotos"></div>
+        <input type="file" id="i-up" accept="image/*" multiple ${S.assets?"":"disabled"}><span class="nota" id="i-upret">${S.assets?"Envie JPG ou PNG. Elas aparecem no site assim que você salvar.":"Envio de fotos indisponível nesta visualização."}</span></div>
+      <label class="campo">Corretor responsável<select id="i-cor">${todosCorretores().map(c=>`<option value="${esc(c._id)}" ${c._id===(i.corretorId||S.crmCorretor||"fernando")?"selected":""}>${esc(c.nome)}</option>`).join("")}</select></label>
+      <div class="campo">Proprietário (fica só no CRM, não aparece no site)<div class="linha2"><input id="i-prop" placeholder="Nome"><input id="i-propcel" placeholder="Celular"></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-marca" type="submit">${id?"Salvar imóvel":"Cadastrar imóvel"}</button>${id?`<a class="btn btn-linha" href="#imovel-${esc(id)}" id="i-ver">Ver no site</a><button class="btn btn-linha" type="button" id="i-excluir">Excluir</button>`:""}</div>
+      <div id="i-ret" class="nota"></div>
+    </form>`);
+  $("#g-fechar").onclick = fecharGaveta;
+  if(id) $("#i-ver").onclick = fecharGaveta;
+  const pintarFotos = ()=>{
+    $("#i-fotos").innerHTML = fotos.map((f,k)=>`<div><img src="${esc(f)}" alt=""><button type="button" data-rm="${k}" aria-label="Remover foto">×</button>${k?`<button type="button" data-capa="${k}" style="right:auto;left:2px" aria-label="Tornar capa">★</button>`:""}</div>`).join("") || '<span class="nota">Sem fotos.</span>';
+    $("#i-fotos").querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{ fotos.splice(+b.dataset.rm,1); pintarFotos(); });
+    $("#i-fotos").querySelectorAll("[data-capa]").forEach(b=>b.onclick=()=>{ const [f]=fotos.splice(+b.dataset.capa,1); fotos.unshift(f); pintarFotos(); });
+  };
+  pintarFotos();
+  if(id) S.db.doc("privado/"+id).get().then(d=>{ const p=d.exists?d.data():{}; if($("#i-prop")){ $("#i-prop").value=p.proprietario||""; $("#i-propcel").value=p.proprietarioCel||""; } }).catch(()=>{});
+  $("#i-up").onchange = async e=>{
+    const arqs=[...e.target.files]; if(!arqs.length||!S.assets) return;
+    $("#i-upret").textContent=`Enviando ${arqs.length} foto(s)…`;
+    for(const a of arqs){ try{ const r=await S.assets.upload(a); fotos.push(r.url); pintarFotos(); }catch(err){ $("#i-upret").textContent="Uma foto não pôde ser enviada (limite de 20 MB)."; } }
+    $("#i-upret").textContent="Fotos enviadas. Salve o imóvel para publicar.";
+    e.target.value="";
+  };
+  let confirmar=false;
+  if(id) $("#i-excluir").onclick = async ()=>{
+    if(!confirmar){ confirmar=true; $("#i-excluir").textContent="Clique de novo para excluir"; return; }
+    await S.db.collection("imoveis").doc(id).delete(); fecharGaveta();
+  };
+  $("#i-form").onsubmit = async e=>{
+    e.preventDefault();
+    const num = v => v===""?null:Number(String(v).replace(",","."));
+    const dados = { titulo:$("#i-titulo").value.trim(), codigo:$("#i-codigo").value.trim(), finalidade:$("#i-fin").value, categoria:$("#i-cat").value,
+      preco:Number(soDig($("#i-preco").value))||0, status:$("#i-status").value, destaque:!!$("#i-dest").value,
+      bairro:$("#i-bairro").value.trim(), cidade:$("#i-cidade").value.trim(), uf:$("#i-uf").value.trim().toUpperCase(),
+      areaTotal:num($("#i-at").value), areaConstruida:num($("#i-ac").value), quartos:num($("#i-qua").value), suites:num($("#i-sui").value), banheiros:num($("#i-ban").value), vagas:num($("#i-vag").value),
+      aceitaFinanciamento:!!$("#i-fi").value, aceitaFGTS:!!$("#i-fg").value, aceitaPermuta:!!$("#i-pe").value,
+      corretorId:$("#i-cor").value, descricao:$("#i-desc").value, caracteristicas:$("#i-car").value.split(",").map(s=>s.trim()).filter(Boolean), fotos,
+      atualizadoEm:hoje() };
+    const priv = { proprietario:$("#i-prop").value.trim(), proprietarioCel:$("#i-propcel").value.trim() };
+    try{
+      let docId = id;
+      if(id) await S.db.collection("imoveis").doc(id).update(dados);
+      else { const ref = S.db.collection("imoveis").doc(dados.codigo.replace(/[^\w-]/g,"")||undefined); docId = ref.id; await ref.set({...dados, criadoEm:hoje()}); }
+      if(priv.proprietario || priv.proprietarioCel) await S.db.doc("privado/"+docId).set(priv);
+      $("#i-ret").className="ok-box"; $("#i-ret").textContent="Imóvel salvo e publicado no site.";
+      if(!id) setTimeout(fecharGaveta, 700);
+    }catch(err){ $("#i-ret").className="err-box"; $("#i-ret").textContent="Não foi possível salvar. Verifique a conexão e tente de novo."; }
+  };
+}
+function proximoCodigo(){ return Math.max(1000, ...S.imoveis.map(i=>Number(i.codigo)||0)) + 1; }
+
+/* ---------- Login do CRM ---------- */
+document.addEventListener("click", async e=>{ if(e.target && e.target.id==="crm-sair"){ await MF.sair(); S.podeCrm=false; $("#link-crm").hidden=true; location.hash="#inicio"; } });
+async function renderEntrar(app, modo){
+  const sess = await MF.sessao();
+  if(modo==="nova-senha"){
+    app.innerHTML = `<section class="wrap sec"><form class="login" id="f-ns"><h2>Criar nova senha</h2>
+      <label class="campo">Nova senha<input id="ns-s" type="password" minlength="8" required autocomplete="new-password"></label>
+      <button class="btn btn-marca" type="submit">Salvar senha</button><div id="ns-r" class="nota"></div></form></section>`;
+    $("#f-ns").onsubmit=async e=>{ e.preventDefault(); try{ await MF.novaSenha($("#ns-s").value); location.hash="#crm"; location.reload(); }catch(err){ $("#ns-r").className="err-box"; $("#ns-r").textContent="Não foi possível salvar. Abra de novo o link do e-mail."; } };
+    return;
+  }
+  if(sess && S.podeCrm){ location.hash="#crm"; return; }
+  app.innerHTML = `<section class="wrap sec"><form class="login" id="f-login">
+    <span class="eyebrow">Área do corretor</span><h2>Entrar no CRM</h2>
+    ${sess&&S.carregado?`<div class="aviso">Você entrou como <b>${esc(sess.user.email||"")}</b>, mas esse e-mail não tem acesso ao CRM. Peça ao Fernando para liberar.</div>`:""}
+    <label class="campo">E-mail<input id="lg-e" type="email" required autocomplete="username"></label>
+    <label class="campo">Senha<input id="lg-s" type="password" required autocomplete="current-password"></label>
+    <button class="btn btn-marca" type="submit">Entrar</button>
+    <button class="btn btn-linha btn-sm" type="button" id="lg-rec">Esqueci a senha</button>
+    <div id="lg-r" class="nota"></div></form></section>`;
+  $("#f-login").onsubmit=async e=>{ e.preventDefault(); const r=$("#lg-r"); r.className="nota"; r.textContent="Entrando…";
+    try{ await MF.entrar($("#lg-e").value.trim(), $("#lg-s").value); location.hash="#crm"; location.reload(); }
+    catch(err){ r.className="err-box"; r.textContent="E-mail ou senha incorretos."; } };
+  $("#lg-rec").onclick=async()=>{ const r=$("#lg-r"); const em=$("#lg-e").value.trim(); if(!em){ r.className="err-box"; r.textContent="Digite seu e-mail acima primeiro."; return; }
+    try{ await MF.recuperar(em); r.className="ok-box"; r.textContent="Enviamos um link para criar nova senha no seu e-mail."; }catch(err){ r.className="err-box"; r.textContent="Não foi possível enviar agora."; } };
+}
+
+iniciar();
+</script>
+</body>
+</html>
