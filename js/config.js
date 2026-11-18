@@ -1,6 +1,6 @@
 // Preencha com os dados do seu projeto Supabase (Project Settings > API).
-// A "anon key" é pública por natureza: as regras de segurança ficam no banco (supabase/schema.sql).
+// A chave "publishable" é pública por natureza: as regras de segurança ficam no banco (supabase/schema.sql).
 window.MF_CONFIG = {
-  supabaseUrl: "COLE_AQUI_A_PROJECT_URL",
-  supabaseAnonKey: "COLE_AQUI_A_ANON_PUBLIC_KEY"
+  supabaseUrl: "https://rzwzcaixyrzpeavnxbxi.supabase.co",
+  supabaseAnonKey: "sb_publishable_sfHaan76RrQOs9nvO0n0_Q_ECQJNJPX"
 };
