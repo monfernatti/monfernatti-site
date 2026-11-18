@@ -11,6 +11,12 @@
 <meta property="og:locale" content="pt_BR">
 <meta name="theme-color" content="#293731">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Monfernatti">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
@@ -371,6 +377,151 @@ body::before{background:var(--topo)}
 .mini-av{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--marca);color:var(--ouro);font-size:10px;font-weight:800}
 .c-titulos{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px}.c-titulos span{font-size:12px;font-weight:700;letter-spacing:.02em;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--ouro,#C9A464) 18%,transparent);color:var(--texto,#293731);border:1px solid color-mix(in srgb,var(--ouro,#C9A464) 45%,transparent)}
 .login{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+/* ---------- CRM (v2): casca de aplicativo, Hoje, agenda, lead em um toque ---------- */
+body.modo-crm .top, body.modo-crm .rodape, body.modo-crm .whats-float{display:none}
+.crm-top{position:sticky;top:0;z-index:40;box-shadow:0 1px 0 var(--linha)}
+.crm-top .crm-barra{flex-wrap:nowrap;gap:8px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.crm-marca{display:flex;align-items:center;gap:8px;color:var(--fg);text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.06em;flex:none}
+.crm-marca svg{width:26px;height:26px;color:var(--ouro-forte)}
+.crm-busca{position:relative;flex:1;min-width:0;max-width:520px;margin-right:auto}
+.crm-busca input{width:100%;border:1px solid var(--linha);background:var(--bg);border-radius:10px;padding:9px 12px;font-size:15px;color:var(--fg)}
+.busca-res{position:absolute;top:calc(100% + 6px);left:0;right:0;min-width:260px;background:var(--card);border:1px solid var(--linha);border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.16);max-height:70vh;overflow:auto;z-index:60;padding:6px}
+.busca-res button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;border:0;background:none;text-align:left;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--fg);font-size:14px}
+.busca-res button:hover,.busca-res button:focus-visible{background:var(--chip)}
+.busca-res small{color:var(--muted);font-size:12px}
+.br-g{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;padding:8px 10px 4px}
+.crm-top .crm-tabs{flex-wrap:nowrap;overflow-x:auto;padding-block:0 8px;gap:4px;scrollbar-width:none}
+.crm-tabs::-webkit-scrollbar{display:none}
+.ctab{flex:none;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.ctab .badge{font-style:normal;background:var(--perigo);color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;line-height:1.5}
+.crm-corpo{padding-block:22px 96px}
+.crm-filtro{flex:none}
+.menu{position:relative}
+.menu>summary{list-style:none;cursor:pointer}
+.menu>summary::-webkit-details-marker{display:none}
+.menu-lista{position:absolute;top:calc(100% + 6px);left:0;z-index:65;background:var(--card);border:1px solid var(--linha);border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.18);padding:6px;min-width:250px;display:flex;flex-direction:column}
+.menu-lista.dir{left:auto;right:0}
+.menu-lista>button,.menu-lista>a:not(.menu-item){border:0;background:none;text-align:left;padding:10px 12px;border-radius:8px;cursor:pointer;color:var(--fg);text-decoration:none;font-size:14px;font-weight:600}
+.menu-lista>button:hover,.menu-lista>a:hover{background:var(--chip)}
+.menu-item{display:flex;flex-direction:column;gap:2px;padding:9px 12px;border-radius:8px;color:var(--fg);text-decoration:none;width:min(360px,80vw);font-size:14px}
+.menu-item small{color:var(--muted);font-size:12px;font-weight:500;white-space:normal;line-height:1.35}
+.fab{display:none}
+.hoje-topo{display:flex;justify-content:space-between;align-items:end;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.hoje-topo h3{font-size:clamp(30px,4vw,40px);margin:0;line-height:1}
+.hoje-topo p{margin:4px 0 0}
+.resumo{display:flex;gap:8px;flex-wrap:wrap}
+.resumo span{background:var(--card);border:1px solid var(--linha);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--muted)}
+.resumo b{color:var(--fg);font-size:15px}
+.resumo .r-alerta{border-color:var(--perigo);color:var(--perigo)}.resumo .r-alerta b{color:var(--perigo)}
+.hoje-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:14px;align-items:start}
+.bloco-card{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.bloco-card h4{margin:0 0 2px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:8px}
+.bloco-card h4 i{font-style:normal;background:var(--chip);border-radius:999px;padding:1px 8px;font-size:12px}
+.bloco-card.urgente{border-left:4px solid var(--perigo)}
+.bloco-card>.nota{margin:0 0 4px}
+.tarefa{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--linha)}
+.bloco-card h4+.tarefa,.bloco-card .nota+.tarefa,.ag-dia h4+.tarefa{border-top:0}
+.t-info{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:0;background:none;padding:0;text-align:left;cursor:pointer;color:var(--fg);font:inherit}
+.t-info b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.t-info small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.t-info:hover b{text-decoration:underline;text-decoration-color:var(--ouro);text-underline-offset:3px}
+.t-acoes{display:flex;gap:6px;flex:none;align-items:center}
+.btn-ico{padding:7px 9px}
+.ok-txt{color:var(--ok);font-weight:700}
+.aviso-acao{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.ag-topo{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.ag-dia{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:4px 16px 6px;margin-bottom:12px}
+.ag-dia h4{margin:12px 0 2px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.ag-hora{flex:none;width:46px;font-weight:800;font-size:14px}
+.ag-tipo{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;padding:2px 6px;border-radius:5px;background:var(--chip);color:var(--muted);margin-right:4px;vertical-align:2px}
+.ag-tipo.ag-vis{background:color-mix(in srgb,var(--ouro) 28%,transparent);color:var(--fg)}
+.chip{position:relative;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--linha);background:var(--card);color:var(--fg);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit}
+.chip:hover{border-color:var(--ouro)}
+.chip.on{background:var(--ouro);border-color:var(--ouro);color:#1d2823}
+.chip input[type=checkbox],.chip input[type=radio]{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.chip:focus-within{outline:2px solid var(--ouro);outline-offset:1px}
+.chip-input{border:1px solid var(--linha);background:var(--card);color:var(--fg);border-radius:999px;padding:5px 10px;font-size:13px;max-width:100%}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--chip);padding:4px;border-radius:10px}
+.seg button{flex:1 1 auto;border:0;background:transparent;border-radius:7px;padding:8px 10px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit}
+.seg button.on{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.seg button.on.et-fechado{background:var(--ok);color:#fff}.seg button.on.et-perdido{background:var(--muted);color:#fff}
+.seg-curto{align-self:flex-start}
+.ld-linha1{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ld-linha1 h2{font-size:30px;line-height:1.05;margin:0;overflow-wrap:anywhere}
+.ld-cab{display:flex;flex-direction:column;gap:8px}
+.ld-meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px;color:var(--muted);align-items:center}
+.ld-acoes{display:flex;gap:8px;flex-wrap:wrap}
+.ld-acoes .btn{padding:10px 14px}
+.ld-msg{background:var(--card);border:1px solid var(--linha);border-radius:10px;padding:10px 12px;font-size:14px;white-space:pre-wrap}
+.ld-din{display:flex;flex-direction:column;gap:16px;border-top:1px solid var(--linha);padding-top:14px}
+.ld-sec{display:flex;flex-direction:column;gap:8px}
+.ld-rot{font-size:12px;text-transform:uppercase;letter-spacing:.07em;font-weight:800;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ld-rot span{text-transform:none;letter-spacing:0;font-weight:700;color:var(--fg);font-size:13px}
+.ld-rot .atraso,.ld-rot span.atraso{color:var(--perigo)}
+.ld-rot .link-btn,.ld-cab .link-btn{margin:0;text-transform:none;letter-spacing:0;font-size:13px}
+.ld-caixa{background:var(--card);border:1px solid var(--linha);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.h-form{display:flex;flex-direction:column;gap:8px}
+.h-form textarea,#fb-txt,.campo-solto{border:1px solid var(--linha);background:var(--card);border-radius:8px;padding:10px;font-size:15px;color:var(--fg);width:100%;font-family:inherit}
+.vis{border:1px solid var(--linha);border-left-width:4px;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:var(--card);font-size:14px}
+.vis small{color:var(--muted)}
+.vis.agendada{border-left-color:var(--ouro)}.vis.realizada{border-left-color:var(--ok)}.vis.cancelada{opacity:.6}
+.comb{display:flex;align-items:center;gap:10px;border:1px solid var(--linha);border-radius:12px;padding:8px 10px 8px 8px;background:var(--card)}
+.comb .t-info{flex-direction:row;align-items:center;gap:10px}
+.comb img{width:64px;height:48px;object-fit:cover;border-radius:6px;flex:none}
+.comb .t-info>span{display:flex;flex-direction:column;min-width:0;gap:2px}
+.ld-bloco{border:1px solid var(--linha);border-radius:12px;background:var(--card);padding:0 14px}
+.ld-bloco>summary{cursor:pointer;padding:13px 0;font-weight:800;font-size:14px}
+.ld-bloco[open]{padding-bottom:14px}
+.g-form{display:flex;flex-direction:column;gap:10px}
+.perfil{border:1px dashed var(--linha);border-radius:12px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:10px;margin:0;min-width:0}
+.perfil legend{font-size:12px;text-transform:uppercase;letter-spacing:.07em;font-weight:800;color:var(--muted);padding:0 6px}
+.tags-in{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border:1px solid var(--linha);background:var(--card);border-radius:8px;padding:6px}
+.campo .tags-in input{border:0;background:transparent;padding:4px;flex:1;min-width:140px;width:auto;outline:none}
+.tag-chip{display:inline-flex;align-items:center;gap:2px;background:color-mix(in srgb,var(--ouro) 24%,transparent);color:var(--fg);border-radius:999px;padding:3px 4px 3px 10px;font-size:12.5px;font-weight:700}
+.tag-chip button{border:0;background:none;cursor:pointer;color:var(--muted);font-size:15px;line-height:1;padding:0 5px}
+.tags-mini{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.tags-mini span{font-size:11px;font-weight:700;background:color-mix(in srgb,var(--ouro) 22%,transparent);border-radius:999px;padding:1px 7px;color:var(--fg)}
+td .tags-mini{flex-wrap:nowrap}
+.lc-pe{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.check{display:flex;gap:8px;align-items:center;font-size:14px}
+.ac-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--linha);font-size:14px;color:var(--fg)}
+.ac-form{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.lista-sel{display:flex;flex-direction:column;gap:6px}
+.lista-sel button{display:flex;flex-direction:column;align-items:flex-start;border:1px solid var(--linha);background:var(--card);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--fg);text-align:left;font-family:inherit;font-size:14px}
+.lista-sel small{color:var(--muted)}
+.st-aviso{color:var(--alerta)}.st-venc{color:var(--perigo)}
+.toasts{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:90;display:flex;flex-direction:column;gap:8px;max-width:min(460px,calc(100vw - 32px))}
+.toast{display:flex;align-items:center;gap:10px;background:#1d2823;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:11px 8px 11px 14px;box-shadow:0 14px 34px rgba(0,0,0,.28);font-size:14px;animation:mf-entra .2s ease-out}
+.toast>span{flex:1}
+.toast-x{border:0;background:none;color:#fff;opacity:.7;font-size:20px;cursor:pointer;padding:0 6px;line-height:1}
+@keyframes mf-entra{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.rel-topo{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.br-lista{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.br-linha{display:grid;grid-template-columns:minmax(90px,40%) 1fr auto;gap:10px;align-items:center;font-size:13px}
+.b-rot{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.b-trilho{height:10px;background:var(--chip);border-radius:6px;overflow:hidden}
+.b-trilho span{display:block;height:100%;border-radius:6px;min-width:4px}
+.kpi dd small{font-size:14px;color:var(--muted);font-family:var(--f-body);font-weight:700}
+.kpi>small{display:block;margin-top:2px}
+.kanban .lc small.atraso{color:var(--perigo)}
+@media(max-width:720px){
+  .m-oculta{display:none!important}
+  .crm-marca span{display:none}
+  .crm-filtro select{max-width:118px}
+  .fab{display:inline-flex;position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:45;border:0;border-radius:999px;padding:15px 22px;background:var(--ouro);color:#1d2823;font-weight:800;font-size:15px;box-shadow:0 10px 24px rgba(0,0,0,.22);cursor:pointer;font-family:inherit}
+  body.modo-crm .toasts{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .tarefa{flex-wrap:wrap}
+  .t-info{flex-basis:60%}
+  .ld-linha1 h2{font-size:26px}
+  .kanban{grid-auto-columns:minmax(240px,82vw)}
+}
+@media print{
+  .crm-top,.fab,.toasts,.rel-topo .chips,.gaveta{display:none!important}
+  body{background:#fff}
+  .crm-corpo{padding:0}
+  .bloco-card,.kpi,.tabela-wrap{break-inside:avoid}
+}
 </style>
 </head>
 <body>
@@ -407,6 +558,7 @@ body::before{background:var(--topo)}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
 <script src="/js/config.js"></script>
 <script src="/js/dados.js"></script>
+<script src="/js/crm.js"></script>
 <script>
 const WHATS = "5543999779003";
 const ETAPAS = [
@@ -421,7 +573,7 @@ const TIPOS_CONTATO = ["WhatsApp","Ligação","E-mail","Visita","Reunião","Prop
 const ORIGENS = ["Site","WhatsApp","Indicação","Placa","Instagram","Facebook","Portal","Carteira própria","Outro"];
 const CATEGORIAS = ["Casa","Casa de condomínio","Sobrado","Apartamento","Terreno","Comercial","Rural"];
 
-const S = { imoveis:[], leads:[], db:null, user:null, podeCrm:false, assets:null, crmTab:"painel", filtro:{}, carregado:false, erroDb:false };
+const S = { imoveis:[], leads:[], privado:{}, db:null, user:null, podeCrm:false, assets:null, crmTab:"hoje", filtro:{}, carregado:false, erroDb:false };
 
 const $ = (s,el=document)=>el.querySelector(s);
 const esc = v => String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -432,6 +584,7 @@ const dataBR = iso => iso ? new Date(iso).toLocaleDateString("pt-BR",{day:"2-dig
 const dataHoraBR = iso => iso ? new Date(iso).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : "";
 const waLink = (msg, num=WHATS) => "https://wa.me/"+num+"?text="+encodeURIComponent(msg);
 const soDig = s => String(s||"").replace(/\D/g,"");
+const fmtCel = c => { c=soDig(c); return c.length===11?`(${c.slice(0,2)}) ${c.slice(2,7)}-${c.slice(7)}`:c.length===10?`(${c.slice(0,2)}) ${c.slice(2,6)}-${c.slice(6)}`:c; };
 
 const INSTA = "https://www.instagram.com/monfernattiimoveis/";
 const ICO = {
@@ -452,22 +605,17 @@ async function iniciar(){
     const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
     S.db = db; S.user = user;
     S.podeCrm = !!(user && ((await user.isOwner().catch(()=>false)) || (await user.canEdit().catch(()=>false))));
+    S.acessoVerificado = true;
     $("#link-crm").hidden = !S.podeCrm;
-    if(S.podeCrm){ claude.use("assets").then(a=>{ S.assets=a; }); }
     if(!db){ clearTimeout(timer); S.erroDb = true; render(); return; }
+    if(S.podeCrm){ claude.use("assets").then(a=>{ S.assets=a; }); crmIniciar(); }
     db.collection("corretores").onSnapshot(snap=>{ S.corretores = snap.docs.map(d=>({_id:d.id, ...d.data()})); if(S.carregado) render(); }, ()=>{});
     db.collection("imoveis").onSnapshot(snap=>{
       clearTimeout(timer);
       S.imoveis = snap.docs.map(d=>({_id:d.id, ...d.data()}));
       S.carregado = true; S.erroDb=false; render();
     }, ()=>{ clearTimeout(timer); S.erroDb = true; render(); });
-    if(S.podeCrm){
-      db.collection("leads").onSnapshot(snap=>{
-        S.leads = snap.docs.map(d=>({_id:d.id, ...d.data()}));
-        if(rota().nome==="crm") render();
-      }, ()=>{});
-    }
-  }catch(e){ clearTimeout(timer); S.erroDb = true; render(); }
+  }catch(e){ clearTimeout(timer); S.acessoVerificado = true; S.erroDb = true; render(); }
 }
 
 function ativos(){ return S.imoveis.filter(i=>i.status!=="oculto" && i.status!=="vendido"); }
@@ -486,6 +634,8 @@ function render(){
   const r = rota();
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.r===r.nome));
   const app = $("#app");
+  document.body.classList.toggle("modo-crm", r.nome==="crm" && !!S.podeCrm);
+  if(r.nome!=="crm" && $("#gaveta") && S.gav) fecharGaveta();
   if(r.nome==="crm") return renderCrm(app);
   if(r.nome==="entrar"||r.nome==="nova-senha") return renderEntrar(app, r.nome);
   if(!S.carregado){
@@ -940,323 +1090,9 @@ function renderInformacoes(app){
   ["g-valor","s-pct","s-prazo","s-juros"].forEach(k=>$("#"+k).addEventListener("input",calc)); calc();
 }
 
-/* ---------- CRM: equipe ---------- */
-function crmEquipe(el){
-  const l = [...todosCorretores()].sort((a,b)=>(a.ordem||99)-(b.ordem||99));
-  el.innerHTML = `<div class="sec-h" style="margin-top:0"><div><h3 style="font-size:26px">Corretores</h3><p>Quem aparece na página Corretores e pode receber leads e imóveis.</p></div><button class="btn btn-marca btn-sm" id="novo-corretor">+ Corretor</button></div>
-  <div class="tabela-wrap"><table><thead><tr><th></th><th>Nome</th><th>CRECI</th><th>WhatsApp</th><th>Leads abertos</th><th>Imóveis</th><th>No site</th></tr></thead><tbody>
-  ${l.map(c=>`<tr class="click" data-c="${esc(c._id)}"><td>${avatar(c,36)}</td><td><b>${esc(c.nome)}</b></td><td>${esc(c.creci||"")}</td><td class="tab">${esc(fmtCel(String(c.whatsapp||"").replace(/^55/,"")))}</td><td class="tab">${S.leads.filter(x=>(x.corretorId||"fernando")===c._id && !["fechado","perdido"].includes(x.etapa)).length}</td><td class="tab">${S.imoveis.filter(i=>(i.corretorId||"fernando")===c._id).length}</td><td>${c.ativo===false?"Oculto":"Visível"}</td></tr>`).join("")}
-  </tbody></table></div>`;
-  $("#novo-corretor").onclick=()=>abrirCorretor(null);
-  el.querySelectorAll("[data-c]").forEach(r=>r.onclick=()=>abrirCorretor(r.dataset.c));
-}
-function abrirCorretor(id){
-  const c = id ? todosCorretores().find(x=>x._id===id) : {ordem:todosCorretores().length+1, ativo:true};
-  let foto = c.foto||"";
-  gaveta(`
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="font-size:30px">${id?"Editar corretor":"Novo corretor"}</h2><button class="btn btn-linha btn-sm" id="g-fechar">Fechar</button></div>
-    <form id="c-form" style="display:flex;flex-direction:column;gap:10px">
-      <div style="display:flex;gap:12px;align-items:center"><span id="c-foto-prev">${avatar({...c,foto},72)}</span><label class="campo" style="flex:1">Foto<input type="file" id="c-up" accept="image/*" ${S.assets?"":"disabled"}></label></div>
-      <label class="campo">Nome<input id="c-nome" required value="${esc(c.nome||"")}"></label>
-      <div class="linha2"><label class="campo">CRECI<input id="c-creci" value="${esc(c.creci||"")}"></label><label class="campo">WhatsApp com DDD<input id="c-wa" inputmode="tel" value="${esc(fmtCel(String(c.whatsapp||"").replace(/^55/,"")))}"></label></div>
-      <label class="campo">E-mail<input id="c-email" type="email" value="${esc(c.email||"")}"></label>
-      <label class="campo">Títulos e credenciais (separe por vírgula)<input id="c-titulos" placeholder="Ex.: CNAI 12.345, Perito judicial" value="${esc(c.titulos||"")}"></label>
-      <label class="campo">Apresentação (aparece no site)<textarea id="c-bio" rows="3">${esc(c.bio||"")}</textarea></label>
-      <div class="linha2"><label class="campo">Ordem na página<input id="c-ordem" inputmode="numeric" value="${esc(c.ordem||"")}"></label><label class="campo">Mostrar no site<select id="c-ativo"><option value="1">Sim</option><option value="" ${c.ativo===false?"selected":""}>Não</option></select></label></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-marca" type="submit">Salvar</button>${id&&id!=="fernando"?`<button class="btn btn-linha" type="button" id="c-excluir">Excluir</button>`:""}</div>
-      <div id="c-ret" class="nota"></div>
-    </form>`);
-  $("#g-fechar").onclick=fecharGaveta;
-  $("#c-up").onchange=async e=>{ const a=e.target.files[0]; if(!a||!S.assets) return; $("#c-ret").textContent="Enviando foto…"; try{ const r=await S.assets.upload(a); foto=r.url; $("#c-foto-prev").innerHTML=avatar({...c,foto},72); $("#c-ret").textContent="Foto enviada. Salve para publicar."; }catch(err){ $("#c-ret").textContent="Não foi possível enviar a foto."; } };
-  let conf=false;
-  if($("#c-excluir")) $("#c-excluir").onclick=async()=>{ if(!conf){conf=true;$("#c-excluir").textContent="Clique de novo para excluir";return;} await S.db.collection("corretores").doc(id).delete(); fecharGaveta(); };
-  $("#c-form").onsubmit=async e=>{ e.preventDefault();
-    const wa=soDig($("#c-wa").value);
-    const dados={nome:$("#c-nome").value.trim(), creci:$("#c-creci").value.trim(), whatsapp:wa?(wa.startsWith("55")&&wa.length>11?wa:"55"+wa):"", email:$("#c-email").value.trim(), titulos:$("#c-titulos").value.trim(), bio:$("#c-bio").value.trim(), ordem:Number($("#c-ordem").value)||99, ativo:!!$("#c-ativo").value, foto, atualizadoEm:hoje()};
-    try{ const docId = id || (dados.nome.toLowerCase().normalize("NFD").replace(/[^\w]+/g,"-").replace(/^-|-$/g,"")||undefined);
-      await S.db.collection("corretores").doc(docId).set(dados); $("#c-ret").className="ok-box"; $("#c-ret").textContent="Salvo."; if(!id) setTimeout(fecharGaveta,600);
-    }catch(err){ $("#c-ret").className="err-box"; $("#c-ret").textContent="Não foi possível salvar. Tente de novo."; } };
-}
-
-/* ======================= CRM ======================= */
-function renderCrm(app){
-  if(!S.podeCrm) return renderEntrar(app, "entrar");
-  const tabs = [["painel","Painel"],["funil","Funil"],["leads","Leads"],["imoveis","Imóveis"],["equipe","Equipe"]];
-  app.innerHTML = `<div class="crm-top"><div class="wrap"><h2>CRM Monfernatti</h2>
-    ${tabs.map(([k,n])=>`<button class="ctab ${S.crmTab===k?"on":""}" data-t="${k}">${n}</button>`).join("")}
-    <label class="crm-filtro">Corretor<select id="crm-cor"><option value="">Todos</option>${todosCorretores().map(c=>`<option value="${esc(c._id)}" ${S.crmCorretor===c._id?"selected":""}>${esc(c.nome)}</option>`).join("")}</select></label>
-    <button class="btn btn-ouro btn-sm" id="novo-lead">+ Lead</button><button class="btn btn-marca btn-sm" id="novo-imovel">+ Imóvel</button><button class="btn btn-linha btn-sm" id="crm-sair">Sair</button></div></div>
-    <section class="wrap sec" id="crm-corpo"></section>`;
-  app.querySelectorAll(".ctab").forEach(b=>b.onclick=()=>{ S.crmTab=b.dataset.t; render(); });
-  $("#novo-lead").onclick = ()=>abrirLead(null);
-  $("#novo-imovel").onclick = ()=>abrirImovel(null);
-  $("#crm-cor").onchange = e=>{ S.crmCorretor=e.target.value; render(); };
-  const corpo = $("#crm-corpo");
-  ({painel:crmPainel, funil:crmFunil, leads:crmLeads, imoveis:crmImoveis, equipe:crmEquipe})[S.crmTab](corpo);
-}
-
-const atrasado = l => l.proximoContato && new Date(l.proximoContato) < new Date() && !["fechado","perdido"].includes(l.etapa);
-const nomeEtapa = id => (ETAPAS.find(e=>e.id===id)||{}).nome || id;
-
-function leadsF(){ return S.crmCorretor ? S.leads.filter(l=>(l.corretorId||"fernando")===S.crmCorretor) : S.leads; }
-function imoveisF(){ return S.crmCorretor ? S.imoveis.filter(i=>(i.corretorId||"fernando")===S.crmCorretor) : S.imoveis; }
-function crmPainel(el){
-  const L = leadsF(), abertos = L.filter(l=>!["fechado","perdido"].includes(l.etapa));
-  const semana = L.filter(l=> (Date.now()-new Date(l.criadoEm))/864e5 <= 7);
-  const tarefas = abertos.filter(l=>l.proximoContato).sort((a,b)=>a.proximoContato.localeCompare(b.proximoContato));
-  const parados = abertos.filter(l=>!l.proximoContato && (Date.now()-new Date(l.atualizadoEm||l.criadoEm))/864e5 > 3);
-  const disp = imoveisF().filter(i=>i.status==="disponivel"||!i.status);
-  const carteira = disp.reduce((s,i)=>s+(Number(i.preco)||0),0);
-  const fechados = L.filter(l=>l.etapa==="fechado");
-  el.innerHTML = `
-  <dl class="kpis">
-    <div class="kpi"><dt>Leads em aberto</dt><dd class="tab">${abertos.length}</dd></div>
-    <div class="kpi"><dt>Novos em 7 dias</dt><dd class="tab">${semana.length}</dd></div>
-    <div class="kpi"><dt>Contatos atrasados</dt><dd class="tab" style="color:${tarefas.filter(atrasado).length?"var(--perigo)":"inherit"}">${tarefas.filter(atrasado).length}</dd></div>
-    <div class="kpi"><dt>Imóveis disponíveis</dt><dd class="tab">${disp.length}</dd></div>
-    <div class="kpi"><dt>Carteira à venda</dt><dd class="tab" style="font-size:26px">${brl(carteira)}</dd></div>
-    <div class="kpi"><dt>Negócios fechados</dt><dd class="tab">${fechados.length}</dd></div>
-  </dl>
-  <div class="det" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin-top:0">
-    <div><h3 style="font-size:24px;margin-bottom:10px">Próximos contatos</h3>
-      ${tarefas.length?`<div class="tabela-wrap"><table><tbody>${tarefas.slice(0,8).map(l=>`<tr class="click" data-l="${esc(l._id)}"><td class="${atrasado(l)?"atraso":""} tab">${dataHoraBR(l.proximoContato)}</td><td><b>${esc(l.nome)}</b></td><td>${esc(nomeEtapa(l.etapa))}</td></tr>`).join("")}</tbody></table></div>`:`<div class="vazio">Nenhum contato agendado. Ao registrar um atendimento, marque o próximo contato.</div>`}
-    </div>
-    <div><h3 style="font-size:24px;margin-bottom:10px">Leads parados há mais de 3 dias</h3>
-      ${parados.length?`<div class="tabela-wrap"><table><tbody>${parados.map(l=>`<tr class="click" data-l="${esc(l._id)}"><td><b>${esc(l.nome)}</b></td><td>${esc(nomeEtapa(l.etapa))}</td><td class="tab">${dataBR(l.atualizadoEm||l.criadoEm)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="vazio">Nenhum lead esquecido. Bom trabalho.</div>`}
-    </div>
-  </div>
-  <h3 style="font-size:24px;margin:28px 0 10px">Funil por etapa</h3>
-  <div class="tabela-wrap"><table><tbody>${ETAPAS.map(e=>{const n=L.filter(l=>l.etapa===e.id).length;const max=Math.max(1,...ETAPAS.map(x=>L.filter(l=>l.etapa===x.id).length));return `<tr><td style="width:170px">${e.nome}</td><td style="width:100%"><div style="height:12px;border-radius:6px;background:${e.id==="perdido"?"var(--muted)":e.id==="fechado"?"var(--ok)":"var(--ouro)"};width:${n/max*100}%;min-width:${n?6:0}px"></div></td><td class="tab" style="text-align:right">${n}</td></tr>`}).join("")}</tbody></table></div>`;
-  el.querySelectorAll("[data-l]").forEach(r=>r.onclick=()=>abrirLead(r.dataset.l));
-}
-
-function crmFunil(el){
-  el.innerHTML = `<p class="nota" style="margin-top:0">Arraste os cartões entre as etapas ou abra o lead para mudar.</p>
-  <div class="kanban">${ETAPAS.map(e=>{
-    const l = leadsF().filter(x=>x.etapa===e.id).sort((a,b)=>(b.atualizadoEm||"").localeCompare(a.atualizadoEm||""));
-    return `<div class="col" data-etapa="${e.id}"><h4>${e.nome}<i class="tab">${l.length}</i></h4>
-      ${l.map(x=>`<button class="lc" draggable="true" data-l="${esc(x._id)}"><b>${esc(x.nome)}</b>
-        <small>${esc(x.imovelTitulo||x.interesse||x.origem||"")}</small>
-        <span style="display:flex;justify-content:space-between;gap:6px;align-items:center"><span style="display:flex;gap:6px;align-items:center"><span class="mini-av" title="${esc(corretorDe(x.corretorId).nome)}">${esc(iniciais(corretorDe(x.corretorId).nome))}</span><span class="termo t-${esc(x.temperatura||"morno")}">${esc(x.temperatura||"morno")}</span></span>${x.proximoContato?`<small class="${atrasado(x)?"atraso":""} tab">${dataHoraBR(x.proximoContato)}</small>`:""}</span></button>`).join("")}
-    </div>`;}).join("")}</div>`;
-  el.querySelectorAll(".lc").forEach(c=>{
-    c.onclick=()=>abrirLead(c.dataset.l);
-    c.ondragstart=ev=>ev.dataTransfer.setData("text/plain", c.dataset.l);
-  });
-  el.querySelectorAll(".col").forEach(col=>{
-    col.ondragover=ev=>{ev.preventDefault();col.classList.add("drop");};
-    col.ondragleave=()=>col.classList.remove("drop");
-    col.ondrop=ev=>{ev.preventDefault();col.classList.remove("drop");moverEtapa(ev.dataTransfer.getData("text/plain"), col.dataset.etapa);};
-  });
-}
-
-async function moverEtapa(id, etapa){
-  const l = S.leads.find(x=>x._id===id); if(!l || l.etapa===etapa) return;
-  const historico = [...(l.historico||[]), {quando:hoje(), tipo:"Funil", texto:`Movido de "${nomeEtapa(l.etapa)}" para "${nomeEtapa(etapa)}".`}];
-  try{ await S.db.collection("leads").doc(id).update({etapa, historico, atualizadoEm:hoje()}); }catch(e){}
-}
-
-function crmLeads(el){
-  const q = (S.buscaLead||"").toLowerCase();
-  const l = leadsF().filter(x=>!q || (x.nome+" "+x.celular+" "+(x.imovelTitulo||"")).toLowerCase().includes(q))
-    .sort((a,b)=>(b.criadoEm||"").localeCompare(a.criadoEm||""));
-  el.innerHTML = `<div class="filtros" style="margin-bottom:14px"><label>Buscar lead<input id="busca-lead" placeholder="Nome, telefone ou imóvel" value="${esc(S.buscaLead||"")}"></label></div>
-  ${l.length?`<div class="tabela-wrap"><table><thead><tr><th>Nome</th><th>Celular</th><th>Interesse</th><th>Corretor</th><th>Origem</th><th>Etapa</th><th>Termômetro</th><th>Entrou</th><th>Próx. contato</th></tr></thead><tbody>
-  ${l.map(x=>`<tr class="click" data-l="${esc(x._id)}"><td><b>${esc(x.nome)}</b></td><td class="tab">${esc(fmtCel(x.celular))}</td><td>${esc(x.imovelTitulo||x.interesse||"")}</td><td>${esc(corretorDe(x.corretorId).nome)}</td><td>${esc(x.origem)}</td><td>${esc(nomeEtapa(x.etapa))}</td><td><span class="termo t-${esc(x.temperatura||"morno")}">${esc(x.temperatura||"morno")}</span></td><td class="tab">${dataBR(x.criadoEm)}</td><td class="tab ${atrasado(x)?"atraso":""}">${dataHoraBR(x.proximoContato)}</td></tr>`).join("")}
-  </tbody></table></div>`:`<div class="vazio">Nenhum lead ainda. Os contatos do site entram aqui sozinhos, e você pode cadastrar um manualmente em "+ Lead".</div>`}`;
-  const b = $("#busca-lead"); b.oninput=()=>{ S.buscaLead=b.value; const pos=b.selectionStart; crmLeads(el); const nb=$("#busca-lead"); nb.focus(); nb.setSelectionRange(pos,pos); };
-  el.querySelectorAll("[data-l]").forEach(r=>r.onclick=()=>abrirLead(r.dataset.l));
-}
-const fmtCel = c => { c=soDig(c); return c.length===11?`(${c.slice(0,2)}) ${c.slice(2,7)}-${c.slice(7)}`:c.length===10?`(${c.slice(0,2)}) ${c.slice(2,6)}-${c.slice(6)}`:c; };
-
-function crmImoveis(el){
-  const l = [...imoveisF()].sort((a,b)=>String(b.codigo).localeCompare(String(a.codigo)));
-  el.innerHTML = l.length?`<div class="tabela-wrap"><table><thead><tr><th></th><th>Cód.</th><th>Imóvel</th><th>Tipo</th><th>Bairro</th><th>Valor</th><th>Status</th><th>Leads</th></tr></thead><tbody>
-  ${l.map(i=>`<tr class="click" data-i="${esc(i._id)}"><td>${(i.fotos||[])[0]?`<img src="${esc(i.fotos[0])}" alt="" style="width:56px;height:40px;object-fit:cover;border-radius:4px;display:block">`:""}</td><td class="tab">${esc(i.codigo)}</td><td><b>${esc(i.titulo)}</b>${i.destaque?' <span class="status" style="color:var(--ouro-forte)">Destaque</span>':""}</td><td>${esc(i.categoria)}</td><td>${esc(i.bairro)}</td><td class="tab">${brl(i.preco)}</td><td><span class="status st-${esc(i.status||"disponivel")}">${esc(rotStatus(i.status))}</span></td><td class="tab">${S.leads.filter(x=>x.imovelId===i._id).length}</td></tr>`).join("")}
-  </tbody></table></div>`:`<div class="vazio">Nenhum imóvel cadastrado. Use "+ Imóvel" para o primeiro.</div>`;
-  el.querySelectorAll("[data-i]").forEach(r=>r.onclick=()=>abrirImovel(r.dataset.i));
-}
-const rotStatus = s => ({disponivel:"Disponível",reservado:"Reservado",vendido:"Vendido",oculto:"Oculto no site"})[s||"disponivel"]||s;
-
-/* ---------- Gaveta: lead ---------- */
-function gaveta(html){
-  fecharGaveta();
-  const g = document.createElement("div"); g.className="gaveta"; g.id="gaveta";
-  g.innerHTML = `<div class="painel" role="dialog" aria-modal="true">${html}</div>`;
-  g.addEventListener("click", e=>{ if(e.target===g) fecharGaveta(); });
-  document.body.appendChild(g);
-  document.addEventListener("keydown", escFecha);
-  return g;
-}
-function escFecha(e){ if(e.key==="Escape") fecharGaveta(); }
-function fecharGaveta(){ const g=$("#gaveta"); if(g) g.remove(); document.removeEventListener("keydown", escFecha); }
-
-function abrirLead(id){
-  const l = id ? S.leads.find(x=>x._id===id) : {etapa:"novo", temperatura:"morno", origem:"WhatsApp", historico:[]};
-  if(!l) return;
-  const im = S.imoveis;
-  const g = gaveta(`
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="font-size:30px">${id?esc(l.nome):"Novo lead"}</h2><button class="btn btn-linha btn-sm" id="g-fechar">Fechar</button></div>
-    ${id?`<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-whats btn-sm" target="_blank" rel="noopener" href="${waLink("Olá "+l.nome.split(" ")[0]+", aqui é o Fernando Monfernatti, corretor de imóveis."+(l.imovelTitulo?" Recebi seu interesse no imóvel "+l.imovelTitulo+".":""), "55"+soDig(l.celular))}">${ICO.whats} WhatsApp</a><span class="nota tab" style="align-self:center">${esc(fmtCel(l.celular))} ${l.email?"· "+esc(l.email):""}</span></div>`:""}
-    <form id="g-form" style="display:flex;flex-direction:column;gap:10px">
-      <div class="linha2"><label class="campo">Nome<input id="g-nome" required value="${esc(l.nome||"")}"></label><label class="campo">Celular<input id="g-cel" required inputmode="tel" value="${esc(fmtCel(l.celular||""))}"></label></div>
-      <div class="linha2"><label class="campo">E-mail<input id="g-email" type="email" value="${esc(l.email||"")}"></label><label class="campo">Origem<select id="g-origem">${opcoes(ORIGENS,l.origem)}</select></label></div>
-      <div class="linha3"><label class="campo">Etapa<select id="g-etapa">${ETAPAS.map(e=>`<option value="${e.id}" ${e.id===l.etapa?"selected":""}>${e.nome}</option>`).join("")}</select></label>
-        <label class="campo">Termômetro<select id="g-temp">${["quente","morno","frio"].map(t=>`<option ${t===l.temperatura?"selected":""}>${t}</option>`).join("")}</select></label>
-        <label class="campo">Próximo contato<input id="g-prox" type="datetime-local" value="${l.proximoContato?toLocalInput(l.proximoContato):""}"></label></div>
-      <label class="campo">Corretor responsável<select id="g-cor">${todosCorretores().map(c=>`<option value="${esc(c._id)}" ${c._id===(l.corretorId||S.crmCorretor||"fernando")?"selected":""}>${esc(c.nome)}</option>`).join("")}</select></label>
-      <label class="campo">Imóvel de interesse<select id="g-imovel"><option value="">Nenhum específico</option>${im.map(i=>`<option value="${esc(i._id)}" ${i._id===l.imovelId?"selected":""}>${esc(i.codigo)} · ${esc(i.titulo)}</option>`).join("")}</select></label>
-      <label class="campo">Observações<textarea id="g-msg" rows="3">${esc(l.mensagem||"")}</textarea></label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-marca" type="submit">${id?"Salvar alterações":"Cadastrar lead"}</button>${id?`<button class="btn btn-linha" type="button" id="g-excluir">Excluir lead</button>`:""}</div>
-      <div id="g-ret" class="nota"></div>
-    </form>
-    ${id?`<div><h3 style="font-size:22px;margin:10px 0">Registrar atendimento</h3>
-      <form id="h-form" style="display:flex;flex-direction:column;gap:8px">
-        <div class="linha2"><label class="campo">Canal<select id="h-tipo">${opcoes(TIPOS_CONTATO,"WhatsApp")}</select></label><label class="campo">Próximo contato<input id="h-prox" type="datetime-local"></label></div>
-        <label class="campo">O que aconteceu<textarea id="h-txt" rows="2" required placeholder="Ex.: cliente pediu fotos internas, retornar sexta"></textarea></label>
-        <button class="btn btn-ouro btn-sm" type="submit" style="align-self:start">Adicionar ao histórico</button>
-      </form></div>
-      <div><h3 style="font-size:22px;margin:10px 0">Histórico</h3><div class="hist">${[...(l.historico||[])].reverse().map(h=>`<div><small class="tab">${dataHoraBR(h.quando)} · ${esc(h.tipo)}</small>${esc(h.texto)}</div>`).join("")||'<div class="nota">Sem registros.</div>'}</div></div>`:""}
-  `);
-  $("#g-fechar").onclick = fecharGaveta;
-  let confirmar = false;
-  if(id) $("#g-excluir").onclick = async ()=>{
-    if(!confirmar){ confirmar=true; $("#g-excluir").textContent="Clique de novo para confirmar"; return; }
-    await S.db.collection("leads").doc(id).delete(); fecharGaveta();
-  };
-  $("#g-form").onsubmit = async e=>{
-    e.preventDefault();
-    const imv = im.find(i=>i._id===$("#g-imovel").value);
-    const prox = $("#g-prox").value ? new Date($("#g-prox").value).toISOString() : "";
-    const dados = { nome:$("#g-nome").value.trim(), celular:soDig($("#g-cel").value), email:$("#g-email").value.trim(), origem:$("#g-origem").value,
-      etapa:$("#g-etapa").value, temperatura:$("#g-temp").value, proximoContato:prox, imovelId:imv?imv._id:"", imovelCodigo:imv?imv.codigo:"", imovelTitulo:imv?imv.titulo:"",
-      mensagem:$("#g-msg").value, corretorId:$("#g-cor").value, atualizadoEm:hoje() };
-    try{
-      if(id){
-        const hist=[...(l.historico||[])];
-        if(dados.etapa!==l.etapa) hist.push({quando:hoje(),tipo:"Funil",texto:`Movido de "${nomeEtapa(l.etapa)}" para "${nomeEtapa(dados.etapa)}".`});
-        if(dados.corretorId!==(l.corretorId||"fernando")) hist.push({quando:hoje(),tipo:"Corretor",texto:`Atendimento passado para ${corretorDe(dados.corretorId).nome}.`});
-        if(dados.temperatura!==l.temperatura) hist.push({quando:hoje(),tipo:"Termômetro",texto:`Termômetro: ${l.temperatura||"-"} → ${dados.temperatura}.`});
-        await S.db.collection("leads").doc(id).update({...dados, historico:hist});
-        $("#g-ret").className="ok-box"; $("#g-ret").textContent="Salvo.";
-      }else{
-        await S.db.collection("leads").add({...dados, criadoEm:hoje(), historico:[{quando:hoje(),tipo:"Sistema",texto:"Lead cadastrado manualmente."}]});
-        fecharGaveta();
-      }
-    }catch(err){ $("#g-ret").className="err-box"; $("#g-ret").textContent="Não foi possível salvar. Verifique a conexão e tente de novo."; }
-  };
-  if(id) $("#h-form").onsubmit = async e=>{
-    e.preventDefault();
-    const prox = $("#h-prox").value ? new Date($("#h-prox").value).toISOString() : (l.proximoContato||"");
-    const hist = [...(l.historico||[]), {quando:hoje(), tipo:$("#h-tipo").value, texto:$("#h-txt").value.trim()}];
-    const up = {historico:hist, proximoContato:prox, atualizadoEm:hoje()};
-    if(l.etapa==="novo") up.etapa="atendimento";
-    await S.db.collection("leads").doc(id).update(up);
-    setTimeout(()=>abrirLead(id), 400);
-  };
-}
-function toLocalInput(iso){ const d=new Date(iso); const p=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; }
-
-/* ---------- Gaveta: imóvel ---------- */
-function abrirImovel(id){
-  const i = id ? S.imoveis.find(x=>x._id===id) : {finalidade:"venda", status:"disponivel", uf:"PR", cidade:"Cornélio Procópio", fotos:[], caracteristicas:[], codigo:String(proximoCodigo())};
-  if(!i) return;
-  let fotos = [...(i.fotos||[])];
-  gaveta(`
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="font-size:30px">${id?"Editar imóvel":"Novo imóvel"}</h2><button class="btn btn-linha btn-sm" id="g-fechar">Fechar</button></div>
-    <form id="i-form" style="display:flex;flex-direction:column;gap:10px">
-      <label class="campo">Título do anúncio<input id="i-titulo" required value="${esc(i.titulo||"")}"></label>
-      <div class="linha3"><label class="campo">Código<input id="i-codigo" required value="${esc(i.codigo||"")}"></label>
-        <label class="campo">Finalidade<select id="i-fin"><option value="venda" ${i.finalidade!=="aluguel"?"selected":""}>Venda</option><option value="aluguel" ${i.finalidade==="aluguel"?"selected":""}>Aluguel</option></select></label>
-        <label class="campo">Tipo<select id="i-cat">${opcoes(CATEGORIAS,i.categoria)}</select></label></div>
-      <div class="linha3"><label class="campo">Valor (R$)<input id="i-preco" inputmode="numeric" value="${esc(i.preco||"")}"></label>
-        <label class="campo">Status<select id="i-status">${["disponivel","reservado","vendido","oculto"].map(s=>`<option value="${s}" ${s===(i.status||"disponivel")?"selected":""}>${rotStatus(s)}</option>`).join("")}</select></label>
-        <label class="campo">Destaque na home<select id="i-dest"><option value="">Não</option><option value="1" ${i.destaque?"selected":""}>Sim</option></select></label></div>
-      <div class="linha3"><label class="campo">Bairro<input id="i-bairro" value="${esc(i.bairro||"")}"></label><label class="campo">Cidade<input id="i-cidade" value="${esc(i.cidade||"")}"></label><label class="campo">UF<input id="i-uf" maxlength="2" value="${esc(i.uf||"PR")}"></label></div>
-      <div class="linha3"><label class="campo">Área total (m²)<input id="i-at" inputmode="decimal" value="${esc(i.areaTotal||"")}"></label><label class="campo">Área construída (m²)<input id="i-ac" inputmode="decimal" value="${esc(i.areaConstruida||"")}"></label><label class="campo">Quartos<input id="i-qua" inputmode="numeric" value="${esc(i.quartos||"")}"></label></div>
-      <div class="linha3"><label class="campo">Suítes<input id="i-sui" inputmode="numeric" value="${esc(i.suites||"")}"></label><label class="campo">Banheiros<input id="i-ban" inputmode="numeric" value="${esc(i.banheiros||"")}"></label><label class="campo">Vagas<input id="i-vag" inputmode="numeric" value="${esc(i.vagas||"")}"></label></div>
-      <div class="linha3"><label class="campo">Financiamento<select id="i-fi"><option value="">Não</option><option value="1" ${i.aceitaFinanciamento?"selected":""}>Aceita</option></select></label><label class="campo">FGTS<select id="i-fg"><option value="">Não</option><option value="1" ${i.aceitaFGTS?"selected":""}>Aceita</option></select></label><label class="campo">Permuta<select id="i-pe"><option value="">Não</option><option value="1" ${i.aceitaPermuta?"selected":""}>Aceita</option></select></label></div>
-      <label class="campo">Descrição<textarea id="i-desc" rows="5">${esc(i.descricao||"")}</textarea></label>
-      <label class="campo">Características (separe por vírgula)<input id="i-car" value="${esc((i.caracteristicas||[]).join(", "))}"></label>
-      <div class="campo">Fotos (a primeira é a capa)<div class="miniaturas" id="i-fotos"></div>
-        <input type="file" id="i-up" accept="image/*" multiple ${S.assets?"":"disabled"}><span class="nota" id="i-upret">${S.assets?"Envie JPG ou PNG. Elas aparecem no site assim que você salvar.":"Envio de fotos indisponível nesta visualização."}</span></div>
-      <label class="campo">Corretor responsável<select id="i-cor">${todosCorretores().map(c=>`<option value="${esc(c._id)}" ${c._id===(i.corretorId||S.crmCorretor||"fernando")?"selected":""}>${esc(c.nome)}</option>`).join("")}</select></label>
-      <div class="campo">Proprietário (fica só no CRM, não aparece no site)<div class="linha2"><input id="i-prop" placeholder="Nome"><input id="i-propcel" placeholder="Celular"></div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-marca" type="submit">${id?"Salvar imóvel":"Cadastrar imóvel"}</button>${id?`<a class="btn btn-linha" href="#imovel-${esc(id)}" id="i-ver">Ver no site</a><button class="btn btn-linha" type="button" id="i-excluir">Excluir</button>`:""}</div>
-      <div id="i-ret" class="nota"></div>
-    </form>`);
-  $("#g-fechar").onclick = fecharGaveta;
-  if(id) $("#i-ver").onclick = fecharGaveta;
-  const pintarFotos = ()=>{
-    $("#i-fotos").innerHTML = fotos.map((f,k)=>`<div><img src="${esc(f)}" alt=""><button type="button" data-rm="${k}" aria-label="Remover foto">×</button>${k?`<button type="button" data-capa="${k}" style="right:auto;left:2px" aria-label="Tornar capa">★</button>`:""}</div>`).join("") || '<span class="nota">Sem fotos.</span>';
-    $("#i-fotos").querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{ fotos.splice(+b.dataset.rm,1); pintarFotos(); });
-    $("#i-fotos").querySelectorAll("[data-capa]").forEach(b=>b.onclick=()=>{ const [f]=fotos.splice(+b.dataset.capa,1); fotos.unshift(f); pintarFotos(); });
-  };
-  pintarFotos();
-  if(id) S.db.doc("privado/"+id).get().then(d=>{ const p=d.exists?d.data():{}; if($("#i-prop")){ $("#i-prop").value=p.proprietario||""; $("#i-propcel").value=p.proprietarioCel||""; } }).catch(()=>{});
-  $("#i-up").onchange = async e=>{
-    const arqs=[...e.target.files]; if(!arqs.length||!S.assets) return;
-    $("#i-upret").textContent=`Enviando ${arqs.length} foto(s)…`;
-    for(const a of arqs){ try{ const r=await S.assets.upload(a); fotos.push(r.url); pintarFotos(); }catch(err){ $("#i-upret").textContent="Uma foto não pôde ser enviada (limite de 20 MB)."; } }
-    $("#i-upret").textContent="Fotos enviadas. Salve o imóvel para publicar.";
-    e.target.value="";
-  };
-  let confirmar=false;
-  if(id) $("#i-excluir").onclick = async ()=>{
-    if(!confirmar){ confirmar=true; $("#i-excluir").textContent="Clique de novo para excluir"; return; }
-    await S.db.collection("imoveis").doc(id).delete(); fecharGaveta();
-  };
-  $("#i-form").onsubmit = async e=>{
-    e.preventDefault();
-    const num = v => v===""?null:Number(String(v).replace(",","."));
-    const dados = { titulo:$("#i-titulo").value.trim(), codigo:$("#i-codigo").value.trim(), finalidade:$("#i-fin").value, categoria:$("#i-cat").value,
-      preco:Number(soDig($("#i-preco").value))||0, status:$("#i-status").value, destaque:!!$("#i-dest").value,
-      bairro:$("#i-bairro").value.trim(), cidade:$("#i-cidade").value.trim(), uf:$("#i-uf").value.trim().toUpperCase(),
-      areaTotal:num($("#i-at").value), areaConstruida:num($("#i-ac").value), quartos:num($("#i-qua").value), suites:num($("#i-sui").value), banheiros:num($("#i-ban").value), vagas:num($("#i-vag").value),
-      aceitaFinanciamento:!!$("#i-fi").value, aceitaFGTS:!!$("#i-fg").value, aceitaPermuta:!!$("#i-pe").value,
-      corretorId:$("#i-cor").value, descricao:$("#i-desc").value, caracteristicas:$("#i-car").value.split(",").map(s=>s.trim()).filter(Boolean), fotos,
-      atualizadoEm:hoje() };
-    const priv = { proprietario:$("#i-prop").value.trim(), proprietarioCel:$("#i-propcel").value.trim() };
-    try{
-      let docId = id;
-      if(id) await S.db.collection("imoveis").doc(id).update(dados);
-      else { const ref = S.db.collection("imoveis").doc(dados.codigo.replace(/[^\w-]/g,"")||undefined); docId = ref.id; await ref.set({...dados, criadoEm:hoje()}); }
-      if(priv.proprietario || priv.proprietarioCel) await S.db.doc("privado/"+docId).set(priv);
-      $("#i-ret").className="ok-box"; $("#i-ret").textContent="Imóvel salvo e publicado no site.";
-      if(!id) setTimeout(fecharGaveta, 700);
-    }catch(err){ $("#i-ret").className="err-box"; $("#i-ret").textContent="Não foi possível salvar. Verifique a conexão e tente de novo."; }
-  };
-}
-function proximoCodigo(){ return Math.max(1000, ...S.imoveis.map(i=>Number(i.codigo)||0)) + 1; }
-
-/* ---------- Login do CRM ---------- */
-document.addEventListener("click", async e=>{ if(e.target && e.target.id==="crm-sair"){ await MF.sair(); S.podeCrm=false; $("#link-crm").hidden=true; location.hash="#inicio"; } });
-async function renderEntrar(app, modo){
-  const sess = await MF.sessao();
-  if(modo==="nova-senha"){
-    app.innerHTML = `<section class="wrap sec"><form class="login" id="f-ns"><h2>Criar nova senha</h2>
-      <label class="campo">Nova senha<input id="ns-s" type="password" minlength="8" required autocomplete="new-password"></label>
-      <button class="btn btn-marca" type="submit">Salvar senha</button><div id="ns-r" class="nota"></div></form></section>`;
-    $("#f-ns").onsubmit=async e=>{ e.preventDefault(); try{ await MF.novaSenha($("#ns-s").value); location.hash="#crm"; location.reload(); }catch(err){ $("#ns-r").className="err-box"; $("#ns-r").textContent="Não foi possível salvar. Abra de novo o link do e-mail."; } };
-    return;
-  }
-  if(sess && S.podeCrm){ location.hash="#crm"; return; }
-  app.innerHTML = `<section class="wrap sec"><form class="login" id="f-login">
-    <span class="eyebrow">Área do corretor</span><h2>Entrar no CRM</h2>
-    ${sess&&S.carregado?`<div class="aviso">Você entrou como <b>${esc(sess.user.email||"")}</b>, mas esse e-mail não tem acesso ao CRM. Peça ao Fernando para liberar.</div>`:""}
-    <label class="campo">E-mail<input id="lg-e" type="email" required autocomplete="username"></label>
-    <label class="campo">Senha<input id="lg-s" type="password" required autocomplete="current-password"></label>
-    <button class="btn btn-marca" type="submit">Entrar</button>
-    <button class="btn btn-linha btn-sm" type="button" id="lg-rec">Esqueci a senha</button>
-    <div id="lg-r" class="nota"></div></form></section>`;
-  $("#f-login").onsubmit=async e=>{ e.preventDefault(); const r=$("#lg-r"); r.className="nota"; r.textContent="Entrando…";
-    try{ await MF.entrar($("#lg-e").value.trim(), $("#lg-s").value); location.hash="#crm"; location.reload(); }
-    catch(err){ r.className="err-box"; r.textContent="E-mail ou senha incorretos."; } };
-  $("#lg-rec").onclick=async()=>{ const r=$("#lg-r"); const em=$("#lg-e").value.trim(); if(!em){ r.className="err-box"; r.textContent="Digite seu e-mail acima primeiro."; return; }
-    try{ await MF.recuperar(em); r.className="ok-box"; r.textContent="Enviamos um link para criar nova senha no seu e-mail."; }catch(err){ r.className="err-box"; r.textContent="Não foi possível enviar agora."; } };
-}
 
 iniciar();
+if("serviceWorker" in navigator) window.addEventListener("load", ()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
 </script>
 </body>
 </html>

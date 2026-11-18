@@ -76,6 +76,18 @@
     async entrar(email, senha){ const {error} = await sb.auth.signInWithPassword({email, password:senha}); if(error) throw error; adminCache=null; },
     async sair(){ if(sb) await sb.auth.signOut(); adminCache=null; },
     async recuperar(email){ const {error} = await sb.auth.resetPasswordForEmail(email, {redirectTo: location.origin+"/#nova-senha"}); if(error) throw error; },
-    async novaSenha(senha){ const {error} = await sb.auth.updateUser({password:senha}); if(error) throw error; }
+    async novaSenha(senha){ const {error} = await sb.auth.updateUser({password:senha}); if(error) throw error; },
+    /* Primeiro acesso: a pessoa cria a própria senha (o e-mail precisa estar liberado na tabela admins para ver o CRM). */
+    async cadastrar(email, senha){ const {data, error} = await sb.auth.signUp({email, password:senha, options:{emailRedirectTo: location.origin+"/#entrar"}}); if(error) throw error; adminCache=null; return data; },
+    /* Papel de quem está logado: gestor (vê tudo) ou corretor (vê só a própria carteira). */
+    async meuAcesso(){
+      if(!sb) return null;
+      const {data, error} = await sb.rpc("meu_acesso");
+      if(error) return (await ehAdmin()) ? {papel:"gestor", corretor_id:"fernando"} : null;
+      return data || null;
+    },
+    async acessos(){ const {data, error} = await sb.from("admins").select("*"); if(error) throw error; return data||[]; },
+    async darAcesso(email, papel, corretor_id){ const {error} = await sb.from("admins").upsert({email:String(email).trim().toLowerCase(), papel, corretor_id}); if(error) throw error; },
+    async removerAcesso(email){ const {error} = await sb.from("admins").delete().eq("email", email); if(error) throw error; }
   };
 })();
