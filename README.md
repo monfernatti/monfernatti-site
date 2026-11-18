@@ -23,3 +23,7 @@ com dados, fotos e login no Supabase.
 Só depois de testar no endereço `*.vercel.app`: na Vercel, *Settings > Domains*, adicione `monfernattiimoveis.com.br`
 e `www.monfernattiimoveis.com.br`, e no registro.br troque os registros DNS indicados pela Vercel.
 O e-mail (Gmail) não é afetado.
+
+## Endereços
+- Supabase: projeto `monfernatti` (região São Paulo), `https://rzwzcaixyrzpeavnxbxi.supabase.co`
+- Vercel: projeto `monfernatti-site` (publica sozinho a cada envio para `main`)
