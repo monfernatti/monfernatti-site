@@ -176,7 +176,7 @@ function abasCrm(){
   const L = leadsF().filter(aberto), fim = fimDoDia();
   const nHoje = L.filter(semResposta).length + L.filter(l=>!semResposta(l) && l.proximoContato && new Date(l.proximoContato)<=fim).length
     + todasVisitas().filter(v=>v.status==="agendada" && new Date(v.quando)<=fim).length;
-  const t = [["hoje","Hoje",nHoje],["funil","Funil"],["leads","Leads"],["agenda","Agenda"],["imoveis","Imóveis"],["avaliacoes","Avaliações",avPedidos().length],["documentos","Documentos"],["relatorios","Relatórios"]];
+  const t = [["hoje","Hoje",nHoje],["funil","Funil"],["leads","Leads"],["agenda","Agenda"],["imoveis","Imóveis"],["avaliacoes","Avaliações",avPedidos().length],["documentos","Documentos"],["guia","Guia"],["relatorios","Relatórios"]];
   if(ehGestor()) t.push(["equipe","Equipe"]);
   return t;
 }
@@ -192,7 +192,7 @@ function renderCrm(app){
   if($("#crm-cor")) $("#crm-cor").value = S.crmCorretor || "";
   $("#crm-tabs").innerHTML = abas.map(([k,n,b])=>`<button class="ctab ${S.crmTab===k?"on":""}" data-act="aba" data-v="${k}" ${S.crmTab===k?'aria-current="page"':""}>${n}${b?`<i class="badge tab">${b}</i>`:""}</button>`).join("");
   const corpo = $("#crm-corpo");
-  preservar(corpo, ()=>({hoje:crmHoje, funil:crmFunil, leads:crmLeads, agenda:crmAgenda, imoveis:crmImoveis, avaliacoes:crmAvaliacoes, documentos:crmDocumentos, relatorios:crmRelatorios, equipe:crmEquipe})[S.crmTab](corpo));
+  preservar(corpo, ()=>({hoje:crmHoje, funil:crmFunil, leads:crmLeads, agenda:crmAgenda, imoveis:crmImoveis, avaliacoes:crmAvaliacoes, documentos:crmDocumentos, guia:crmGuia, relatorios:crmRelatorios, equipe:crmEquipe})[S.crmTab](corpo));
   if(!$("#crm-q-res").hidden) pintarBusca();
 }
 function cascaHtml(){
@@ -275,6 +275,7 @@ async function sairCrm(){ await MF.sair(); S.podeCrm = false; S.acessoPronto = f
 async function acao(nome, d, el){
   if(nome.startsWith("doc-")) return acaoDoc(nome, d, el);
   if(nome.startsWith("av-")) return acaoAv(nome, d, el);
+  if(nome.startsWith("gu-")) return acaoGu(nome, d, el);
   const id = d.lead;
   const l = id ? S.leads.find(x=>x._id===id) : null;
   switch(nome){
@@ -926,7 +927,7 @@ function abrirImovel(id, opc={}){
     <div class="ld-acoes">${menuDocs({imovel:id})}<button class="btn btn-linha" data-act="av-estudo" data-imovel="${esc(id)}">Estudo de mercado</button></div>
     <section class="ld-sec"><div class="ld-rot">Clientes que combinam com este imóvel</div>
       ${clientes.length?clientes.slice(0,10).map(l=>{ const e=(l.enviados||[]).find(x=>x.imovelId===id); return `<div class="comb"><button class="t-info" data-l="${esc(l._id)}"><span><b>${esc(l.nome)}</b><small>${esc(nomeEtapa(l.etapa))} · <span class="termo t-${esc(l.temperatura||"morno")}">${esc(l.temperatura||"morno")}</span>${e?` · <span class="ok-txt">enviado ${dataBR(e.quando)}</span>`:""}</small></span></button>${linkWa(l,"imovel",{imovel:i},`${ICO.whats} ${e?"Reenviar":"Enviar"}`)}</div>`; }).join("")
-        :'<p class="nota" style="margin:0">Nenhum cliente em aberto com perfil compatível. Preencha "o que o cliente procura" nos leads para cruzar automaticamente.</p>'}</section>${secDocsImovel(id)}${secEstudosImovel(id)}`:""}
+        :'<p class="nota" style="margin:0">Nenhum cliente em aberto com perfil compatível. Preencha "o que o cliente procura" nos leads para cruzar automaticamente.</p>'}</section>${secDocsImovel(id)}${secEstudosImovel(id)}${secChecklistImovel(id, podeEditar)}`:""}
     <form id="i-form" class="g-form" ${podeEditar?"":'inert'}>
       <details class="ld-bloco" id="i-dados" ${id?"":"open"}><summary>Dados do anúncio (aparecem no site)</summary><div class="g-form" style="padding-top:10px">
       <label class="campo">Título do anúncio<input id="i-titulo" required value="${esc(i.titulo||"")}"></label>
@@ -961,6 +962,7 @@ function abrirImovel(id, opc={}){
       <div id="i-ret" class="nota"></div>
     </form>`);
   S.gav = {tipo:"imovel", id};
+  if(id) ligarChecklist(id, podeEditar);
   if(!podeEditar) return;
   if(id) $("#i-ver").onclick = fecharGaveta;
   const pintarFotos = ()=>{
@@ -991,7 +993,7 @@ function abrirImovel(id, opc={}){
       aceitaFinanciamento:!!$("#i-fi").value, aceitaFGTS:!!$("#i-fg").value, aceitaPermuta:!!$("#i-pe").value,
       corretorId:$("#i-cor").value, descricao:$("#i-desc").value, caracteristicas:$("#i-car").value.split(",").map(s=>s.trim()).filter(Boolean), fotos,
       atualizadoEm:hoje() };
-    const priv = { ...p, proprietario:$("#i-prop").value.trim(), proprietarioCel:$("#i-propcel").value.trim(), proprietarioEmail:$("#i-propemail").value.trim(),
+    const priv = { ...p, ...(id ? S.privado[id]||{} : {}), proprietario:$("#i-prop").value.trim(), proprietarioCel:$("#i-propcel").value.trim(), proprietarioEmail:$("#i-propemail").value.trim(),
       proprietarioCpf:fmtCpf($("#i-propcpf").value.trim()), endereco:$("#i-end").value.trim(), matricula:$("#i-mat").value.trim(), inscricaoIptu:$("#i-iptu").value.trim(),
       autorizacaoTipo:$("#i-aut").value, autorizacaoInicio:$("#i-autini").value, autorizacaoValidade:$("#i-autfim").value, comissaoPct:$("#i-compct").value.trim(), chave:$("#i-chave").value.trim(), obsInternas:$("#i-obsint").value.trim() };
     const temPriv = Object.entries(priv).some(([k,v])=>v && k!=="origemLead");

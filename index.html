@@ -843,6 +843,81 @@ b.fd-logo{height:auto;color:#d1ae70;font-family:"Barlow Condensed",Arial,sans-se
 .dc-estudo h2{break-after:avoid}
 .dc-estudo .dc-assin{margin:10mm 0 2mm}
 .es-aviso{font-size:7.5pt;line-height:1.45;color:#6b7570;border-top:1px solid #dfe5e1;padding-top:2.5mm;margin:5mm 0 0;text-align:justify;break-inside:avoid}
+/* estudo: comparação simples (melhor/parecido/pior), busca, pedido x mercado e detalhes técnicos */
+.av-crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;align-items:end}
+.av-crit-r{grid-column:1/-1;font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--muted)}
+.av-crit select.mudou{border-color:var(--ouro);background:color-mix(in srgb,var(--ouro) 14%,var(--card))}
+.av-busca{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.av-busca .nota{margin:0 4px 0 0}
+.av-busca .chip{text-decoration:none;color:var(--fg)}
+.av-tec{border:1px solid var(--linha);border-radius:10px;background:var(--card);padding:8px 10px}
+.av-tec summary{cursor:pointer;font-weight:700;font-size:13px}
+.av-tec-tab{overflow-x:auto;margin-top:8px}
+.av-tec .dc-tab{font-size:12px;margin:0}
+.av-tec .dc-tab th{background:var(--chip);color:var(--fg)}
+.av-tec .dc-tab th,.av-tec .dc-tab td{border-color:var(--linha);padding:4px 6px;white-space:nowrap;text-align:right}
+.av-tec .dc-tab td:last-child,.av-tec .dc-tab th:last-child{text-align:left;width:auto}
+.av-tec-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:8px}
+.av-tec-g div{display:flex;flex-direction:column;border:1px solid var(--linha);border-radius:8px;padding:6px 8px;min-width:0}
+.av-tec-g small{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800}
+.av-tec-g b{font-size:13px}
+.av-pedcard{display:flex;flex-direction:column;gap:2px;border-radius:10px;padding:10px 12px;border:1px solid var(--linha);border-left:4px solid var(--ok);background:var(--card);font-size:14px}
+.av-ped-acima{border-left-color:var(--perigo)}
+.av-ped-abaixo{border-left-color:var(--alerta)}
+.av-pedcard small{color:var(--muted)}
+.es-ped{text-align:center;margin:1.5mm 0 0;font-size:9pt;color:#293731}
+.es-peq{font-size:8pt;color:#4c5752}
+.es-tec .av-tec-tab{overflow:visible;margin:0}
+.es-tec .dc-tab{font-size:7.5pt}
+.es-tec .dc-tab th,.es-tec .dc-tab td{padding:1.2mm 1.5mm;text-align:right;white-space:nowrap}
+.es-tec .dc-tab td:last-child,.es-tec .dc-tab th:last-child{text-align:left;width:auto}
+.es-tec .av-tec-g{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5mm;margin:2mm 0 3mm;break-inside:avoid}
+.es-tec .av-tec-g div{border:1px solid #dfe5e1;border-radius:1.5mm;padding:1.5mm 2mm;display:flex;flex-direction:column}
+.es-tec .av-tec-g small{font-size:6.5pt;text-transform:uppercase;letter-spacing:.05em;color:#6b7570;font-weight:800}
+.es-tec .av-tec-g b{font-size:8.5pt;color:#293731}
+/* guia do corretor */
+.gu-abas{margin:4px 0 16px}
+.gu-duas{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+.gu-lado{display:flex;flex-direction:column;gap:12px}
+.gu-passos{list-style:none;margin:0;padding:0;counter-reset:gu;display:flex;flex-direction:column;gap:10px}
+.gu-passos li{counter-increment:gu;display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:14px}
+.gu-passos li::before{content:counter(gu,decimal-leading-zero);display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--av-sel);color:var(--av-sel-fg);font-weight:800;font-size:13px}
+.gu-passos b{font-size:15px}
+.gu-passos p{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.5}
+.gu-passos .chips{margin-top:10px}
+.gu-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;margin-top:14px;align-items:start}
+.gu-h{margin:22px 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.gu-certs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px}
+.gu-cert{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.gu-cert-top{display:flex;gap:12px;align-items:flex-start}
+.gu-n{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ouro);color:#1d2823;font-weight:800;font-size:13px}
+.gu-cert p{margin:4px 0 0;font-size:13.5px;color:var(--muted)}
+.gu-onde{background:var(--bg);border-radius:10px;padding:8px 10px;font-size:13.5px;flex:1}
+.gu-onde p{margin:0;color:var(--fg)}
+.gu-onde small{display:block;color:var(--muted);margin-top:3px}
+.gu-cert .btn{align-self:flex-start}
+.gu-quando{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px}
+.gu-quando .btn{align-self:flex-start;margin-top:auto}
+.gu-quando .nota{margin:0}
+.gu-lista .lista{margin:0}
+.gu-barra{height:6px;border-radius:999px;background:var(--chip);overflow:hidden}
+.gu-barra i{display:block;height:100%;background:var(--ouro);border-radius:999px;transition:width .2s}
+.gu-ck-det>summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--ouro-forte);width:max-content}
+.gu-ck-det[open]{display:flex;flex-direction:column;gap:10px}
+.gu-pj{margin-top:2px}
+.gu-grupo h5{margin:4px 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.gu-it{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:7px 0;border-top:1px solid var(--linha)}
+.gu-it label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:14px;min-width:0}
+.gu-it input{margin-top:2px;width:18px;height:18px;flex:none;accent-color:var(--ouro-forte)}
+.gu-it small{display:block;color:var(--muted);font-size:12px}
+.gu-it.ok>label>span{color:var(--muted)}
+.gu-it.na>label>span{color:var(--muted);text-decoration:line-through}
+.gu-it.na>label small{text-decoration:none;display:inline-block;margin-left:6px}
+.gu-it.velha small{color:var(--alerta);font-weight:700}
+.gu-it-a{display:flex;gap:12px;flex:none}
+.gu-it-a .link-btn{margin:0;font-size:12.5px;white-space:nowrap}
+@media(max-width:900px){.gu-duas{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.gu-it{flex-wrap:wrap}.gu-it-a{padding-left:28px}.gu-passos li{grid-template-columns:30px minmax(0,1fr);padding:12px}.gu-passos li::before{width:30px;height:30px}}
 </style>
 </head>
 <body>
@@ -883,6 +958,7 @@ b.fd-logo{height:auto;color:#d1ae70;font-family:"Barlow Condensed",Arial,sans-se
 <script src="/js/crm.js"></script>
 <script src="/js/documentos.js"></script>
 <script src="/js/avaliacao.js"></script>
+<script src="/js/guia.js"></script>
 <script>
 const WHATS = "5543999779003";
 const ETAPAS = [

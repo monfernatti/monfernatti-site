@@ -1,8 +1,8 @@
 /* Service worker: deixa o site e o CRM abrirem rápido e funcionarem como aplicativo no celular.
    Páginas e scripts: busca na rede primeiro (sempre a versão nova) e usa a cópia guardada se estiver sem internet.
    Dados (Supabase) nunca passam por aqui. */
-const CACHE = "mf-2026-11-19a";
-const BASE = ["/", "/js/config.js", "/js/dados.js", "/js/crm.js", "/js/documentos.js", "/js/avaliacao.js", "/favicon.png", "/icons/icon-192.png", "/manifest.webmanifest"];
+const CACHE = "mf-2026-11-19b";
+const BASE = ["/", "/js/config.js", "/js/dados.js", "/js/crm.js", "/js/documentos.js", "/js/avaliacao.js", "/js/guia.js", "/favicon.png", "/icons/icon-192.png", "/manifest.webmanifest"];
 
 self.addEventListener("install", e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(BASE)).catch(()=>{}).then(()=>self.skipWaiting()));

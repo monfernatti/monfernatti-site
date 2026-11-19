@@ -561,6 +561,18 @@ const AV_FRASES = [
   {r:"Reparos", t:"Pequenos reparos e uma boa arrumação antes das fotos ajudam a aproximar a venda do valor máximo."},
   {r:"Documentação", t:"Antes de anunciar, vale conferir a matrícula atualizada e a averbação da construção, o que evita atrasos na venda e no financiamento."}
 ];
+/* Comparação simples: o corretor diz se o comparado é melhor, parecido ou pior que o avaliado.
+   Por trás vira fator de homogeneização (NBR 14653): comparado melhor vale menos para o avaliado. */
+const AV_NIVEIS = [[2,"Muito melhor"],[1,"Melhor"],[0,"Parecido"],[-1,"Pior"],[-2,"Muito pior"]];
+const AV_CRIT = [["loc","Localização"],["pad","Acabamento"],["cons","Conservação"]];
+const avFator = n => Math.round((1 - 0.1*(Number(n)||0))*100)/100;
+const avNivel = n => (AV_NIVEIS.find(x=>x[0]===(Number(n)||0))||AV_NIVEIS[2])[1];
+/* Valor crítico de Chauvenet por número de amostras e t de Student bicaudal 80% por graus de liberdade. */
+const AV_CHAUV = {3:1.38,4:1.54,5:1.65,6:1.73,7:1.80,8:1.86,9:1.92,10:1.96,11:2.00,12:2.03,13:2.07,14:2.10,15:2.13,16:2.15,17:2.17,18:2.20,19:2.22,20:2.24};
+const AV_T80 = [0,3.078,1.886,1.638,1.533,1.476,1.440,1.415,1.397,1.383,1.372,1.363,1.356,1.350,1.345,1.341,1.337,1.333,1.330,1.328,1.325];
+function avStats(v){ const n = v.length, m = n ? v.reduce((a,b)=>a+b,0)/n : 0; return {n, m, s: n>1 ? Math.sqrt(v.reduce((a,x)=>a+(x-m)**2,0)/(n-1)) : 0}; }
+const AV_PORTAIS = [["ZAP","zapimoveis.com.br"],["Viva Real","vivareal.com.br"],["OLX","olx.com.br"],["Imovelweb","imovelweb.com.br"],["Chaves na Mão","chavesnamao.com.br"]];
+function avTermoBusca(e){ const im = e.imovel; return [im.tipo, Number(im.quartos)>0?`${im.quartos} quartos`:"", e.fin==="aluguel"?"aluguel":"à venda", im.bairro, im.cidade].filter(Boolean).join(" "); }
 const avNovoId = () => "e" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 const avBasePadrao = f => ({apto:"Área privativa", terreno:"Área do terreno", rural:"Área total"})[f] || "Área construída";
 const avArred = v => !v ? 0 : v>=1e5 ? Math.round(v/1e3)*1e3 : v>=1e4 ? Math.round(v/100)*100 : Math.round(v/10)*10;
@@ -572,7 +584,7 @@ function avGet(o, caminho){ return caminho.split(".").reduce((x,p)=>x==null?x:x[
 function avEstudoBase(){
   return {id:avNovoId(), criadoEm:hoje(), atualizadoEm:hoje(), por:meuId(), fin:"venda",
     imovel:{tipo:"Casa", bairro:"", cidade:"Cornélio Procópio", endereco:"", base:"Área construída", area:0, unidade:"m2", areaTerreno:0, quartos:"", banheiros:"", vagas:"", conservacao:"", descricao:""},
-    comps:[], desconto:10, amplitude:"auto", final:null, parecer:"", opc:{fotos:true, fontes:true}, fotos:[]};
+    comps:[], desconto:10, amplitude:"auto", final:null, pedido:0, parecer:"", opc:{fotos:true, fontes:true, pedido:true, memoria:false}, fotos:[]};
 }
 function avEstudoDoPedido(l){
   const e = avEstudoBase(), a = l.avaliacao || {}, f = avFam(a.tipo);
@@ -582,6 +594,7 @@ function avEstudoDoPedido(l){
     quartos:a.quartos?String(a.quartos):"", banheiros:a.banheiros?String(a.banheiros):"", vagas:a.vagas?String(a.vagas):"", conservacao:a.conservacao||"", descricao:l.avaliacao?avDescricao(a):""};
   e.fin = avSoAluguel(a.motivo) ? "aluguel" : "venda";
   e.fotos = a.fotos || [];
+  e.pedido = numBR(a.valorPretendido) || 0;
   return e;
 }
 function avEstudoDoImovel(i){
@@ -592,29 +605,41 @@ function avEstudoDoImovel(i){
     areaTerreno:(f==="casa"||f==="com") ? (i.areaTotal||0) : 0, quartos:i.quartos?String(i.quartos):"", banheiros:i.banheiros?String(i.banheiros):"", vagas:i.vagas?String(i.vagas):"",
     descricao:String(i.descricao||"").replace(/\s+/g," ").slice(0,420)};
   e.fin = i.finalidade==="aluguel" ? "aluguel" : "venda";
-  e.imovelId = i._id; e.fotosPub = (i.fotos||[]).slice(0,3);
+  e.imovelId = i._id; e.fotosPub = (i.fotos||[]).slice(0,3); e.pedido = i.preco || 0;
   return e;
 }
-/* Cálculo: valor por unidade de área de cada comparado, desconto nas ofertas, ajuste individual,
-   descarte dos que ficam a mais de 30% da média, média dos restantes x área do avaliado e faixa de valor. */
+/* Cálculo (roteiro do método comparativo da NBR 14653):
+   1. valor por unidade de área de cada comparado; 2. homogeneização: oferta x (1 - desconto), x fatores de
+   localização, acabamento e conservação (0,80 a 1,20), x ajuste extra; 3. saneamento: sai quem fica a mais de 30%
+   da mediana e, depois, quem falha no critério de Chauvenet; 4. média e desvio padrão dos que ficaram;
+   5. intervalo de confiança de 80% (t de Student), limitado a ±15% da média (campo de arbítrio);
+   6. valor unitário = média saneada (o centro do campo); valor = unitário x área. */
 function avCalc(e){
   const des = (Number(e.desconto)||0)/100;
   const L = e.comps.map(c=>{
     const area = Number(c.area)||0, valor = Number(c.valor)||0;
     if(!(area>0 && valor>0)) return {c, ok:false};
-    const unit = valor/area, homog = unit * (c.tipo==="Vendido" ? 1 : 1-des) * (1 + (Number(c.ajuste)||0)/100);
-    return {c, ok:true, unit, homog};
+    const unit = valor/area, fFonte = c.tipo==="Vendido" ? 1 : 1-des, fat = AV_CRIT.map(([k])=>avFator(c[k])), fExtra = 1 + (Number(c.ajuste)||0)/100;
+    return {c, ok:true, unit, fFonte, fat, fExtra, homog: unit * fFonte * fat.reduce((a,b)=>a*b, 1) * fExtra};
   });
   const cand = L.filter(x=>x.ok && x.c.usar!==false);
-  const m0 = cand.length ? cand.reduce((s,x)=>s+x.homog, 0)/cand.length : 0;
-  cand.forEach(x=>{ x.desvio = m0 ? x.homog/m0 - 1 : 0; x.fora = cand.length>=3 && Math.abs(x.desvio) > .30 && !x.c.forcar; });
-  const hs = cand.filter(x=>!x.fora).map(x=>x.homog);
-  const media = hs.length ? hs.reduce((a,b)=>a+b, 0)/hs.length : 0;
-  const dp = hs.length>1 ? Math.sqrt(hs.reduce((s,h)=>s+(h-media)**2, 0)/(hs.length-1)) : 0;
-  const cv = media ? dp/media*100 : 0, area = Number(e.imovel.area)||0, valor = media*area;
-  const amp = e.amplitude==="auto" ? (hs.length<3 ? 15 : Math.min(15, Math.max(5, Math.round(cv)))) : (Number(e.amplitude)||10);
-  return {L, usados:hs.length, media, mediana:mediana(hs)||0, cv, valor, amp, temFora:cand.some(x=>x.fora),
-    min:avArred(valor*(1-amp/100)), rec:avArred(valor), max:avArred(valor*(1+amp/100))};
+  const med0 = mediana(cand.map(x=>x.homog)) || 0;
+  cand.forEach(x=>{ x.desvio = med0 ? x.homog/med0 - 1 : 0; x.fora = cand.length>=3 && Math.abs(x.desvio) > .30 && !x.c.forcar; if(x.fora) x.motivo = "mediana"; });
+  let R = cand.filter(x=>!x.fora);
+  const s0 = avStats(R.map(x=>x.homog)), vc = R.length>=3 ? AV_CHAUV[Math.min(R.length, 20)] : 0;
+  R.forEach(x=>{ x.d = s0.s ? Math.abs(x.homog - s0.m)/s0.s : 0; if(vc && x.d >= vc && !x.c.forcar){ x.fora = true; x.motivo = "chauvenet"; } });
+  R = R.filter(x=>!x.fora);
+  const hs = R.map(x=>x.homog), st = avStats(hs), n = st.n, media = st.m, dp = st.s;
+  const tc = n>=2 ? AV_T80[Math.min(n-1, 20)] : 0, margem = n>=2 ? tc*dp/Math.sqrt(n-1) : 0;
+  const li = media - margem, ls = media + margem;
+  const cMin = n>=3 ? Math.max(li, media*.85) : media*.85, cMax = n>=3 ? Math.min(ls, media*1.15) : media*1.15;
+  const unitSug = media;
+  const area = Number(e.imovel.area)||0, valor = unitSug*area, auto = e.amplitude==="auto";
+  const amp = auto ? (media ? Math.round(Math.max(media-cMin, cMax-media)/media*1000)/10 : 0) : (Number(e.amplitude)||10);
+  const min = auto ? cMin*area : valor*(1-amp/100), max = auto ? cMax*area : valor*(1+amp/100);
+  return {L, usados:n, media, mediana:mediana(hs)||0, dp, cv: media ? dp/media*100 : 0, vc, tc, li, ls, cMin, cMax, unitSug,
+    valor, amp, temFora:cand.some(x=>x.fora), foraMediana:cand.some(x=>x.motivo==="mediana"), foraChauv:cand.some(x=>x.motivo==="chauvenet"),
+    min:avArred(min), rec:avArred(valor), max:avArred(max)};
 }
 const avFinais = (e, c) => e.final ? {...e.final} : {min:c.min, rec:c.rec, max:c.max};
 const avLeadEst = () => S.est && S.est.alvo.tipo==="lead" ? S.leads.find(x=>x._id===S.est.alvo.id) : null;
@@ -700,9 +725,12 @@ function avCompHtml(c, k, U){
       <label class="campo">Área (${U.r})<input ${A("area")} inputmode="decimal" data-num="1" value="${esc(avNumTxt(c.area))}"></label>
       <label class="campo">${S.est.e.fin==="aluguel"?"Aluguel":"Valor"} (R$)<input ${A("valor")} inputmode="numeric" data-num="1" value="${esc(avNumTxt(c.valor))}"></label>
       <label class="campo">Situação<select ${A("tipo")}><option ${c.tipo!=="Vendido"?"selected":""}>Oferta</option><option ${c.tipo==="Vendido"?"selected":""}>Vendido</option></select></label>
-      <label class="campo">Ajuste (%)<input ${A("ajuste")} inputmode="decimal" placeholder="0" value="${c.ajuste?esc(String(c.ajuste).replace(".",",")):""}"></label>
       <label class="campo">Bairro<input ${A("bairro")} value="${esc(c.bairro||"")}"></label>
-      <label class="campo">Fonte ou link<input ${A("fonte")} placeholder="Portal, placa, cartório…" value="${esc(c.fonte||"")}"></label>
+      <label class="campo largo2">Fonte ou link<input ${A("fonte")} placeholder="Portal, placa, cartório…" value="${esc(c.fonte||"")}"></label>
+    </div>
+    <div class="av-crit"><span class="av-crit-r">Comparado ao imóvel avaliado, este é:</span>
+      ${AV_CRIT.map(([k,r])=>`<label class="campo">${r}<select ${A(k)} class="${Number(c[k])?"mudou":""}">${AV_NIVEIS.map(([v,t])=>`<option value="${v}" ${(Number(c[k])||0)===v?"selected":""}>${t}</option>`).join("")}</select></label>`).join("")}
+      ${Number(c.ajuste)?`<label class="campo">Outro ajuste (%)<input ${A("ajuste")} inputmode="decimal" value="${esc(String(c.ajuste).replace(".",","))}"></label>`:""}
     </div>
     <div class="av-comp-res" id="acr-${id}"></div></div>`;
 }
@@ -711,8 +739,8 @@ function avCompRes(x, U){
   if(!x.ok) return `<span>Informe a área e o valor para entrar no cálculo.</span>`;
   const base = `<span>${brl(x.unit)}/${U.c}</span><span>ajustado <b>${brl(x.homog)}/${U.c}</b></span>`;
   if(c.usar===false) return `${base}<span class="av-fora">Fora do cálculo</span><button type="button" class="link-btn" data-act="av-usar" data-v="1" ${D}>Usar</button>`;
-  const d = x.desvio!=null ? ` (${x.desvio>0?"+":""}${Math.round(x.desvio*100)}% da média)` : "";
-  if(x.fora) return `${base}<span class="av-fora">Muito diferente da média${d}: fora do cálculo</span><button type="button" class="link-btn" data-act="av-usar" data-v="f" ${D}>Usar mesmo assim</button>`;
+  const d = x.desvio!=null ? ` (${x.desvio>0?"+":""}${Math.round(x.desvio*100)}% da mediana)` : "";
+  if(x.fora) return `${base}<span class="av-fora">${x.motivo==="chauvenet"?"Fora do padrão estatístico dos outros":`Muito diferente dos outros${d}`}: fora do cálculo</span><button type="button" class="link-btn" data-act="av-usar" data-v="f" ${D}>Usar mesmo assim</button>`;
   return `${base}${c.forcar?`<span class="av-mantido">Mantido por você${d}</span>`:""}<button type="button" class="link-btn" data-act="av-usar" data-v="0" ${D}>Não usar</button>`;
 }
 function avPickerHtml(){
@@ -754,7 +782,8 @@ function avPintarForm(){
       <label class="campo largo">Descrição no estudo<textarea id="ae-desc" data-e="imovel.descricao" rows="3">${esc(im.descricao||"")}</textarea></label>
     </div></section>
     <section class="doc-sec"><div class="ld-rot">Imóveis comparados <span class="tab">${e.comps.length}</span></div>
-      <p class="nota" style="margin:0">Use imóveis parecidos (tipo, bairro e padrão), de portais, placas ou vendas que você conhece. O ideal é de 4 a 8. No ajuste, use + quando o imóvel avaliado é melhor que o comparado e − quando é pior.</p>
+      <p class="nota" style="margin:0">Use imóveis parecidos (tipo, bairro e padrão), de portais, placas ou vendas que você conhece. O ideal é de 4 a 8. Para cada um, diga se é melhor, parecido ou pior que o avaliado: o CRM faz os ajustes.</p>
+      <div class="av-busca" id="av-busca"></div>
       ${e.comps.map((c,k)=>avCompHtml(c,k,U)).join("")}
       <div class="chips"><button type="button" class="btn btn-linha btn-sm" data-act="av-comp-add">+ Adicionar imóvel</button><button type="button" class="btn btn-linha btn-sm" data-act="av-picker" aria-expanded="${st.picker}">${st.picker?"Fechar a carteira":"+ Da minha carteira"}</button></div>
       ${st.picker?`<div class="av-pick"><input id="ae-pq" class="campo-solto" data-pq="1" placeholder="Buscar por código, bairro ou tipo" value="${esc(st.pq||"")}" aria-label="Buscar na carteira">${avPickerHtml()}</div>`:""}
@@ -762,11 +791,14 @@ function avPintarForm(){
     <section class="doc-sec"><div class="ld-rot">Resultado</div>
       <div class="doc-campos">
         <label class="campo">Desconto nas ofertas<select id="ae-desconto" data-e="desconto">${[0,5,10,15,20].map(n=>`<option value="${n}" ${Number(e.desconto)===n?"selected":""}>${n}%</option>`).join("")}</select></label>
-        <label class="campo">Faixa de valor<select id="ae-amp" data-e="amplitude"><option value="auto" ${e.amplitude==="auto"?"selected":""}>Automática</option>${[5,10,15].map(n=>`<option value="${n}" ${String(e.amplitude)===String(n)?"selected":""}>± ${n}%</option>`).join("")}</select></label>
+        <label class="campo">Faixa de valor<select id="ae-amp" data-e="amplitude"><option value="auto" ${e.amplitude==="auto"?"selected":""}>Estatística (automática)</option>${[5,10,15].map(n=>`<option value="${n}" ${String(e.amplitude)===String(n)?"selected":""}>± ${n}%</option>`).join("")}</select></label>
       </div>
       <div class="av-calc" id="av-calc"></div>
+      <details class="av-tec" id="av-tec"><summary>Ver detalhes técnicos do cálculo</summary><div id="av-tec-c"></div></details>
       <div class="av-finais">${[["min","Mínimo"],["rec","Recomendado"],["max","Máximo"]].map(([k,r])=>`<label class="campo">${r} (R$)<input id="ae-f-${k}" data-final="${k}" inputmode="numeric"></label>`).join("")}</div>
       <p class="nota" id="av-final-nota" style="margin:0"></p>
+      <div class="doc-campos">${avIn("pedido", e.fin==="aluguel"?"Aluguel pedido pelo proprietário (R$)":"Valor pedido pelo proprietário (R$)", e.pedido, {num:true, ph:"opcional"})}</div>
+      <div id="av-pedido"></div>
     </section>
     <section class="doc-sec"><div class="ld-rot">Parecer do corretor</div>
       <textarea id="ae-parecer" class="campo-solto" data-e="parecer" rows="4" placeholder="Sua leitura do mercado e a estratégia sugerida (opcional)">${esc(e.parecer||"")}</textarea>
@@ -775,11 +807,38 @@ function avPintarForm(){
     <section class="doc-sec"><div class="ld-rot">No PDF</div>
       <label class="check"><input type="checkbox" id="ae-opc-fontes" data-e="opc.fontes" ${e.opc.fontes!==false?"checked":""}> Mostrar a fonte de cada imóvel comparado</label>
       ${temFotos?`<label class="check"><input type="checkbox" id="ae-opc-fotos" data-e="opc.fotos" ${e.opc.fotos!==false?"checked":""}> Mostrar fotos do imóvel</label>`:""}
+      <label class="check"><input type="checkbox" id="ae-opc-pedido" data-e="opc.pedido" ${e.opc.pedido!==false?"checked":""}> Comparar com o valor pedido pelo proprietário</label>
+      <label class="check"><input type="checkbox" id="ae-opc-memoria" data-e="opc.memoria" ${e.opc.memoria?"checked":""}> Incluir a memória de cálculo (estatística)</label>
     </section>
     <div class="chips av-fe-acoes"><button type="button" class="btn btn-marca" data-act="av-salvar">Salvar estudo</button><a class="btn btn-whats" id="av-wa" target="_blank" rel="noopener" data-act="av-wa" hidden>${ICO.whats} Enviar resumo</a><button type="button" class="btn btn-ouro" data-act="av-imprimir">Imprimir ou PDF</button></div>
     <p class="nota" id="av-salvo" style="margin:0"></p>`; });
   f.scrollTop = sc;
+  const tecD = $("#av-tec"); if(tecD) tecD.addEventListener("toggle", ()=>{ if(tecD.open) avAtualizar(true); });
   avAtualizar(true);
+}
+/* Valor pedido pelo proprietário x faixa de mercado. */
+function avPedidoInfo(e, fin){
+  const p = Number(e.pedido)||0; if(!p || !fin.rec) return null;
+  const dif = (p - fin.rec)/fin.rec*100, situ = fin.max && p > fin.max ? "acima" : fin.min && p < fin.min ? "abaixo" : "dentro";
+  const pct = `${Math.abs(dif).toLocaleString("pt-BR",{maximumFractionDigits:1})}% ${dif>=0?"acima":"abaixo"} do valor de mercado`;
+  return {p, dif, situ, pct, titulo:{acima:"Pedido acima da faixa de mercado", dentro:"Pedido dentro da faixa de mercado", abaixo:"Pedido abaixo da faixa de mercado"}[situ],
+    texto:{acima:"Vale mostrar os imóveis comparados ao proprietário e combinar um valor de anúncio mais perto do recomendado.", dentro:"O valor pedido está coerente com o mercado.",
+      abaixo:"O imóvel tende a vender rápido. Confirme se o proprietário sabe que pode pedir mais."}[situ]};
+}
+const avF2 = v => Number(v).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2});
+/* Memória de cálculo: tabela de homogeneização e estatística (tela e PDF). */
+function avTecHtml(e, c, U){
+  const L = c.L.filter(x=>x.ok);
+  if(!L.length) return `<p class="nota" style="margin:0">Adicione imóveis comparados com área e valor.</p>`;
+  const sit = x => x.c.usar===false ? "fora (você tirou)" : x.fora ? (x.motivo==="chauvenet" ? "fora (Chauvenet)" : "fora (+30% da mediana)") : (x.homog>=c.cMin-1e-9 && x.homog<=c.cMax+1e-9 ? "no campo" : "fora do campo");
+  return `<div class="av-tec-tab"><table class="dc-tab"><thead><tr><th>#</th><th>R$/${U.c}</th><th>Fonte</th>${AV_CRIT.map(([,r])=>`<th>${r.slice(0,4)}.</th>`).join("")}<th>Outro</th><th>Homog.</th><th>d</th><th>Situação</th></tr></thead><tbody>
+    ${L.map(x=>`<tr><td>${e.comps.indexOf(x.c)+1}</td><td>${avF2(x.unit)}</td><td>${avF2(x.fFonte)}</td>${x.fat.map(f=>`<td>${avF2(f)}</td>`).join("")}<td>${avF2(x.fExtra)}</td><td><b>${avF2(x.homog)}</b></td><td>${x.d!=null?avF2(x.d):"—"}</td><td>${sit(x)}</td></tr>`).join("")}
+    </tbody></table></div>
+    <div class="av-tec-g">${[["Amostras no cálculo", String(c.usados)], ["Média (X)", `${avF2(c.media)} R$/${U.c}`], ["Desvio padrão (S)", `${avF2(c.dp)} R$/${U.c}`], ["Coef. de variação", pctFmt(c.cv)],
+      ["Chauvenet", c.vc ? `VC = ${avF2(c.vc)} (n = ${c.L.filter(x=>x.ok && x.c.usar!==false && x.motivo!=="mediana").length})` : "a partir de 3 amostras"],
+      ["t de Student 80%", c.tc ? `${avF2(c.tc)} (${c.usados-1} g.l.)` : "—"], ["Intervalo de confiança", c.usados>=2 ? `${avF2(c.li)} a ${avF2(c.ls)}` : "—"],
+      ["Campo de arbítrio", `${avF2(c.cMin)} a ${avF2(c.cMax)}`], ["Unitário adotado", `${avF2(c.unitSug)} R$/${U.c} (média saneada)`]]
+      .map(([r,v])=>`<div><small>${r}</small><b>${v}</b></div>`).join("")}</div>`;
 }
 /* Atualiza números, avisos e prévia sem redesenhar o formulário (não perde o foco de quem está digitando). */
 function avAtualizar(semPrevia){
@@ -796,7 +855,13 @@ function avAtualizar(semPrevia){
   ["min","rec","max"].forEach(k=>{ const i = document.getElementById("ae-f-"+k); if(i && document.activeElement!==i) i.value = fin[k] ? Number(fin[k]).toLocaleString("pt-BR") : ""; });
   const nota = $("#av-final-nota");
   if(nota) nota.innerHTML = e.final ? `Valores ajustados por você. <button type="button" class="link-btn" data-act="av-recalc">Voltar ao calculado</button>`
-    : c.valor ? `Faixa de ± ${c.amp}%${e.amplitude==="auto"?", conforme a variação dos preços pesquisados":""}. Você pode mudar os valores à mão.` : "";
+    : c.valor ? (e.amplitude==="auto" ? (c.usados>=3 ? `Faixa estatística de ± ${String(c.amp).replace(".",",")}% (intervalo de confiança de 80%, limitado a 15%).` : "Faixa de ± 15% até ter 3 comparados.") : `Faixa de ± ${c.amp}%.`) + " Você pode mudar os valores à mão." : "";
+  const tec = $("#av-tec-c"); if(tec && $("#av-tec").open) tec.innerHTML = avTecHtml(e, c, U);
+  const bu = $("#av-busca"), termo = avTermoBusca(e);
+  if(bu && bu.dataset.t!==termo){ bu.dataset.t = termo;
+    bu.innerHTML = `<span class="nota">Buscar parecidos:</span>${AV_PORTAIS.map(([n,d])=>`<a class="chip" target="_blank" rel="noopener" href="${esc(GU_BUSCA(`site:${d} ${termo}`))}">${n} ↗</a>`).join("")}<a class="chip" target="_blank" rel="noopener" href="${esc(GU_BUSCA(termo))}">Google ↗</a>`; }
+  const pe = $("#av-pedido"), pi = avPedidoInfo(e, fin);
+  if(pe) pe.innerHTML = pi ? `<div class="av-ped-${pi.situ} av-pedcard"><b>${pi.titulo}</b><span>${brl(pi.p)}${e.fin==="aluguel"?" por mês":""}, ${pi.pct}.</span><small>${pi.texto}</small></div>` : "";
   const sol = avSolicitante(), t = $("#av-titulo"); if(t) t.textContent = "Estudo de mercado" + (sol ? " · " + sol : "");
   const falta = [!(Number(e.imovel.area)>0) && "área do imóvel", c.usados<3 && "3 comparados", !fin.rec && "valor"].filter(Boolean), fe = $("#av-falta");
   if(fe){ fe.className = "doc-falta m-oculta " + (falta.length ? "tem" : "ok"); fe.textContent = falta.length ? "Falta: " + falta.join(", ") : "Pronto para enviar"; }
@@ -810,9 +875,9 @@ function avInput(ev){
   if(x.dataset.pq){ if(ev.type!=="input") return; st.pq = x.value; const l = $("#av-pick-lista"); if(l){ const d = document.createElement("div"); d.innerHTML = avPickerHtml(); l.replaceWith(d.firstElementChild); } return; }
   if(x.dataset.c && x.dataset.cf){
     const c = e.comps.find(y=>y.id===x.dataset.c); if(!c) return;
-    const k = x.dataset.cf, v = k==="ajuste" ? avPct(x.value) : (k==="area" || k==="valor") ? numBR(x.value) : x.value;
+    const k = x.dataset.cf, crit = AV_CRIT.some(([q])=>q===k), v = k==="ajuste" ? avPct(x.value) : (k==="area" || k==="valor") ? numBR(x.value) : crit ? (Number(x.value)||0) : x.value;
     if(c[k]===v) return;
-    c[k] = v; st.sujo = true; avAtualizar(); return;
+    c[k] = v; st.sujo = true; if(crit) x.classList.toggle("mudou", !!v); avAtualizar(); return;
   }
   if(x.dataset.final){ const c = avCalc(e), v = numBR(x.value); if(e.final && e.final[x.dataset.final]===v) return; e.final = {...avFinais(e, c), [x.dataset.final]:v}; st.sujo = true; avAtualizar(); return; }
   const k = x.dataset.e; if(!k) return;
@@ -861,13 +926,15 @@ function htmlEstudo(){
       ${vals.map(v=>`<i style="left:${pos(v)}%"></i>`).join("")}<div class="es-alvo" style="left:${pos(fin.rec)}%"></div></div>
       <div class="es-leg"><span><i class="es-ponto"></i> valor equivalente de cada imóvel comparado</span><span><i class="es-faixa-ico"></i> faixa recomendada</span></div>`;
   }
-  const des = Number(e.desconto)||0;
-  const metodo = `Usamos o método comparativo direto de dados de mercado: o valor por ${U.c} de imóveis semelhantes da região foi ajustado e aplicado à ${String(im.base).toLowerCase()} do imóvel avaliado.`
+  const des = Number(e.desconto)||0, auto = e.amplitude==="auto";
+  const metodo = `Seguimos o roteiro do método comparativo direto de dados de mercado da ABNT NBR 14653: o valor por ${U.c} de imóveis semelhantes da região foi homogeneizado e aplicado à ${String(im.base).toLowerCase()} do imóvel avaliado.`
     + (des && e.comps.some(x=>x.tipo!=="Vendido") ? ` Os preços em oferta receberam desconto de ${des}%, margem comum de negociação.` : "")
-    + (e.comps.some(x=>Number(x.ajuste)) ? " Ajustes individuais consideram diferenças de localização, padrão e conservação." : "")
-    + (c.temFora ? " Imóveis com valor ajustado mais de 30% distante da média foram desconsiderados." : "")
-    + (c.usados ? ` Média ajustada: ${brl(c.media)} por ${U.c}, com ${c.usados} ${c.usados===1?"imóvel":"imóveis"}.` : "")
-    + (e.final ? " Os valores finais foram definidos pelo corretor a partir do cálculo, considerando características do imóvel que os números não mostram." : c.valor ? ` A faixa de ± ${c.amp}% reflete a variação dos preços pesquisados.` : "");
+    + (e.comps.some(x=>AV_CRIT.some(([k])=>Number(x[k])) || Number(x.ajuste)) ? " Cada imóvel comparado foi ajustado pelas diferenças de localização, acabamento e conservação em relação ao avaliado." : "")
+    + (c.temFora ? ` Foram desconsiderados os imóveis muito distantes dos demais (${[c.foraMediana&&"mais de 30% da mediana", c.foraChauv&&"critério de Chauvenet"].filter(Boolean).join(" e ")}).` : "")
+    + (c.usados ? ` Média homogeneizada: ${brl(c.media)} por ${U.c}, com ${c.usados} ${c.usados===1?"imóvel":"imóveis"}.` : "")
+    + (e.final ? " Os valores finais foram definidos pelo corretor a partir do cálculo, considerando características do imóvel que os números não mostram."
+      : !c.valor ? "" : auto && c.usados>=3 ? ` A faixa corresponde ao intervalo de confiança de 80% da média, limitado a 15% (campo de arbítrio).` : ` A faixa é de ± ${String(c.amp).replace(".",",")}% sobre o valor recomendado.`);
+  const ped = e.opc.pedido!==false ? avPedidoInfo(e, fin) : null;
   return `${timbreDoc({empresa:emp, corretor:cor})}
     <h1>Estudo de mercado</h1>
     <p class="es-sub">${alug?"Opinião de valor de locação":"Opinião de valor de venda"} · ${esc(dataLonga(toLocalInput(e.atualizadoEm||hoje()).slice(0,10)))}${sol?` · Para ${esc(sol)}`:""}</p>
@@ -878,6 +945,7 @@ function htmlEstudo(){
         <div><small>Máximo</small><b>${fin.max?brl(fin.max):"—"}</b></div>
       </div>${escala}
       ${fin.rec && area ? `<p class="es-m2">Equivale a ${brl(fin.rec/area)} por ${U.c} (${esc(String(im.base).toLowerCase())} de ${numFmt(area)} ${U.r}).</p>` : ""}
+      ${ped ? `<p class="es-ped es-ped-${ped.situ}">${alug?"Aluguel pretendido":"Valor pretendido"} pelo proprietário: <b>${brl(ped.p)}</b>, ${esc(ped.pct)}${ped.situ==="dentro"?", dentro da faixa":ped.situ==="acima"?", acima da faixa":", abaixo da faixa"}.</p>` : ""}
     </section>
     <h2>Imóvel avaliado</h2>
     <div class="fi-specs es-specs">${specs.map(([r,v])=>`<div><small>${esc(r)}</small><b>${esc(v)}</b></div>`).join("")}</div>
@@ -886,12 +954,14 @@ function htmlEstudo(){
     <h2>Imóveis comparados</h2>
     ${e.comps.length ? `<table class="dc-tab es-tab"><thead><tr><th>#</th><th>Imóvel</th><th>Área</th><th>${alug?"Aluguel":"Valor"}</th><th>Por ${U.c}</th><th>Ajustado</th></tr></thead><tbody>
       ${c.L.map((x,k)=>{ const cc = x.c, fora = !x.ok || cc.usar===false || x.fora;
-        const info = [cc.bairro, cc.tipo==="Vendido"?"vendido":"em oferta", cc.ajuste?`ajuste ${cc.ajuste>0?"+":""}${String(cc.ajuste).replace(".",",")}%`:"", e.opc.fontes!==false?cc.fonte:""].filter(Boolean).join(" · ");
-        return `<tr class="${fora?"es-fora":""}"><td>${k+1}</td><td><b>${esc(cc.desc||"Imóvel "+(k+1))}</b>${info||fora?`<br><small>${esc(info)}${fora?`${info?" · ":""}${x.ok?(x.fora?"fora da média, não considerado":"não considerado"):"dados incompletos"}`:""}</small>`:""}</td>
+        const crit = AV_CRIT.filter(([k])=>Number(cc[k])).map(([k,r])=>`${r.toLowerCase()} ${avNivel(cc[k]).toLowerCase()}`).join(", ");
+        const info = [cc.bairro, cc.tipo==="Vendido"?"vendido":"em oferta", crit, cc.ajuste?`outro ajuste ${cc.ajuste>0?"+":""}${String(cc.ajuste).replace(".",",")}%`:"", e.opc.fontes!==false?cc.fonte:""].filter(Boolean).join(" · ");
+        return `<tr class="${fora?"es-fora":""}"><td>${k+1}</td><td><b>${esc(cc.desc||"Imóvel "+(k+1))}</b>${info||fora?`<br><small>${esc(info)}${fora?`${info?" · ":""}${x.ok?(x.fora?"fora do padrão dos demais, não considerado":"não considerado"):"dados incompletos"}`:""}</small>`:""}</td>
           <td>${cc.area?esc(numFmt(cc.area)+" "+(U.c==="m²"?"m²":U.r)):"—"}</td><td>${cc.valor?brl(cc.valor):"—"}</td><td>${x.ok?brl(x.unit):"—"}</td><td>${x.ok?brl(x.homog):"—"}</td></tr>`; }).join("")}
       </tbody></table>` : `<p class="es-txt">Nenhum imóvel comparado informado.</p>`}
     <h2>Como chegamos ao valor</h2>
     <p class="es-txt">${esc(metodo)}</p>
+    ${e.opc.memoria && c.usados ? `<h2>Memória de cálculo</h2><p class="es-txt es-peq">Comparado em relação ao avaliado: muito melhor 0,80; melhor 0,90; parecido 1,00; pior 1,10; muito pior 1,20. Homogeneizado = R$/${esc(U.c)} × fonte × localização × acabamento × conservação × outro ajuste.</p><div class="es-tec">${avTecHtml(e, c, U)}</div>` : ""}
     ${e.parecer?`<h2>Parecer do corretor</h2><p class="es-txt">${esc(e.parecer).replace(/\n/g,"<br>")}</p>`:""}
     <div class="dc-assin n1"><div class="dc-ass"><span class="dc-linha"></span><b>${esc(cor.nome)}</b><small>${/a$/i.test(primeiroNome(cor.nome))?"Corretora":"Corretor"} de imóveis${cor.creci?` · CRECI ${esc(cor.creci)}`:""}${cnai?` · ${esc(cnai)}`:""}</small></div></div>
     <p class="es-aviso">Este estudo é uma opinião de valor preparada para orientar a ${alug?"locação":"venda"} do imóvel, com base nas informações fornecidas e em imóveis semelhantes ofertados ou negociados na região até a data acima. Não é laudo de avaliação e não substitui o Parecer Técnico de Avaliação Mercadológica (PTAM) nem o laudo conforme a ABNT NBR 14653, exigidos em inventários, partilhas, processos judiciais e garantias bancárias. Os valores mudam com o mercado; recomenda-se revisar o estudo em até seis meses.</p>`;
