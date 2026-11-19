@@ -176,7 +176,7 @@ function abasCrm(){
   const L = leadsF().filter(aberto), fim = fimDoDia();
   const nHoje = L.filter(semResposta).length + L.filter(l=>!semResposta(l) && l.proximoContato && new Date(l.proximoContato)<=fim).length
     + todasVisitas().filter(v=>v.status==="agendada" && new Date(v.quando)<=fim).length;
-  const t = [["hoje","Hoje",nHoje],["funil","Funil"],["leads","Leads"],["agenda","Agenda"],["imoveis","Imóveis"],["documentos","Documentos"],["relatorios","Relatórios"]];
+  const t = [["hoje","Hoje",nHoje],["funil","Funil"],["leads","Leads"],["agenda","Agenda"],["imoveis","Imóveis"],["avaliacoes","Avaliações",avPedidos().length],["documentos","Documentos"],["relatorios","Relatórios"]];
   if(ehGestor()) t.push(["equipe","Equipe"]);
   return t;
 }
@@ -192,7 +192,7 @@ function renderCrm(app){
   if($("#crm-cor")) $("#crm-cor").value = S.crmCorretor || "";
   $("#crm-tabs").innerHTML = abas.map(([k,n,b])=>`<button class="ctab ${S.crmTab===k?"on":""}" data-act="aba" data-v="${k}" ${S.crmTab===k?'aria-current="page"':""}>${n}${b?`<i class="badge tab">${b}</i>`:""}</button>`).join("");
   const corpo = $("#crm-corpo");
-  preservar(corpo, ()=>({hoje:crmHoje, funil:crmFunil, leads:crmLeads, agenda:crmAgenda, imoveis:crmImoveis, documentos:crmDocumentos, relatorios:crmRelatorios, equipe:crmEquipe})[S.crmTab](corpo));
+  preservar(corpo, ()=>({hoje:crmHoje, funil:crmFunil, leads:crmLeads, agenda:crmAgenda, imoveis:crmImoveis, avaliacoes:crmAvaliacoes, documentos:crmDocumentos, relatorios:crmRelatorios, equipe:crmEquipe})[S.crmTab](corpo));
   if(!$("#crm-q-res").hidden) pintarBusca();
 }
 function cascaHtml(){
@@ -257,7 +257,7 @@ document.addEventListener("click", e=>{
   const res = $("#crm-q-res"); if(res && !res.hidden && !e.target.closest(".crm-busca")) res.hidden = true;
   if(e.target.id==="crm-sair"){ sairCrm(); return; }
   const t = e.target.closest("[data-wa],[data-act],[data-l],[data-i]");
-  if(!t || !t.closest("#crm-shell, #crm-corpo, #gaveta, #doc-tela, #toasts, .fab")) return;
+  if(!t || !t.closest("#crm-shell, #crm-corpo, #gaveta, #doc-tela, #av-tela, #toasts, .fab")) return;
   const menu = t.closest("details.menu"); if(menu && t.tagName!=="SUMMARY") menu.open = false;
   if(res && t.closest("#crm-q-res")){ res.hidden = true; $("#crm-q").value = ""; }
   if(t.dataset.wa){ const d = {...t.dataset}; setTimeout(()=>registrarModelo(d.lead, d.wa, d), 60); return; }
@@ -266,7 +266,7 @@ document.addEventListener("click", e=>{
   if(t.dataset.i){ e.preventDefault(); abrirImovel(t.dataset.i); return; }
 });
 document.addEventListener("keydown", e=>{
-  if(rota().nome!=="crm" || $("#gaveta") || $("#doc-tela")) return;
+  if(rota().nome!=="crm" || $("#gaveta") || $("#doc-tela") || $("#av-tela")) return;
   const digitando = /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||"");
   if((e.key==="k" && (e.ctrlKey||e.metaKey)) || (e.key==="/" && !digitando)){ const q=$("#crm-q"); if(q){ e.preventDefault(); q.focus(); } }
 });
@@ -274,6 +274,7 @@ async function sairCrm(){ await MF.sair(); S.podeCrm = false; S.acessoPronto = f
 
 async function acao(nome, d, el){
   if(nome.startsWith("doc-")) return acaoDoc(nome, d, el);
+  if(nome.startsWith("av-")) return acaoAv(nome, d, el);
   const id = d.lead;
   const l = id ? S.leads.find(x=>x._id===id) : null;
   switch(nome){
@@ -306,7 +307,8 @@ async function acao(nome, d, el){
         salvarLead(id, {visitas:(l.visitas||[]).map(x=>x.id===d.visita?{...x, status:"cancelada"}:x)}, [{tipo:"Nota", texto:`Visita de ${dataHoraBR(v&&v.quando)} cancelada.`}]); } return;
     case "excluir-lead": if(el.dataset.ok!=="1"){ el.dataset.ok="1"; el.textContent="Clique de novo para excluir"; return; }
       try{ await S.db.collection("leads").doc(id).delete(); fecharGaveta(); toast("Lead excluído."); }catch(err){ toast("Não foi possível excluir."); } return;
-    case "virar-imovel": if(l) abrirImovel(null, {priv:{proprietario:l.nome, proprietarioCel:fmtCel(l.celular), proprietarioEmail:l.email||"", origemLead:l._id, obsInternas:l.mensagem||""}}); return;
+    case "virar-imovel": if(l){ const ped = l.avaliacao ? avImovelDoPedido(l) : {};
+      abrirImovel(null, {...ped, priv:{proprietario:l.nome, proprietarioCel:fmtCel(l.celular), proprietarioEmail:l.email||"", origemLead:l._id, obsInternas:l.mensagem||"", ...(ped.priv||{})}}); } return;
     case "lead-visita": S.agendando = d.lead; abrirLead(d.lead); setTimeout(()=>{ const x=$("#v-quando"); if(x){ x.scrollIntoView({block:"center"}); x.focus(); } }, 50); return;
   }
 }
@@ -413,7 +415,7 @@ function msgModelo(id, l, ctx={}){
   const pn = primeiroNome(l.nome), eu = corretorDe(l.corretorId||"fernando").nome;
   const im = ctx.imovel || imovelPorId(l.imovelId), v = ctx.visita;
   switch(id){
-    case "primeiro": return `Olá ${pn}, tudo bem? Aqui é ${eu}, da Monfernatti Imóveis. ` + (l.interesse==="Captação"
+    case "primeiro": return `Olá ${pn}, tudo bem? Aqui é ${eu}, da Monfernatti Imóveis. ` + (l.avaliacao ? msgPrimeiroAvaliacao(l) : l.interesse==="Captação"
       ? "Recebi seu pedido para anunciar seu imóvel. Podemos combinar uma visita para a avaliação e as fotos?"
       : im ? `Recebi seu interesse no imóvel ${im.titulo} (cód. ${im.codigo}). Posso te mandar mais detalhes ou já agendar uma visita?`
       : "Recebi seu contato. Me conta o que você procura que eu separo as melhores opções.");
@@ -755,6 +757,7 @@ function pintarLeadDin(){
   const enviado = iid => (l.enviados||[]).find(e=>e.imovelId===iid);
   preservar(el, ()=>{ el.innerHTML = `
     ${S.ligacao===l._id?`<div class="aviso aviso-acao"><span><b>Como foi a ligação?</b></span><span class="chips"><button class="btn btn-ouro btn-sm" data-act="atendeu" ${D}>Atendeu</button><button class="btn btn-linha btn-sm" data-act="nao-atendeu" ${D}>Não atendeu</button></span></div>`:""}
+    ${secAvaliacaoLead(l)}
     <section class="ld-sec"><div class="ld-rot">Próximo contato <span class="${atrasado(l)?"atraso":""}">${l.proximoContato?`${diaRotulo(l.proximoContato)} às ${horaBR(l.proximoContato)}${atrasado(l)?" (atrasado)":""}`:"nenhum marcado"}</span></div>
       <div class="chips">${[["2h","Daqui 2 h"],["amanha","Amanhã 9h"],["3d","Em 3 dias"],["7d","Em 1 semana"]].map(([k,r])=>`<button class="chip" data-act="prox" data-v="${k}" ${D}>${r}</button>`).join("")}
         <input type="datetime-local" class="chip-input" id="ld-prox" aria-label="Escolher data e hora" value="${toLocalInput(l.proximoContato)}">${l.proximoContato?`<button class="chip" data-act="prox" data-v="" ${D}>Limpar</button>`:""}</div></section>
@@ -790,6 +793,7 @@ function pintarLeadDin(){
     ${secDocsLead(l)}
     <section class="ld-sec"><div class="ld-rot">Histórico</div><div class="hist">${[...(l.historico||[])].reverse().map(h=>`<div><small class="tab">${dataHoraBR(h.quando)} · ${esc(h.tipo)}</small>${esc(h.texto)}</div>`).join("")||'<div class="nota">Sem registros.</div>'}</div></section>`; });
   ligarLeadDin(l);
+  pintarFotosAv(el);
 }
 function ligarLeadDin(l){
   const id = l._id;
@@ -908,7 +912,7 @@ function ligarFormLeadCrm(l, novo){
 
 /* ---------- Gaveta: imóvel ---------- */
 function abrirImovel(id, opc={}){
-  const i = id ? S.imoveis.find(x=>x._id===id) : {finalidade:"venda", status:"disponivel", uf:"PR", cidade:"Cornélio Procópio", fotos:[], caracteristicas:[], codigo:String(proximoCodigo()), corretorId:S.crmCorretor||meuId()};
+  const i = id ? S.imoveis.find(x=>x._id===id) : {finalidade:"venda", status:"disponivel", uf:"PR", cidade:"Cornélio Procópio", fotos:[], caracteristicas:[], codigo:String(proximoCodigo()), corretorId:S.crmCorretor||meuId(), ...(opc.base||{})};
   if(!i) return;
   const p = {...(id ? (S.privado[id]||{}) : {}), ...(opc.priv||{})};
   const podeEditar = ehGestor() || (i.corretorId||"fernando")===S.meuCorretor;
@@ -919,10 +923,10 @@ function abrirImovel(id, opc={}){
   gaveta(`
     <div class="ld-linha1"><h2>${id?esc(i.codigo)+" · "+esc(i.titulo):"Novo imóvel"}</h2><button class="btn btn-linha btn-sm" data-act="fechar">Fechar</button></div>
     ${id?`<div class="ld-meta"><span class="status st-${esc(i.status||"disponivel")}">${esc(rotStatus(i.status))}</span><span>${nLeads} ${nLeads===1?"lead":"leads"}</span><span>${nVis} ${nVis===1?"visita":"visitas"}</span><span>${badgeAut(p)}</span></div>
-    <div class="ld-acoes">${menuDocs({imovel:id})}</div>
+    <div class="ld-acoes">${menuDocs({imovel:id})}<button class="btn btn-linha" data-act="av-estudo" data-imovel="${esc(id)}">Estudo de mercado</button></div>
     <section class="ld-sec"><div class="ld-rot">Clientes que combinam com este imóvel</div>
       ${clientes.length?clientes.slice(0,10).map(l=>{ const e=(l.enviados||[]).find(x=>x.imovelId===id); return `<div class="comb"><button class="t-info" data-l="${esc(l._id)}"><span><b>${esc(l.nome)}</b><small>${esc(nomeEtapa(l.etapa))} · <span class="termo t-${esc(l.temperatura||"morno")}">${esc(l.temperatura||"morno")}</span>${e?` · <span class="ok-txt">enviado ${dataBR(e.quando)}</span>`:""}</small></span></button>${linkWa(l,"imovel",{imovel:i},`${ICO.whats} ${e?"Reenviar":"Enviar"}`)}</div>`; }).join("")
-        :'<p class="nota" style="margin:0">Nenhum cliente em aberto com perfil compatível. Preencha "o que o cliente procura" nos leads para cruzar automaticamente.</p>'}</section>${secDocsImovel(id)}`:""}
+        :'<p class="nota" style="margin:0">Nenhum cliente em aberto com perfil compatível. Preencha "o que o cliente procura" nos leads para cruzar automaticamente.</p>'}</section>${secDocsImovel(id)}${secEstudosImovel(id)}`:""}
     <form id="i-form" class="g-form" ${podeEditar?"":'inert'}>
       <details class="ld-bloco" id="i-dados" ${id?"":"open"}><summary>Dados do anúncio (aparecem no site)</summary><div class="g-form" style="padding-top:10px">
       <label class="campo">Título do anúncio<input id="i-titulo" required value="${esc(i.titulo||"")}"></label>
@@ -965,6 +969,7 @@ function abrirImovel(id, opc={}){
     $("#i-fotos").querySelectorAll("[data-capa]").forEach(b=>b.onclick=()=>{ const [f] = fotos.splice(+b.dataset.capa,1); fotos.unshift(f); pintarFotos(); });
   };
   pintarFotos();
+  if(!id && (opc.copiarFotos||[]).length) copiarFotosAv(opc.copiarFotos, url=>{ fotos.push(url); pintarFotos(); });
   $("#i-up").onchange = async e=>{
     const arqs = [...e.target.files]; if(!arqs.length||!S.assets) return;
     $("#i-upret").textContent = `Enviando ${arqs.length} foto(s)…`;

@@ -88,6 +88,18 @@
     },
     async acessos(){ const {data, error} = await sb.from("admins").select("*"); if(error) throw error; return data||[]; },
     async darAcesso(email, papel, corretor_id){ const {error} = await sb.from("admins").upsert({email:String(email).trim().toLowerCase(), papel, corretor_id}); if(error) throw error; },
-    async removerAcesso(email){ const {error} = await sb.from("admins").delete().eq("email", email); if(error) throw error; }
+    async removerAcesso(email){ const {error} = await sb.from("admins").delete().eq("email", email); if(error) throw error; },
+    /* Fotos dos pedidos de avaliação: pasta privada "avaliacoes". Visitantes só enviam; a equipe vê por links temporários. */
+    async enviarFotoAvaliacao(blob){
+      const caminho = "pedidos/" + new Date().toISOString().slice(0,7) + "/" + novoId() + ".jpg";
+      const {error} = await sb.storage.from("avaliacoes").upload(caminho, blob, {contentType: blob.type || "image/jpeg", upsert:false});
+      if(error) throw error; return caminho;
+    },
+    async linksAvaliacao(caminhos){
+      const {data, error} = await sb.storage.from("avaliacoes").createSignedUrls(caminhos, 3600);
+      if(error) throw error;
+      return Object.fromEntries((data||[]).filter(x=>x && x.signedUrl && x.path).map(x=>[x.path, x.signedUrl]));
+    },
+    async baixarFotoAvaliacao(caminho){ const {data, error} = await sb.storage.from("avaliacoes").download(caminho); if(error) throw error; return data; }
   };
 })();

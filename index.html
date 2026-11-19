@@ -226,6 +226,7 @@ body::before{background:var(--topo)}
 .nav a.crm{border-color:var(--linha);color:var(--topo-fg)}
 .nav a.wa{background:var(--marca);color:#fff}
 .nav a.wa:hover{background:var(--marca-2)}
+@media(min-width:1141px){.nav{gap:2px}.nav a{padding:8px 10px}}
 
 .hero2{background:var(--card)}
 .hero2 .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center;padding-block:56px 44px}
@@ -677,6 +678,171 @@ b.fd-logo{height:auto;color:#d1ae70;font-family:"Barlow Condensed",Arial,sans-se
   #doc-print .dc-vazio{background-color:transparent}
   #doc-print .dc-vazio.area{background-color:transparent}
 }
+/* ---------- Avalie seu imóvel: página pública ---------- */
+:root{--av-sel:var(--marca);--av-sel-fg:#fff;--av-dest:var(--marca)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--av-sel:var(--ouro);--av-sel-fg:#1d2823;--av-dest:var(--ouro)}}
+:root[data-theme="dark"]{--av-sel:var(--ouro);--av-sel-fg:#1d2823;--av-dest:var(--ouro)}
+.av-hero{background:var(--suave);border-bottom:1px solid var(--linha)}
+.av-hero-in{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:44px;align-items:start;padding-block:48px 56px}
+.av-intro{position:sticky;top:calc(env(safe-area-inset-top,0px) + 110px)}
+.av-intro h1{font-family:var(--f-body);font-weight:400;font-size:clamp(32px,4.3vw,54px);line-height:1.06;text-transform:uppercase;letter-spacing:-.01em;margin:10px 0 14px;max-width:13ch}
+.av-intro h1 b{font-weight:800;color:var(--av-dest)}
+.av-intro .sub{color:var(--muted);font-size:16px;max-width:46ch;margin:0 0 20px}
+.av-checks{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.av-checks li{display:flex;gap:10px;align-items:center;font-weight:700;font-size:14.5px}
+.av-checks li::before{content:"✓";flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ouro);color:#1d2823;font-size:12px;font-weight:800}
+.av-card{background:var(--card);border:1px solid var(--linha);border-radius:18px;box-shadow:0 20px 50px rgba(20,30,25,.10);padding:24px;min-width:0;scroll-margin-top:90px}
+.av-topo{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.av-prog{height:6px;background:var(--chip);border-radius:99px;overflow:hidden;margin:8px 0 20px}
+.av-prog span{display:block;height:100%;background:var(--ouro);border-radius:99px;transition:width .3s}
+.av-card h2{font-size:clamp(26px,3vw,32px);margin:0 0 6px;outline:none}
+.av-sub{color:var(--muted);margin:0 0 18px;font-size:14px}
+.av-grupo{margin-top:14px}
+.av-grupo h3{font-family:var(--f-body);font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.av-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:8px}
+.av-tile{position:relative;display:flex;align-items:center;gap:10px;border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:700;font-size:14px;line-height:1.25;background:var(--card);min-height:54px;transition:border-color .15s,background .15s}
+.av-tile svg{width:24px;height:24px;flex:none;color:var(--ouro-forte)}
+.av-tile:hover,.av-op:hover{border-color:var(--ouro)}
+.av-tile.on{border-color:var(--av-sel);background:color-mix(in srgb,var(--av-sel) 9%,var(--card));box-shadow:inset 0 0 0 1px var(--av-sel)}
+.av-tile input,.av-op input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.av-tile:focus-within,.av-op:focus-within{outline:2px solid var(--ouro);outline-offset:2px}
+.av-q{border:0;padding:0;margin:0 0 18px;min-width:0}
+.av-q legend{font-weight:800;font-size:14.5px;padding:0;margin-bottom:8px}
+.av-q .opc,.av-campo .opc{font-weight:500;color:var(--muted);font-style:normal;font-size:13px}
+.av-ops{display:flex;flex-wrap:wrap;gap:8px}
+.av-op{position:relative;display:inline-flex;align-items:center;border:1.5px solid var(--linha);border-radius:999px;padding:9px 15px;font-weight:600;font-size:14px;cursor:pointer;background:var(--card);min-height:42px;line-height:1.2}
+.av-op.on{background:var(--av-sel);border-color:var(--av-sel);color:var(--av-sel-fg)}
+.av-op.multi.on span::before{content:"✓ "}
+.av-q.erro .av-op,#avq-tipo:has(.av-erro) .av-tile{border-color:color-mix(in srgb,var(--perigo) 55%,var(--linha))}
+.av-campos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.av-campos:empty{display:none}
+.av-campo{display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:13.5px;min-width:0}
+@supports (grid-template-rows:subgrid){.av-campos>.av-campo{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:0}.av-campos>.av-campo>span:first-child{align-self:end;margin-bottom:6px}.av-campos>.av-campo>.av-erro{margin-top:6px}}
+.av-campo.largo{grid-column:1/-1}
+.av-campo .in{display:flex;align-items:center;border:1.5px solid var(--linha);border-radius:10px;background:var(--bg);overflow:hidden}
+.av-campo .in:focus-within,.av-campo textarea:focus{border-color:var(--ouro);box-shadow:0 0 0 3px color-mix(in srgb,var(--ouro) 25%,transparent)}
+.av-campo input,.av-campo textarea{border:0;background:transparent;padding:11px 12px;font-size:16px;font-weight:500;width:100%;min-width:0;outline:none;color:var(--fg)}
+.av-campo textarea{border:1.5px solid var(--linha);border-radius:10px;background:var(--bg);resize:vertical;font-family:inherit}
+.av-campo .in i{font-style:normal;color:var(--muted);font-weight:700;font-size:13px;padding:0 12px;flex:none}
+.av-campo .in i:first-child{padding-right:0}
+.av-campo.erro .in{border-color:var(--perigo)}
+.av-erro{display:block;color:var(--perigo);font-size:12.5px;font-weight:700;margin-top:6px}
+.av-campo .av-erro{margin-top:0}
+.av-dica{font-size:13px;color:var(--muted);margin:0}
+.av-info{background:color-mix(in srgb,var(--ouro) 14%,var(--card));border:1px solid color-mix(in srgb,var(--ouro) 45%,var(--linha));border-radius:12px;padding:12px 14px;font-size:14px;margin:0 0 18px}
+.av-check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.45;cursor:pointer;margin-top:4px}
+.av-check input{width:20px;height:20px;flex:none;margin:1px 0 0;accent-color:var(--av-sel)}
+#avq-aceite.erro .av-check span{color:var(--perigo)}
+.av-mel{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.av-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px;padding-top:16px;border-top:1px solid var(--linha)}
+.av-nav .btn{min-width:130px;padding:13px 20px;font-size:15px}
+.av-nav .btn:disabled{opacity:.6;cursor:wait}
+#av-ret:not(:empty){margin-top:12px}
+.av-drop{display:flex;flex-direction:column;align-items:center;gap:4px;border:2px dashed var(--linha);border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;background:var(--bg);margin-bottom:12px}
+.av-drop:hover{border-color:var(--ouro)}
+.av-drop svg{width:34px;height:34px;color:var(--ouro-forte)}
+.av-drop span{font-size:13px;color:var(--muted)}
+.av-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.av-thumbs:empty{display:none}
+.av-thumb{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--chip)}
+.av-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.av-thumb button{position:absolute;top:4px;right:4px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:16px;cursor:pointer;line-height:1}
+.av-feito{text-align:center;padding:18px 4px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.av-feito-ico{width:64px;height:64px;border-radius:50%;background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok);display:grid;place-items:center;font-size:30px;font-weight:800}
+.av-feito p{margin:0;color:var(--muted);max-width:46ch}
+.av-feito-acoes{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.av-como{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px}
+.av-como>div{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:18px}
+.av-como span{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--marca);color:var(--ouro);font-family:var(--f-display);font-weight:700;font-size:18px}
+.av-como h3{font-size:23px;margin:12px 0 6px}
+.av-como p{margin:0;color:var(--muted);font-size:14px}
+.av-aviso{margin-top:22px;max-width:80ch}
+.cta-faixa .btn-vaz{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
+@media(max-width:900px){
+  .av-hero-in{grid-template-columns:minmax(0,1fr);gap:22px;padding-block:26px 34px}
+  .av-intro{position:static}
+  .av-intro .sub{margin-bottom:14px}
+  .av-checks{display:flex;flex-wrap:wrap;gap:6px 16px}
+  .av-checks li{font-size:13px}
+  .av-checks li::before{width:18px;height:18px;font-size:10px}
+}
+@media(max-width:600px){
+  .av-card{padding:18px 14px;border-radius:16px}
+  .av-tiles{grid-template-columns:1fr 1fr}
+  .av-tile{padding:9px 10px;font-size:13.5px;gap:8px}
+  .av-tile svg{width:20px;height:20px}
+  .av-campos{grid-template-columns:1fr 1fr}
+  .av-op{padding:8px 13px;font-size:13.5px}
+  .av-nav .btn{min-width:0;flex:1}
+  .av-nav>span{display:none}
+}
+/* ---------- Avaliações no CRM ---------- */
+.av-ped{background:var(--card);border:1px solid var(--linha);border-left:4px solid var(--ouro);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.av-dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px 12px;margin:0}
+.av-dl div{min-width:0}
+.av-dl dt{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800}
+.av-dl dd{margin:0;font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.av-mais>summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--muted)}
+.av-mais[open]>summary{margin-bottom:8px}
+.av-fotos-ped{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}
+.av-foto{display:block;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--chip)}
+.av-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.av-foto.erro{opacity:.4}
+.av-comp{border:1px solid var(--linha);border-radius:12px;background:var(--card);padding:10px;display:flex;flex-direction:column;gap:8px}
+.av-comp.fora{border-style:dashed;background:color-mix(in srgb,var(--card) 70%,var(--bg))}
+.av-comp-top{display:flex;gap:8px;align-items:center}
+.av-n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font-size:12px}
+.av-comp-top .campo-solto{flex:1;min-width:0;padding:8px 10px;font-size:14px}
+.av-comp-g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.av-comp-res{font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:3px 10px;align-items:center}
+.av-comp-res b{color:var(--fg)}
+.av-comp-res .link-btn{margin:0;font-size:12.5px}
+.av-fora{color:var(--perigo);font-weight:700}
+.av-mantido{color:var(--alerta);font-weight:700}
+.av-pick{display:flex;flex-direction:column;gap:8px;border:1px dashed var(--linha);border-radius:12px;padding:10px}
+.av-pick .lista-sel{max-height:300px;overflow-y:auto}
+.lista-sel button:disabled{opacity:.55;cursor:default}
+.av-calc{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.av-calc>div{background:var(--card);border:1px solid var(--linha);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;min-width:0}
+.av-calc small{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800}
+.av-calc b{font-size:15px}
+.av-calc .av-calc-v{grid-column:1/-1;border-color:color-mix(in srgb,var(--ouro) 70%,var(--linha))}
+.av-calc-v b{font-family:var(--f-display);font-size:26px;line-height:1.1}
+.av-alerta{grid-column:1/-1;margin:0;font-size:12.5px;color:var(--alerta);font-weight:700}
+.av-finais{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.av-fe-acoes{position:sticky;bottom:calc(-40px - env(safe-area-inset-bottom,0px));background:var(--bg);padding:10px 0 calc(40px + env(safe-area-inset-bottom,0px));margin-bottom:calc(-40px - env(safe-area-inset-bottom,0px));border-top:1px solid var(--linha)}
+.av-fe-acoes [hidden]{display:none}
+/* folha do estudo de mercado (sempre clara, como no papel) */
+.dc-estudo .es-sub{text-align:center;color:#4c5752;margin:-4mm 0 6mm;font-size:9.5pt}
+.es-res{border:1.5pt solid #c9a464;border-radius:3mm;padding:5mm 6mm 4mm;margin-bottom:5mm;break-inside:avoid}
+.es-faixa{display:grid;grid-template-columns:1fr 1.35fr 1fr;align-items:end;text-align:center;gap:4mm}
+.es-faixa small{display:block;font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#6b7570;font-weight:800;margin-bottom:.5mm}
+.es-faixa b{font-family:"Barlow Condensed",Arial,sans-serif;font-size:19pt;color:#293731;line-height:1.05;white-space:nowrap}
+.es-rec b{font-size:31pt}
+.es-rec span{display:block;font-size:8.5pt;color:#6b7570}
+.es-escala{position:relative;height:9mm;margin:5mm 2mm 1mm}
+.es-trilho{position:absolute;left:0;right:0;top:3.9mm;height:1.2mm;background:#e3e8e5;border-radius:1mm}
+.es-banda{position:absolute;top:2.5mm;height:4mm;background:#ead8b3;border-radius:1mm}
+.es-escala i{position:absolute;top:3.2mm;width:2.6mm;height:2.6mm;margin-left:-1.3mm;border-radius:50%;background:#5f6b65}
+.es-alvo{position:absolute;top:0;width:.9mm;height:9mm;margin-left:-.45mm;background:#293731;border-radius:.4mm}
+.es-leg{display:flex;justify-content:center;gap:8mm;font-size:7.5pt;color:#6b7570;margin:0 2mm}
+.es-leg span{display:inline-flex;align-items:center;gap:1.5mm}
+.es-ponto{display:inline-block;width:2.2mm;height:2.2mm;border-radius:50%;background:#5f6b65}
+.es-faixa-ico{display:inline-block;width:5mm;height:2.6mm;border-radius:.6mm;background:#ead8b3}
+.es-m2{text-align:center;margin:2.5mm 0 0;font-size:9pt;color:#4c5752}
+.es-specs{margin-bottom:2.5mm}
+.es-txt{font-size:9.5pt;text-align:justify;margin:0 0 3mm}
+.es-fotos{display:grid;grid-template-columns:repeat(3,1fr);gap:2mm;margin:1mm 0 3mm;break-inside:avoid}
+.es-fotos img{width:100%;height:34mm;object-fit:cover;border-radius:1.5mm;display:block}
+.dc-tab.es-tab td:last-child{width:auto}
+.es-tab th:nth-child(n+3),.es-tab td:nth-child(n+3){text-align:right;white-space:nowrap}
+.es-tab td:first-child,.es-tab th:first-child{width:5mm;text-align:center}
+.es-tab tr{break-inside:avoid}
+.es-fora td{color:#8a948f}
+.es-fora td:nth-child(n+3){text-decoration:line-through}
+.dc-estudo h2{break-after:avoid}
+.dc-estudo .dc-assin{margin:10mm 0 2mm}
+.es-aviso{font-size:7.5pt;line-height:1.45;color:#6b7570;border-top:1px solid #dfe5e1;padding-top:2.5mm;margin:5mm 0 0;text-align:justify;break-inside:avoid}
 </style>
 </head>
 <body>
@@ -691,6 +857,7 @@ b.fd-logo{height:auto;color:#d1ae70;font-family:"Barlow Condensed",Arial,sans-se
       <a href="#corretores" data-r="corretores">Corretores</a>
       <a href="#servicos" data-r="servicos">Serviços</a>
       <a href="#informacoes" data-r="informacoes">Informações úteis</a>
+      <a href="#avaliar" data-r="avaliar">Avaliar imóvel</a>
       <a href="#anunciar" data-r="anunciar" class="hide-m">Anunciar imóvel</a>
       <a href="#favoritos" data-r="favoritos" class="hide-m">♡ Favoritos</a>
       <a href="#crm" data-r="crm" class="crm" id="link-crm" hidden>CRM</a>
@@ -715,6 +882,7 @@ b.fd-logo{height:auto;color:#d1ae70;font-family:"Barlow Condensed",Arial,sans-se
 <script src="/js/dados.js"></script>
 <script src="/js/crm.js"></script>
 <script src="/js/documentos.js"></script>
+<script src="/js/avaliacao.js"></script>
 <script>
 const WHATS = "5543999779003";
 const ETAPAS = [
@@ -793,7 +961,9 @@ function render(){
   document.body.classList.toggle("modo-crm", r.nome==="crm" && !!S.podeCrm);
   if(r.nome!=="crm" && $("#gaveta") && S.gav) fecharGaveta();
   if(r.nome!=="crm" && $("#doc-tela")) fecharDoc(true);
+  if(r.nome!=="crm" && $("#av-tela")) fecharEstudo(true);
   if(r.nome==="crm") return renderCrm(app);
+  if(r.nome==="avaliar") return renderAvaliar(app);
   if(r.nome==="entrar"||r.nome==="nova-senha") return renderEntrar(app, r.nome);
   if(!S.carregado){
     app.innerHTML = S.erroDb
@@ -920,6 +1090,8 @@ function renderInicio(app){
     </div>
   </div></section>
 
+  <section class="wrap sec"><div class="cta-faixa" style="margin-top:0"><div><span class="eyebrow">Para proprietários</span><h3>Quanto vale o seu imóvel hoje?</h3><p>Responda algumas perguntas e receba um estudo de mercado gratuito, feito por avaliador com CNAI.</p></div><a class="btn btn-ouro" href="#avaliar">Avaliar meu imóvel</a></div></section>
+
   <section class="faixa"><div class="wrap">
     <div><span class="eyebrow">Quem atende você</span><h2>Monfernatti Imóveis</h2>
       <p>Atendimento próximo, do primeiro contato à entrega das chaves. Cada imóvel anunciado aqui foi visitado pela nossa equipe, com fotos e informações conferidas.</p>
@@ -932,6 +1104,7 @@ function renderInicio(app){
     <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">
       <a class="btn btn-whats" target="_blank" rel="noopener" href="${waLink("Olá Fernando, vim pelo site e gostaria de atendimento.")}">${ICO.whats} Falar no WhatsApp</a>
       <a class="btn btn-ouro" href="#anunciar">Quero vender ou alugar meu imóvel</a>
+      <a class="btn btn-linha" style="color:#fff;border-color:rgba(255,255,255,.4)" href="#avaliar">Quanto vale meu imóvel?</a>
       <a class="btn btn-linha" style="color:#fff;border-color:rgba(255,255,255,.4)" target="_blank" rel="noopener" href="${INSTA}">${ICO.insta} Siga @monfernattiimoveis</a>
       <span style="color:#cfd8d2;font-size:13px">Rua dos Bandeirantes, 315, Sala 02, Centro, Cornélio Procópio, PR</span>
     </div>
@@ -1145,6 +1318,7 @@ function renderAnunciar(app){
     <span class="eyebrow">Para proprietários</span>
     <h2 style="font-size:clamp(32px,4vw,46px);margin:8px 0 10px">Quer vender ou alugar seu imóvel?</h2>
     <p style="color:var(--muted);max-width:60ch">Faço a avaliação, as fotos e a divulgação. Conte um pouco sobre o imóvel e eu retorno para combinar a visita.</p>
+    <p class="aviso" style="margin:14px 0 0">Ainda não sabe quanto pedir? <a href="#avaliar" style="color:var(--ouro-forte);font-weight:700">Faça o estudo de mercado gratuito</a>: em 3 minutos você descreve o imóvel e recebe uma faixa de preço pelo WhatsApp.</p>
     <form class="lead" id="f-anuncio" style="margin-top:18px;background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:20px">
       <div class="linha2"><input id="a-nome" required placeholder="Seu nome"><input id="a-cel" required placeholder="Celular com DDD" inputmode="tel"></div>
       <input id="a-email" type="email" placeholder="E-mail (opcional)">
@@ -1197,7 +1371,7 @@ function renderServicos(app){
     <span class="eyebrow">O que fazemos</span>
     <div class="sec-h"><div><h2>Serviços</h2><p>Do primeiro contato à entrega das chaves, com um corretor acompanhando cada etapa.</p></div></div>
     <div class="servicos">${SERVICOS.map(([t,d,cta],k)=>`<article class="servico"><span class="s-num tab">${String(k+1).padStart(2,"0")}</span><h3>${t}</h3><p>${d}</p><a class="link-btn" target="_blank" rel="noopener" href="${waLink("Olá, vim pelo site. "+cta+".")}">${cta} →</a></article>`).join("")}</div>
-    <div class="cta-faixa"><div><h3>Quer anunciar seu imóvel?</h3><p>Conte um pouco sobre ele e retornamos para combinar a avaliação.</p></div><a class="btn btn-ouro" href="#anunciar">Anunciar imóvel</a></div>
+    <div class="cta-faixa"><div><h3>Quer anunciar seu imóvel?</h3><p>Conte um pouco sobre ele e retornamos para combinar a avaliação. Ainda não sabe o preço? Peça um estudo de mercado gratuito.</p></div><div class="chips"><a class="btn btn-vaz" href="#avaliar">Quanto vale meu imóvel?</a><a class="btn btn-ouro" href="#anunciar">Anunciar imóvel</a></div></div>
   </section>`;
 }
 
